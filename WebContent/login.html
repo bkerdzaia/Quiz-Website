@@ -4,31 +4,52 @@
 <meta charset="UTF-8">
 <title>Login</title>
 
-<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 
 <script>
 	function passwordStrength() {
 		var weak = "";
-		if (document.form.password.value.length < 6) {
+		if (document.form1.password.value.length < 6) {
 			weak = "* weaken password";
 		}
 		$("form > span").text(weak);
 	};
+	
+	function registerClick() {
+		$(function() {
+			$("#login-form-id").hide();
+			$("#register-form-id").show();
+		});
+	};
+	
+	function loginClick() {
+		$(function() {
+			$("#register-form-id").hide();
+			$("#login-form-id").show();
+		});
+	};
+	loginClick();
 </script>
 
 </head>
 <body>
 
 	<p>Please log in</p>
+	<button style="margin:0px 0px 0px 500px" onclick="loginClick()">Login</button>
+	<button style="margin:0px 0px 0px 10px" onclick="registerClick()">Register</button><br /><br /> 
 
-	<form id="form-id" name="form" action="" method="post">
+	<form id="login-form-id" name="form1" action="" method="post">
+		<input type="text" name="userName" placeholder="Username" required><br /><br /> 
+		<input type="password" name="password" placeholder="Password" required><br /><br /> 
+		<input type="submit" value="Log In"><br /><br /> 
+	</form>
+
+	<form id="register-form-id" name="form2" action="" method="post">
 		<input type="text" name="userName" placeholder="Username" required><br /><br /> 
 		<input type="password" name="password" placeholder="Password" onkeyup="passwordStrength()" required> 
 		<span style="color:red"></span><br /><br /> 
-		<input type="submit" value="Log In">
-
+		<input type="submit" value="Register"><br /><br /> 
 	</form>
-
 
 </body>
 </html>
