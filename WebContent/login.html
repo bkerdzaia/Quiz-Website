@@ -9,11 +9,16 @@
 <script>
 	function passwordStrength() {
 		var weak = "";
-		if (document.form1.password.value.length < 6) {
+		if (document.getElementById("register-form-id").password.value.length < 6) {
 			weak = "* weaken password";
 		}
-		$("form > span").text(weak);
+		$("#register-form-id > span").text(weak);
 	};
+	
+	function validateName() {
+		var pat = /^[\w]+$/;
+		return pat.test(document.getElementById("register-form-id").userName.value);
+	}
 	
 	function registerClick() {
 		$(function() {
@@ -34,22 +39,27 @@
 </head>
 <body>
 
-	<p>Please log in</p>
-	<button style="margin:0px 0px 0px 500px" onclick="loginClick()">Login</button>
-	<button style="margin:0px 0px 0px 10px" onclick="registerClick()">Register</button><br /><br /> 
+	<div>
+		<button style="margin:0px 0px 0px 500px" onclick="loginClick()">Login</button>
+		<button style="margin:0px 0px 0px 10px" onclick="registerClick()">Register</button><br /><br /> 
+	</div>
 
-	<form id="login-form-id" name="form1" action="" method="post">
-		<input type="text" name="userName" placeholder="Username" required><br /><br /> 
-		<input type="password" name="password" placeholder="Password" required><br /><br /> 
-		<input type="submit" value="Log In"><br /><br /> 
-	</form>
+	<div>
+		<form  id="login-form-id" action="" method="post">
+			<input type="text" name="userName" placeholder="Username" required><br /><br /> 
+			<input type="password" name="password" placeholder="Password" required><br /><br /> 
+			<input type="submit" value="Log In"><br /><br /> 
+		</form>
+	</div>
 
-	<form id="register-form-id" name="form2" action="" method="post">
-		<input type="text" name="userName" placeholder="Username" required><br /><br /> 
-		<input type="password" name="password" placeholder="Password" onkeyup="passwordStrength()" required> 
-		<span style="color:red"></span><br /><br /> 
-		<input type="submit" value="Register"><br /><br /> 
-	</form>
+	<div>
+		<form id="register-form-id" action="" method="post" onsubmit="validateName()">
+			<input type="text" name="userName" placeholder="Username" required><br /><br /> 
+			<input type="password" name="password" placeholder="Password" onkeyup="passwordStrength()" required> 
+			<span style="color:red"></span><br /><br /> 
+			<input type="submit" value="Register"><br /><br /> 
+		</form>
+	</div>
 
 </body>
 </html>
