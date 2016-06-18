@@ -2,6 +2,7 @@ package factory;
 
 import quiz.Quiz;
 import quiz.QuizCollection;
+import quiz.QuizQuestions;
 import quiz.UserMessageList;
 
 public class QuizFactory {
@@ -18,4 +19,7 @@ public class QuizFactory {
 		return new UserMessageList();
 	}
 	
+	public static QuizQuestions getQuizQuestions() {
+		return new QuizQuestions();
+	}
 }

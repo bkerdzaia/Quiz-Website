@@ -1,6 +1,6 @@
 package questions;
 
-public class FillBlank implements QuizType {
+public class FillBlank implements QuestionType {
 	
 	public FillBlank() {
 		// TODO Auto-generated constructor stub

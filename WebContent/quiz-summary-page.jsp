@@ -99,7 +99,7 @@
 	</div>
 	
 	<div>
-		<p><a href="">take a quiz</a></p>
+		<p><a href="quiz-question.jsp?question=1">take a quiz</a></p>
 	</div>
 	
 	<div>

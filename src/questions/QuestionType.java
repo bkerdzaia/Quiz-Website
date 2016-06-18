@@ -1,6 +1,6 @@
 package questions;
 
-public interface QuizType {
+public interface QuestionType {
 	
 	public String getQuestion();
 	

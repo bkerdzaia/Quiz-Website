@@ -1,6 +1,6 @@
 package questions;
 
-public class MultipleChoice implements QuizType {
+public class MultipleChoice implements QuestionType {
 	
 	public MultipleChoice() {
 		// TODO Auto-generated constructor stub
@@ -8,20 +8,19 @@ public class MultipleChoice implements QuizType {
 
 	@Override
 	public String getQuestion() {
-		// TODO Auto-generated method stub
-		return null;
+		return "what is usa first president?";
 	}
 
 	@Override
 	public String[] getCorrectAnswers() {
 		// TODO Auto-generated method stub
-		return null;
+		return new String[] {"washington"};
 	}
 
 	@Override
 	public String[] getPossibleAnswers() {
 		// TODO Auto-generated method stub
-		return null;
+		return new String[] {"washington", "jeperson", "kenedy", "lincoln"};
 	}
 
 }

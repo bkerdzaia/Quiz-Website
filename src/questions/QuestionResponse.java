@@ -1,6 +1,6 @@
 package questions;
 
-public class QuestionResponse implements QuizType {
+public class QuestionResponse implements QuestionType {
 	
 	public QuestionResponse() {
 		// TODO Auto-generated constructor stub
