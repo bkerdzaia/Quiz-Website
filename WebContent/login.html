@@ -45,7 +45,7 @@
 	</div>
 
 	<div>
-		<form  id="login-form-id" action="" method="post">
+		<form  id="login-form-id" action="LoginServlet" method="post">
 			<input type="text" name="userName" placeholder="Username" required><br /><br /> 
 			<input type="password" name="password" placeholder="Password" required><br /><br /> 
 			<input type="submit" value="Log In"><br /><br /> 
@@ -53,7 +53,7 @@
 	</div>
 
 	<div>
-		<form id="register-form-id" action="" method="post" onsubmit="validateName()">
+		<form id="register-form-id" action="RegisterServlet" method="post" onsubmit="validateName()">
 			<input type="text" name="userName" placeholder="Username" required><br /><br /> 
 			<input type="password" name="password" placeholder="Password" onkeyup="passwordStrength()" required> 
 			<span style="color:red"></span><br /><br /> 

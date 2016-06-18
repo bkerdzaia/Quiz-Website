@@ -18,4 +18,10 @@ public class FriendRequest implements Message {
 		return false;
 	}
 
+	@Override
+	public boolean isRead() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

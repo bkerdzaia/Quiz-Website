@@ -17,6 +17,12 @@ public class Note implements Message {
 		Note other = (Note) obj;
 		return false;
 	}
+
+	@Override
+	public boolean isRead() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 	
 }

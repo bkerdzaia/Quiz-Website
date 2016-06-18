@@ -17,5 +17,11 @@ public class Challenge implements Message {
 		Challenge other = (Challenge) obj;
 		return false;
 	}
+
+	@Override
+	public boolean isRead() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }
