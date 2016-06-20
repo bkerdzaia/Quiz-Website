@@ -4,6 +4,8 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
+
+import database.DatabaseGrabber;
 import factory.*;
 import quiz.*;
 
@@ -22,11 +24,13 @@ public class LoginServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		System.out.println("login servlet");
-		Database db = (Database) request.getServletContext().getAttribute(DatabaseListener.ATTRIBUTE_NAME);
+		DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DatabaseListener.ATTRIBUTE_NAME);
+		/*
 		if (db == null) {
 			db = DatabaseFactory.getDatabase();
 			request.getServletContext().setAttribute(DatabaseListener.ATTRIBUTE_NAME, db);
 		}
+		*/
 		// read all information and pass home page as session
 		HttpSession session = request.getSession();
 		User user = db.loadUser(request.getParameter("userName"));

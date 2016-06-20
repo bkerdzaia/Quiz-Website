@@ -1,4 +1,4 @@
-package application;
+package database;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -28,7 +28,7 @@ public class DatabaseListener implements ServletContextListener {
      */
     public void contextDestroyed(ServletContextEvent arg0)  { 
          ServletContext contex =  arg0.getServletContext();
-         contex.setAttribute(ATTRIBUTE_NAME, DatabaseFactory.getDatabase());
+         // contex.setAttribute(ATTRIBUTE_NAME, DatabaseFactory.getDatabase());
     }
 
 	/**

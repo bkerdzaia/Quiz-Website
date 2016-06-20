@@ -7,25 +7,26 @@ import java.sql.*;
  * The class provides means of connectivity to MYSQL database.
  * Constructor is hidden as usual for singleton pattern; instead
  * clients should call static 'getConnection' method to retrieve
- * connection object which is shared across different clients.
+ * DatabaseConnection object which is shared across different clients.
  */
-public class DatabaseConnection implements DatabaseParameters{
+public class DatabaseConnectionHandler implements DatabaseParameters{
 	
 	// Initially empty, will be created 'lazily'.
-	private static Connection dbConnection = null;
+	private Connection mysqlConnection = null;
+	private static DatabaseConnectionHandler connectionHandler = null;
 	
 	// Hide constructor 
-	private DatabaseConnection(){}
+	private DatabaseConnectionHandler(){}
 	
 	/**
-	 * Returns database connection object needed to carry
+	 * Returns DatabaseConnection object needed to carry
 	 * out various queries from MYSQL database.
 	 * @return object of type 'connection'
 	 */
-	public static Connection getConnection(){
+	public Connection getConnection(){
 		// If connection is already initialized, just hand it back.
-		if (dbConnection != null) 
-			return dbConnection;
+		if (mysqlConnection != null) 
+			return mysqlConnection;
 		/* Otherwise try to establish connection, save it in the 
 		   corresponding field and pass back to the client. */
 		String driverName = "com.mysql.jdbc.Driver";
@@ -41,8 +42,22 @@ public class DatabaseConnection implements DatabaseParameters{
 		}catch(ClassNotFoundException e){
 			e.printStackTrace();
 		}
-		DatabaseConnection.dbConnection = currentConnection;
+		this.mysqlConnection = currentConnection;
 		return currentConnection;
+	}
+	
+	/**
+	 * Returns object of current class. Way of instantiation
+	 * alternative to 'new' keyword. Client should acquire 
+	 * DatabaseConnection object this way and then get actual
+	 * connection object from it.
+	 */
+	public static DatabaseConnectionHandler getConnectionHandler(){
+		//If static field is empty, initialize it
+		if (connectionHandler == null)
+			connectionHandler = new DatabaseConnectionHandler();
+		
+		return connectionHandler;
 	}
 	
 	/**
@@ -50,12 +65,13 @@ public class DatabaseConnection implements DatabaseParameters{
 	 * May create additional work if used improperly; client
 	 * should close connection if it is not needed anymore.
 	 */
-	public static void close(){
+	public void close(){
 		try{
-			dbConnection.close();
+			mysqlConnection.close();
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
-		dbConnection = null;
+		mysqlConnection = null;
 	}
+	
 }
