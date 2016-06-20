@@ -16,6 +16,14 @@ DROP TABLE IF EXISTS `friends`;
 DROP TABLE IF EXISTS `messages`;
 DROP TABLE IF EXISTS `badges`;
 DROP TABLE IF EXISTS `users_badges`;
+DROP TABLE IF EXISTS `question_response`;
+DROP TABLE IF EXISTS `question_response_correct_answers`;
+DROP TABLE IF EXISTS `fill_in_blank`;
+DROP TABLE IF EXISTS `fill_in_blank_correct_answers`;
+DROP TABLE IF EXISTS `multiple_choise`;
+DROP TABLE IF EXISTS `multiple_choise_answers`;
+DROP TABLE IF EXISTS `picture_response`;
+DROP TABLE IF EXISTS `picture_response_correct_answers`;
 
 # Restore configuration.
 SET UNIQUE_CHECKS=1;

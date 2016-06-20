@@ -9,7 +9,7 @@
 -- the same directory.
 */
 
-/* Weaken some check, such as foreign key constaint, etc. (Auto-generated) */
+/* Weaken some check, such as foreign key constaint, etc. */
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
@@ -30,11 +30,11 @@ USE `QuizWebsite` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `QuizWebsite`.`users` (
 
-  `user_id`           INT       NOT NULL AUTO_INCREMENT,
-  `username`          CHAR(45)  NOT NULL,
-  `passw_hash`        INT       NOT NULL,
-  `profile_pic_url`   TEXT      NULL, # default
-  `description`       TEXT      NULL, # to null
+  `user_id`           INT          NOT NULL AUTO_INCREMENT,
+  `username`          VARCHAR(45)  NOT NULL,
+  `passw_hash`        INT          NOT NULL,
+  `profile_pic_url`   TEXT         NULL, # default
+  `description`       TEXT         NULL, # to null
 
   PRIMARY KEY (`user_id`))
 
@@ -47,8 +47,8 @@ COMMENT = 'Table stores users of system.';
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `QuizWebsite`.`quiz_categories` (
 
-  `category_id`      INT       NOT NULL,
-  `category_name`    CHAR(45)  NULL,
+  `category_id`      INT           NOT NULL,
+  `category_name`    VARCHAR(45)   NOT NULL,
 
   PRIMARY KEY (`category_id`))
 
@@ -61,29 +61,34 @@ COMMENT = 'Stores thematic categories, e.g. Geograpy, Math...';
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `QuizWebsite`.`quizzes` (
 
-  `quiz_id`          INT       NOT NULL,
-  `quiz_name`        CHAR(45)  NOT NULL,
-  `creation_date`    DATE      NOT NULL,
-  `category_id`      INT       NOT NULL,
-  `quiz_content`     BLOB      NOT NULL,
-  `quiz_creator_id`  INT       NOT NULL,
+  `quiz_id`             INT            NOT NULL,
+  `quiz_name`           VARCHAR(45)    NOT NULL,
+  `creation_date`       DATE           NOT NULL,
+  `category_id`         INT            NOT NULL,  # FK 
+  `quiz_creator_id`     INT            NOT NULL,  # FK 
+  `random_order`        ENUM('0','1')  NOT NULL,  # ENUM('0', '1')
+  `instant_correction`  ENUM('0','1')  NOT NULL,  # is just a way
+  `one_mult_page`       ENUM('0','1')  NOT NULL,  # of storing booleans
 
   PRIMARY KEY (`quiz_id`, `quiz_creator_id`),
 
   /* Indexing foreign keys */
-  INDEX `fk_quiz_to_category_idx` (`category_id` ASC),
-  INDEX `fk_quiz_to_creator_idx` (`quiz_creator_id` ASC),
+  INDEX `quiz_to_category_idx` (`category_id` ASC),
+  INDEX `quiz_to_creator_idx` (`quiz_creator_id` ASC),
 
   /* Adding foreign key constraint to `category_id` and `quiz_creator_id`. */ 
-  CONSTRAINT `fk_quiz_to_category`
+  CONSTRAINT `quiz_to_category`
     FOREIGN KEY (`category_id`)
     REFERENCES `QuizWebsite`.`quiz_categories` (`category_id`),
-  CONSTRAINT `fk_quiz_to_creator`
+  CONSTRAINT `quiz_to_creator`
     FOREIGN KEY (`quiz_creator_id`)
     REFERENCES `QuizWebsite`.`users` (`user_id`))
 
 ENGINE = InnoDB
-COMMENT = 'Stores quiz blobs (serialized objects) alongside with some properties.';
+COMMENT = 'Stores quiz properties; actual content will be composed by joining other tables.
+           `category_id` column implements one-to-many relation between categories and quizzes.
+           `quiz_creator_id` column points to user_id, who is the author of particular quiz,
+           implements one-to-many relation between users(authors) and created quzzes';
 
 
 -- -----------------------------------------------------
@@ -91,23 +96,23 @@ COMMENT = 'Stores quiz blobs (serialized objects) alongside with some properties
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `QuizWebsite`.`quizzes_taken` (
 
-  `quiz_id`         INT  NOT NULL,
+  `quiz_id`         INT  NOT NULL,  # FK
   `attempt_id`      INT  NOT NULL,
-  `user_id`         INT  NOT NULL,
+  `user_id`         INT  NOT NULL,  # FK
   `score`           INT  NOT NULL,
   `attempt_date`    DATE NOT NULL,
   
   PRIMARY KEY (`attempt_id`),
   
   /* Indexing foreign keys */
-  INDEX `fk_quizzes_has_users_users1_idx` (`user_id` ASC),
-  INDEX `fk_quizzes_has_users_quizzes1_idx` (`quiz_id` ASC),
+  INDEX `quiz_idx` (`user_id` ASC),
+  INDEX `user_idx` (`quiz_id` ASC),
 
   /* Adding foreign key constraints. */ 
-  CONSTRAINT `fk_quizzes_has_users_quizzes1`
+  CONSTRAINT `quiz`
     FOREIGN KEY (`quiz_id`)
     REFERENCES `QuizWebsite`.`quizzes` (`quiz_id`),
-  CONSTRAINT `fk_quizzes_has_users_users1`
+  CONSTRAINT `user`
     FOREIGN KEY (`user_id`)
     REFERENCES `QuizWebsite`.`users` (`user_id`))
 
@@ -115,32 +120,37 @@ ENGINE = InnoDB
 COMMENT = 'Implements many-to-many relationship between users and
            quizzes. Also stores score and date of each attempt.';
 
+
 -- -----------------------------------------------------
 -- Table `QuizWebsite`.`friends`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `QuizWebsite`.`friends` (
 
   `first_user_id`      INT            NOT NULL,  # initiator of friendship
-  `second_users_id`    INT            NOT NULL,  # the one to accept
-  `status`             ENUM('0','1')  NOT NULL,
+  `second_user_id`     INT            NOT NULL,  # the one to accept
+  `status`             ENUM('0','1')  NOT NULL,  # pending / accepted (by second user)
   `friendship_id`      INT            NOT NULL, 
 
   PRIMARY KEY (`friendship_id`),
 
   /* Indexing foreign keys */
-  INDEX `fk_users_has_users_users2_idx` (`second_users_id` ASC),
-  INDEX `fk_users_has_users_users1_idx` (`first_user_id` ASC),
+  INDEX `fk_first_user_to_users_idx` (`first_user_id` ASC),
+  INDEX `fk_second_user_to_users_idx` (`second_user_id` ASC),
 
   /* Adding foreign key constraints. */ 
-  CONSTRAINT `fk_users_has_users_users1`
+  CONSTRAINT `first_user_to_users`
     FOREIGN KEY (`first_user_id`)
     REFERENCES `QuizWebsite`.`users` (`user_id`),
-  CONSTRAINT `fk_users_has_users_users2`
-    FOREIGN KEY (`second_users_id`)
+  CONSTRAINT `second_user_to_users`
+    FOREIGN KEY (`second_user_id`)
     REFERENCES `QuizWebsite`.`users` (`user_id`))
 
 ENGINE = InnoDB
-COMMENT = 'first_user is\nthe initiator of \nfriendship,\nsecond_user \nshould accept \nrequest.';
+COMMENT = 'Links users to each other implementing \'friends\' feature.
+           via many-to-many relation between users on both sides. 
+           As an attempt to reduce data redundancy, each pair of users
+           is stored only once, with first_user being the one who
+           inititated friendship (sent request)';
 
 
 -- -----------------------------------------------------
@@ -157,10 +167,10 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`messages` (
   PRIMARY KEY (`message_id`),
 
   /* Indexing foreign keys */
-  INDEX `fk_messages_friends1_idx` (`friendship_id` ASC),
+  INDEX `fk_messages_friends_idx` (`friendship_id` ASC),
 
   /* Adding foreign key constraint*/ 
-  CONSTRAINT `fk_messages_friends1`
+  CONSTRAINT `fk_messages_friends`
     FOREIGN KEY (`friendship_id`)
     REFERENCES `QuizWebsite`.`friends` (`friendship_id`))
 
@@ -174,9 +184,8 @@ COMMENT = 'Stores messages associated with particular friendship entry.';
 CREATE TABLE IF NOT EXISTS `QuizWebsite`.`badges` (
 
   `badge_id`               INT           NOT NULL,
-  `badge_description`      VARCHAR(45)   NULL,
-  `badge_picture_url`      VARCHAR(45)   NULL,
-  `badgescol`              VARCHAR(45)   NULL,
+  `badge_description`      VARCHAR(45)   NOT NULL, # we will insist on 
+  `badge_picture_url`      VARCHAR(45)   NOT NULL, # well-formed badges
 
   PRIMARY KEY (`badge_id`))
 
@@ -190,25 +199,217 @@ COMMENT = 'Stores various badges the users are rewarded with when
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `QuizWebsite`.`users_badges` (
 
-  `user_id` INT NOT NULL,
-  `badge_id` INT NOT NULL,
+  `user_id`      INT NOT NULL, # FK points to `users` table
+  `badge_id`     INT NOT NULL, # FK points to `badges` table
 
-  PRIMARY KEY (`user_id`, `badge_id`),
+  PRIMARY KEY (`user_id`, `badge_id`), # as usual for many-to-many
 
   /* Indexing foreign keys */
-  INDEX `fk_users_has_badges_badges1_idx` (`badge_id` ASC),
-  INDEX `fk_users_has_badges_users1_idx` (`user_id` ASC),
+  INDEX `fk_users_badges_to_user_idx` (`badge_id` ASC),
+  INDEX `fk_users_badges_to_badge_idx` (`user_id` ASC),
 
   /* Adding foreign key constraints. */ 
-  CONSTRAINT `fk_users_has_badges_users1`
+  CONSTRAINT `fk_users_badges_to_user`
     FOREIGN KEY (`user_id`)
     REFERENCES `QuizWebsite`.`users` (`user_id`),
-  CONSTRAINT `fk_users_has_badges_badges1`
+  CONSTRAINT `fk_users_badges_to_badge`
     FOREIGN KEY (`badge_id`)
     REFERENCES `QuizWebsite`.`badges` (`badge_id`))
 
 ENGINE = InnoDB
-COMMENT = 'many to many relation\nbetween users and various\nbadges.';
+COMMENT = 'Implements many-to-many relation between users and badges, allowing
+           each user to have various badges, and vice-versa.';
+
+
+-- -----------------------------------------------------
+-- Table `QuizWebsite`.`question_response`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `QuizWebsite`.`question_response` (
+
+  `problem_id`               INT     NOT NULL, 
+  `question`                 TEXT    NOT NULL,
+  `quiz_id`                  INT     NOT NULL, # FK
+  `rel_position`             INT,    # may be null in case of random order
+
+  PRIMARY KEY (`problem_id`),
+
+  /* Indexing foreign keys */
+  INDEX `fk_question_response_to_quiz_idx` (`quiz_id` ASC),
+
+  CONSTRAINT `fk_question_response_to_quiz`
+    FOREIGN KEY (`quiz_id`)
+    REFERENCES `QuizWebsite`.`quizzes` (`quiz_id`))
+
+ENGINE = InnoDB
+COMMENT = 'Stores problems of type "Queston-response". Each entry
+           is associated with particular quiz via `quiz_id` attribute.
+           Relationship between quizzes and question_response is `one-to-many`';
+
+
+-- -----------------------------------------------------
+-- Table `QuizWebsite`.`question_response_correct_answers`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `QuizWebsite`.`question_response_correct_answers` (
+    
+  `answer_id`                    INT    NOT NULL,
+  `problem_id`                   INT    NOT NULL, # FK
+  `correct_answer`               TEXT   NOT NULL,
+
+  PRIMARY KEY (`answer_id`),
+
+  /* Indexing foreign keys */
+  INDEX `fk_correct_answers_to_question_response_idx` (`problem_id` ASC),
+
+  CONSTRAINT `fk_correct_answers_to_question_response`
+    FOREIGN KEY (`problem_id`)
+    REFERENCES `QuizWebsite`.`question_response` (`problem_id`))
+
+ENGINE = InnoDB
+COMMENT = 'Stores correct answers for "Question-response" problems.
+           Allows author of the quiz to specify several correct answers.
+           Implements one-to-many between `question_responce` and current table';
+
+
+-- -----------------------------------------------------
+-- Table `QuizWebsite`.`fill_in_blank`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `QuizWebsite`.`fill_in_blank` (
+
+  `problem_id`        INT     NOT NULL,
+  `question`          TEXT    NOT NULL,
+  `quiz_id`           INT     NOT NULL,
+  `rel_position`      INT,     # may be null in case of random order
+
+  PRIMARY KEY (`problem_id`),
+
+  /* Indexing foreign keys */
+  INDEX `fk_quiz_idx` (`quiz_id` ASC),
+
+  CONSTRAINT `fk_fill_in_blank_problem_to_quiz`
+    FOREIGN KEY (`quiz_id`)
+    REFERENCES `QuizWebsite`.`quizzes` (`quiz_id`))
+
+ENGINE = InnoDB
+COMMENT = 'Stores problems of type "Fill in the blank". Each entry
+           is associated with particular quiz via `quiz_id` attribute.';
+
+
+-- -----------------------------------------------------
+-- Table `QuizWebsite`.`fill_in_blank_correct_answers`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `QuizWebsite`.`fill_in_blank_correct_answers` (
+
+  `answer_id`                     INT    NOT NULL,
+  `problem_id`                    INT    NOT NULL,  # FK
+  `correct_answer`                TEXT   NOT NULL,
+
+  PRIMARY KEY (`answer_id`),
+
+  /* Indexing foreign keys */
+  INDEX `fk_correct_answers_to_fill_in_blank_idx` (`problem_id` ASC),
+
+  CONSTRAINT `fk_correct_answer_to_fill_in_blank`
+    FOREIGN KEY (`problem_id`)
+    REFERENCES `QuizWebsite`.`fill_in_blank` (`problem_id`))
+
+ENGINE = InnoDB
+COMMENT = 'Stores answers for particular "Fill in the blank" question that are considered correct.
+            Each entry is associated with particular quiz via `quiz_id` attribute.';
+
+
+-- -----------------------------------------------------
+-- Table `QuizWebsite`.`multiple_choise`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `QuizWebsite`.`multiple_choise` (
+
+  `problem_id`             INT      NOT NULL,
+  `quiz_id`                INT      NOT NULL, # FK
+  `question`               TEXT     NOT NULL,
+  `rel_position`           INT,     # may be null in case of random order
+
+  PRIMARY KEY (`problem_id`),
+
+  /* Indexing foreign keys */
+  INDEX `fk_multiple_choise_problem_to_quiz_idx` (`quiz_id` ASC),
+
+  CONSTRAINT `fk_multiple_choise_problem_to_quiz`
+    FOREIGN KEY (`quiz_id`)
+    REFERENCES `QuizWebsite`.`quizzes` (`quiz_id`))
+
+ENGINE = InnoDB
+COMMENT = 'Stores problems of type "Multiple choise". Each entry
+           is associated with particular quiz via `quiz_id` attribute.
+           Relationship between quizzes and `multiple_choise` is one-to-many';
+
+
+-- -----------------------------------------------------
+-- Table `QuizWebsite`.`multiple_choise_answers`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `QuizWebsite`.`multiple_choise_answers` (
+
+  `answer_id`                     INT             NOT NULL,
+  `problem_id`                    INT             NOT NULL, # FK
+  `answer`                        TEXT            NOT NULL,
+  `is_correct`                    ENUM('0','1')   NOT NULL,
+
+  PRIMARY KEY (`answer_id`),
+
+  /* Indexing foreign keys */
+  INDEX `fk_answer_to_multiple_choise_problem_idx` (`problem_id` ASC),
+
+  CONSTRAINT `fk_answer_to_multiple_choise_problem`
+    FOREIGN KEY (`problem_id`)
+    REFERENCES `QuizWebsite`.`multiple_choise` (`problem_id`))
+
+ENGINE = InnoDB
+COMMENT = 'Stores answers for particula "Multiple choise" problem.';
+
+
+-- -----------------------------------------------------
+-- Table `QuizWebsite`.`picture_response`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `QuizWebsite`.`picture_response` (
+
+  `problem_id`          INT    NOT NULL,
+  `quiz_id`             INT    NOT NULL,
+  `question`            TEXT   NOT NULL,
+  `image_url`           TEXT   NOT NULL,
+  `rel_position`        INT,    # may be null in case of random order
+
+  PRIMARY KEY (`problem_id`),
+
+  /* Indexing foreign keys */
+  INDEX `fk_picture_response_to_quiz_idx` (`quiz_id` ASC),
+
+  CONSTRAINT `picture_response_to_quiz`
+    FOREIGN KEY (`quiz_id`)
+    REFERENCES `QuizWebsite`.`quizzes` (`quiz_id`))
+
+ENGINE = InnoDB
+COMMENT = 'Stores problems of type "Picture-response".';
+
+
+-- -----------------------------------------------------
+-- Table `QuizWebsite`.`picture_response_correct_answers`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `QuizWebsite`.`picture_response_correct_answers` (
+
+  `problem_id`   INT    NOT NULL,
+  `answer`       TEXT   NOT NULL,
+
+  /* Indexing foreign keys */
+  INDEX `correct_answer_to_picture_response_idx` (`problem_id` ASC),
+
+  PRIMARY KEY (`problem_id`),
+
+  CONSTRAINT `fk_correct_answer_to_picture_response`
+    FOREIGN KEY (`problem_id`)
+    REFERENCES `QuizWebsite`.`picture_response` (`problem_id`))
+
+ENGINE = InnoDB
+COMMENT = 'Stores correct responses for Picture-response problems';
+
+
 
 /* Re-enable all the constraints */
 SET SQL_MODE=@OLD_SQL_MODE;
