@@ -36,16 +36,19 @@ public class DatabaseGrabber implements DatabaseParameters{
 		this.conHandler = dbFactory.getDatabaseConnectionHandler();
 		try{
 			Statement stmt = conHandler.getConnection().createStatement();
-			stmt.executeQuery("USE" + SCHEMA_NAME);
+			stmt.executeQuery("USE " + SCHEMA_NAME + " ;");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-/*	
-	public void uploadUser(User user) {
-		
-	}
 	
+	public void registerUser(User user) {}
+	
+	public void authenticateUser(User user){}
+	
+	public void uploadQuiz(Quiz quiz) {}
+
+/*	
 	public User loadUser(String userName) {
 		User user = UserFactory.getUser();
 		user.setName(userName);
@@ -64,14 +67,6 @@ public class DatabaseGrabber implements DatabaseParameters{
 		hist.addQuiz(perf);
 		user.setHistory(hist);
 		return user;
-	}
-	
-	public void uploadQuiz(Quiz quiz) {
-		
-	}
-	
-	public boolean findUser(String userName, String password) {
-		return true;
 	}
 	
 	public Quiz loadQuiz(String quizName) {
