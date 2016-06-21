@@ -10,9 +10,16 @@ import database.DatabaseConnectionHandler;
 import org.junit.Before;
 import org.junit.Test;
 
+/** 
+ * @author dav23r
+ * Trivial test ConnectionHandler. Ensure creation of 
+ * valid connection with database and it's subsequent
+ * termination.
+ */
 public class DatabaseConnectionHandlerTestSimple {
 
 	DatabaseConnectionHandler conHandler = null;
+
 	@Before
 	public void setUp() throws Exception {
 		conHandler = 

@@ -42,9 +42,28 @@ public class DatabaseGrabber implements DatabaseParameters{
 		}
 	}
 	
-	public void registerUser(User user) {}
+	/**
+	 * Registers user inside database. If the userName already
+	 * exists in database, registration will fail, returning
+	 * value of 'false'; 'true' signifies successful registration.
+	 * @param userName - system login of the user.
+	 * @param password - secret string for proving identity.
+	 * @return registration status
+	 */
+	public boolean registerUser(String userName, String password){
+		Statement stmt = null;
+		try {
+			stmt = conHandler.getConnection().createStatement();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
-	public void authenticateUser(User user){}
+	public User authenticateUser(String userName, String passwHash){
+		User retrievedUser = null;
+		return retrievedUser;
+	}
 	
 	public void uploadQuiz(Quiz quiz) {}
 

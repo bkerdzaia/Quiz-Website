@@ -1,25 +1,13 @@
 package factory;
+import quiz.*;
 
-import quiz.Quiz;
-import quiz.QuizCollection;
-import quiz.QuizQuestions;
-import quiz.UserMessageList;
+public interface QuizFactory {
 
-public class QuizFactory {
-
-	public static QuizCollection getQuizCollection() {
-		return new QuizCollection();
-	}
+	public QuizCollection getQuizCollection();
 	
-	public static Quiz getQuiz() {
-		return new Quiz();
-	}
+	public Quiz getQuiz();
 	
-	public static UserMessageList getMessageList() {
-		return new UserMessageList();
-	}
+	public UserMessageList getMessageList();
 	
-	public static QuizQuestions getQuizQuestions() {
-		return new QuizQuestions();
-	}
+	public QuizQuestions getQuizQuestions();
 }
