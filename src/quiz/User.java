@@ -8,6 +8,8 @@ public class User {
 	private UserMessageList messages;
 	private QuizCollection createdQuiz;
 	private QuizCollection madeQuiz;
+	private String aboutMe;
+	private String pictureUrl;
 	private History history;
 
 	public User() {}

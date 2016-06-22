@@ -2,12 +2,15 @@ package tests.database_tests;
 
 import static org.junit.Assert.*;
 
+import java.sql.SQLException;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import database.DatabaseConnectionHandler;
 import database.DatabaseGrabber;
 import factory.DatabaseFactory;
+import factory.DefaultDatabaseFactory;
 
 /**
  * @author dav23r
@@ -20,7 +23,7 @@ public class DatabaseGrabberTestSimpleMocking {
 	DatabaseFactory corruptedFactory = null;
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp(){
 
 		corruptedFactory = new DatabaseFactory(){
 			@Override
@@ -35,7 +38,7 @@ public class DatabaseGrabberTestSimpleMocking {
 	}
 
 	@Test(expected=NullPointerException.class)
-	public void test() {
+	public void connectionTest() throws SQLException {
 		DatabaseGrabber dbGrabber = new DatabaseGrabber(corruptedFactory);
 		dbGrabber.connect();
 	}

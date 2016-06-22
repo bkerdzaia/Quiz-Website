@@ -1,77 +1,35 @@
 package database;
 
-import java.sql.*;
+import java.sql.Connection;
 
 /**
  * @author dav23r
- * The class provides means of connectivity to MYSQL database.
- * Constructor is hidden as usual for singleton pattern; instead
- * clients should call static 'getConnection' method to retrieve
- * DatabaseConnection object which is shared across different clients.
+ * The interface states methods that should be implemented
+ * by connection-related classes to provides means of creating
+ * connection with database and properly terminating it.
  */
-public class DatabaseConnectionHandler implements DatabaseParameters{
-	
-	// Initially empty, will be created 'lazily'.
-	private Connection mysqlConnection = null;
-	private static DatabaseConnectionHandler connectionHandler = null;
-	
-	// Hide constructor 
-	private DatabaseConnectionHandler(){}
+public interface DatabaseConnectionHandler {
 	
 	/**
-	 * Returns DatabaseConnection object needed to carry
-	 * out various queries from MYSQL database.
-	 * @return object of type 'connection'
+	 * Method returns name of the schema on which
+	 * subsequent queries should be performed.
+	 * @return schema name
 	 */
-	public Connection getConnection(){
-		// If connection is already initialized, just hand it back.
-		if (mysqlConnection != null) 
-			return mysqlConnection;
-		/* Otherwise try to establish connection, save it in the 
-		   corresponding field and pass back to the client. */
-		String driverName = "com.mysql.jdbc.Driver";
-		Connection currentConnection = null;
-		try{
-			Class.forName(driverName); // ensure existence of driver
-			currentConnection = DriverManager.getConnection(
-					"jdbc:mysql://" + DatabaseParameters.SERVER_ADDRESS,
-					DatabaseParameters.LOGIN, 
-					DatabaseParameters.PASSWORD);
-		}catch(SQLException e){
-			e.printStackTrace();
-		}catch(ClassNotFoundException e){
-			e.printStackTrace();
-		}
-		this.mysqlConnection = currentConnection;
-		return currentConnection;
-	}
+	public String getDatabaseName();
 	
 	/**
-	 * Returns object of current class. Way of instantiation
-	 * alternative to 'new' keyword. Client should acquire 
-	 * DatabaseConnection object this way and then get actual
-	 * connection object from it.
+	 * Initiates connection and provides client
+	 * with 'connection' object that allows to 
+	 * transfer data to and from database.
+	 * @return Connection object
 	 */
-	public static DatabaseConnectionHandler getConnectionHandler(){
-		//If static field is empty, initialize it
-		if (connectionHandler == null)
-			connectionHandler = new DatabaseConnectionHandler();
-		
-		return connectionHandler;
-	}
+	public Connection getConnection();
 	
 	/**
-	 * Method closes existing connection to database.
-	 * May create additional work if used improperly; client
-	 * should close connection if it is not needed anymore.
+	 * Terminates current connection. Clients are supposed
+	 * to call this method as fast as particular 'job' 
+	 * regarding database is done.
 	 */
-	public void close(){
-		try{
-			mysqlConnection.close();
-		}catch(SQLException e){
-			e.printStackTrace();
-		}
-		mysqlConnection = null;
-	}
-	
+	public void close();
+
 }

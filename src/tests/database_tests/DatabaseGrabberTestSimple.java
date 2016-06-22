@@ -4,6 +4,8 @@ import database.DatabaseGrabber;
 import factory.DatabaseFactory;
 import factory.DefaultDatabaseFactory;
 
+import java.sql.SQLException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,13 +19,14 @@ public class DatabaseGrabberTestSimple {
 	DatabaseGrabber dbGrabber = null;
 	
 	@Before
-	public void setUp() throws Exception {
-		DatabaseFactory dbFactory = DefaultDatabaseFactory.getFactoryInstance();
+	public void setUp() {
+		DatabaseFactory dbFactory = 
+				DefaultDatabaseFactory.getFactoryInstance();
 		dbGrabber = new DatabaseGrabber(dbFactory);
 	}
 
 	@Test
-	public void test() {
+	public void test() throws SQLException {
 		dbGrabber.connect();
 		dbGrabber.close();
 	}

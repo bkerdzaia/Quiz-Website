@@ -2,6 +2,7 @@ package factory;
 
 import database.DatabaseConnectionHandler;
 import database.DatabaseGrabber;
+import database.DefaultDatabaseConnectionHandler;
 
 /**
  * @author dav23r
@@ -33,10 +34,10 @@ public class DefaultDatabaseFactory implements DatabaseFactory{
 		return new DatabaseGrabber(getFactoryInstance());
 	}
 	
-	// Constructs DatabaseConnectionHandler object
+	// Constructs DefaultDatabaseConnectionHandler object
 	@Override
 	public DatabaseConnectionHandler getDatabaseConnectionHandler(){
-		return DatabaseConnectionHandler.getConnectionHandler();
+		return DefaultDatabaseConnectionHandler.getConnectionHandler();
 	}
 
 }

@@ -1,8 +1,13 @@
 package database;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 
 import factory.DatabaseFactory;
 import quiz.*;
@@ -31,15 +36,14 @@ public class DatabaseGrabber implements DatabaseParameters{
 	/**
 	 * Initialize connection with database, make possible subsequent
 	 * interactions with MYSQL database using credentials from DatabaseParameters.
+	 * @throws SQLException 
 	 */
-	public void connect() {
+	public void connect() throws SQLException {
 		this.conHandler = dbFactory.getDatabaseConnectionHandler();
-		try{
-			Statement stmt = conHandler.getConnection().createStatement();
-			stmt.executeQuery("USE " + SCHEMA_NAME + " ;");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+
+		Statement stmt = conHandler.getConnection().createStatement();
+		stmt.executeQuery("USE " + conHandler.getDatabaseName() + " ;");
+		stmt.close();
 	}
 	
 	/**
@@ -49,88 +53,87 @@ public class DatabaseGrabber implements DatabaseParameters{
 	 * @param userName - system login of the user.
 	 * @param password - secret string for proving identity.
 	 * @return registration status
+	 * @throws SQLException 
 	 */
-	public boolean registerUser(String userName, String password){
-		Statement stmt = null;
-		try {
-			stmt = conHandler.getConnection().createStatement();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
+	public boolean registerUser(String userName, String password) 
+			throws SQLException{
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlNumberEntriesSameName = 
+				"SELECT COUNT(*) "
+				+ "FROM users "
+				+ "WHERE username = " + "'" + userName + "'"+ ";";
+		
+		ResultSet rs = stmt.executeQuery(sqlNumberEntriesSameName);
+		// If database already contains entry with same name terminate.
+		if (!rs.next())
+			return false;
+		// Otherwise add new user row to database
+		String sqlAddNewUser = 
+				"INSERT INTO users (username, passw_hash) " +
+				"VALUES "+ "(" + "'" + userName + "'" + "," + " " + 
+						"'" + password + "'" + ");";
+				
+		stmt.executeUpdate(sqlAddNewUser);
+		stmt.close();
+		return true;
 	}
 	
-	public User authenticateUser(String userName, String passwHash){
-		User retrievedUser = null;
-		return retrievedUser;
+	
+	/**
+	 * Authenticates user in database. Ensure that right credentials
+	 * are supplied, and if that is the case returns corresponding
+	 * 'user' object. If user doesn't exist or password hashes do not
+	 * match, null object is handed back
+	 * @param userName
+	 * @param passwHash
+	 * @return corresponding 'user' or null
+	 * @throws SQLException
+	 */
+	public User authenticateUser(String userName, String passwHash)
+			throws SQLException{
+		Statement stmt = conHandler.getConnection().createStatement();
+		String queryUser = 
+				"SELECT * FROM users "
+				+ "WHERE username = " + "'" + userName + "';";
+		ResultSet rs = stmt.executeQuery(queryUser);
+		// User with provided userName doesn't exist in database
+		if (!rs.next())
+			return null;
+		// Otherwise check if stored hash and provided one are equal
+		if (rs.getString(PASSW_HASH).equals(passwHash))
+			return null;
+		// If valid credentials are provided, return corresponding user.
+		return loadUser(userName);
 	}
 	
-	public void uploadQuiz(Quiz quiz) {}
+	/**
+	 * Methods drops all tables in database, so all the data
+	 * is lost after method completion, be extremely 
+	 * !!!!!!!    CAREFUL !!!!!!!! If no extreme condition,
+	 * client should *** NEVER *** call this method.
+	 * @throws FileNotFoundException 
+	 */
+	public void dropDatabase() throws FileNotFoundException{
+		BufferedReader br = new BufferedReader(new FileReader(DROP_DB_SCRIPT));
 
-/*	
-	public User loadUser(String userName) {
-		User user = UserFactory.getUser();
-		user.setName(userName);
-		user.setMadeQuiz(getPopularQuizzes());
-		user.setCreatedQuiz(getRecentlyCreatedQuizzes());
-		UserMessageList messages = UserFactory.getMessageList();
-		messages.addMessage(new Challenge());
-		user.setMessages(messages);
-		user.setFriends(UserFactory.getFriendList());
-		History hist = UserFactory.getHistory();
-		QuizPerformance perf = new QuizPerformance();
-		perf.setAmountTime(new Time(System.currentTimeMillis()));
-		perf.setDate(new Date());
-		perf.setPercentCorrect(20);
-		perf.setQuiz(loadQuiz("quiz new"));
-		hist.addQuiz(perf);
-		user.setHistory(hist);
-		return user;
 	}
 	
-	public Quiz loadQuiz(String quizName) {
-		Quiz quiz = QuizFactory.getQuiz();
-		quiz.setName(quizName);
-		quiz.setDescription("this is quiz " + quizName);
-		QuizQuestions questions = QuizFactory.getQuizQuestions();
-		MultipleChoice e = new MultipleChoice();
-		questions.add(e);
-		quiz.setQuestions(questions);
-		User user = UserFactory.getUser();
-		user.setName("user 1");
-		quiz.setCreator(user);
-		return quiz;
-	}
+	public void uploadQuiz (Quiz quiz) 
+			throws SQLException  {}
+
 	
-	public QuizCollection getPopularQuizzes() {
-		QuizCollection col = QuizFactory.getQuizCollection();
-		col.add(loadQuiz("quiz 1"));
-		col.add(loadQuiz("quiz 2"));
-		col.add(loadQuiz("quiz 3"));
-		col.add(loadQuiz("quiz 4"));
-		return col;
-	}
+	public User loadUser(String userName) {return null;}
 	
-	public QuizCollection getRecentlyCreatedQuizzes() {
-		QuizCollection col = QuizFactory.getQuizCollection();
-		col.add(loadQuiz("quiz 1"));
-		col.add(loadQuiz("quiz 3"));
-		return col;
-	}
+	public Quiz loadQuiz(String quizName) {return null;}
 	
-	public UserList getRecentTestTakers(String quizName, Date date) {
-		UserList l = new UserList();
-		l.add(loadUser("user1"));
-		l.add(loadUser("user2"));
-		return l;
-	}
+	public QuizCollection getPopularQuizzes() {return null;}
 	
-	public UserList highestPerformers(String quizName, Date date) {
-		UserList l = new UserList();
-		l.add(loadUser("user1"));
-		return l;
-	}
-*/	
+	public QuizCollection getRecentlyCreatedQuizzes() {return null;}
+	
+	public UserList getRecentTestTakers(String quizName, Date date) {return null;}
+	
+	public UserList highestPerformers(String quizName, Date date) {return null;}
+	
 	/**
 	 * Frees up resources associated with current connection.
 	 */

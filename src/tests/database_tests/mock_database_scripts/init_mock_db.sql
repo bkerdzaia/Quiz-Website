@@ -15,20 +15,20 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema QuizWebsite
+-- Schema MockQuizWebsite
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema QuizWebsite
+-- Schema MockQuizWebsite
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `QuizWebsite` DEFAULT CHARACTER SET utf8 ;
-USE `QuizWebsite` ;
+CREATE SCHEMA IF NOT EXISTS `MockQuizWebsite` DEFAULT CHARACTER SET utf8 ;
+USE `MockQuizWebsite` ;
 
 
 -- -----------------------------------------------------
--- Table `QuizWebsite`.`users`
+-- Table `MockQuizWebsite`.`users`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `QuizWebsite`.`users` (
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`users` (
 
   `user_id`           INT          NOT NULL AUTO_INCREMENT,
   `username`          VARCHAR(45)  NOT NULL,
@@ -43,9 +43,9 @@ COMMENT = 'Table stores users of system.';
 
 
 -- -----------------------------------------------------
--- Table `QuizWebsite`.`quiz_categories`
+-- Table `MockQuizWebsite`.`quiz_categories`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `QuizWebsite`.`quiz_categories` (
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`quiz_categories` (
 
   `category_id`      INT           NOT NULL,
   `category_name`    VARCHAR(45)   NOT NULL,
@@ -57,9 +57,9 @@ COMMENT = 'Stores thematic categories, e.g. Geograpy, Math...';
 
 
 -- -----------------------------------------------------
--- Table `QuizWebsite`.`quizzes`
+-- Table `MockQuizWebsite`.`quizzes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `QuizWebsite`.`quizzes` (
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`quizzes` (
 
   `quiz_id`             INT            NOT NULL,
   `quiz_name`           VARCHAR(45)    NOT NULL,
@@ -79,10 +79,10 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`quizzes` (
   /* Adding foreign key constraint to `category_id` and `quiz_creator_id`. */ 
   CONSTRAINT `quiz_to_category`
     FOREIGN KEY (`category_id`)
-    REFERENCES `QuizWebsite`.`quiz_categories` (`category_id`),
+    REFERENCES `MockQuizWebsite`.`quiz_categories` (`category_id`),
   CONSTRAINT `quiz_to_creator`
     FOREIGN KEY (`quiz_creator_id`)
-    REFERENCES `QuizWebsite`.`users` (`user_id`))
+    REFERENCES `MockQuizWebsite`.`users` (`user_id`))
 
 ENGINE = InnoDB
 COMMENT = 'Stores quiz properties; actual content will be composed by joining other tables.
@@ -92,9 +92,9 @@ COMMENT = 'Stores quiz properties; actual content will be composed by joining ot
 
 
 -- -----------------------------------------------------
--- Table `QuizWebsite`.`quizzes_taken`
+-- Table `MockQuizWebsite`.`quizzes_taken`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `QuizWebsite`.`quizzes_taken` (
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`quizzes_taken` (
 
   `quiz_id`         INT  NOT NULL,  # FK
   `attempt_id`      INT  NOT NULL,
@@ -111,10 +111,10 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`quizzes_taken` (
   /* Adding foreign key constraints. */ 
   CONSTRAINT `quiz`
     FOREIGN KEY (`quiz_id`)
-    REFERENCES `QuizWebsite`.`quizzes` (`quiz_id`),
+    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_id`),
   CONSTRAINT `user`
     FOREIGN KEY (`user_id`)
-    REFERENCES `QuizWebsite`.`users` (`user_id`))
+    REFERENCES `MockQuizWebsite`.`users` (`user_id`))
 
 ENGINE = InnoDB
 COMMENT = 'Implements many-to-many relationship between users and
@@ -122,9 +122,9 @@ COMMENT = 'Implements many-to-many relationship between users and
 
 
 -- -----------------------------------------------------
--- Table `QuizWebsite`.`friends`
+-- Table `MockQuizWebsite`.`friends`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `QuizWebsite`.`friends` (
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`friends` (
 
   `first_user_id`      INT            NOT NULL,  # initiator of friendship
   `second_user_id`     INT            NOT NULL,  # the one to accept
@@ -140,10 +140,10 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`friends` (
   /* Adding foreign key constraints. */ 
   CONSTRAINT `first_user_to_users`
     FOREIGN KEY (`first_user_id`)
-    REFERENCES `QuizWebsite`.`users` (`user_id`),
+    REFERENCES `MockQuizWebsite`.`users` (`user_id`),
   CONSTRAINT `second_user_to_users`
     FOREIGN KEY (`second_user_id`)
-    REFERENCES `QuizWebsite`.`users` (`user_id`))
+    REFERENCES `MockQuizWebsite`.`users` (`user_id`))
 
 ENGINE = InnoDB
 COMMENT = 'Links users to each other implementing \'friends\' feature.
@@ -154,9 +154,9 @@ COMMENT = 'Links users to each other implementing \'friends\' feature.
 
 
 -- -----------------------------------------------------
--- Table `QuizWebsite`.`messages`
+-- Table `MockQuizWebsite`.`messages`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `QuizWebsite`.`messages` (
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`messages` (
 
   `message_id`               INT               NOT NULL,
   `friendship_id`            INT               NOT NULL,
@@ -172,16 +172,16 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`messages` (
   /* Adding foreign key constraint*/ 
   CONSTRAINT `fk_messages_friends`
     FOREIGN KEY (`friendship_id`)
-    REFERENCES `QuizWebsite`.`friends` (`friendship_id`))
+    REFERENCES `MockQuizWebsite`.`friends` (`friendship_id`))
 
 ENGINE = InnoDB
 COMMENT = 'Stores messages associated with particular friendship entry.';
 
 
 -- -----------------------------------------------------
--- Table `QuizWebsite`.`badges`
+-- Table `MockQuizWebsite`.`badges`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `QuizWebsite`.`badges` (
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`badges` (
 
   `badge_id`               INT           NOT NULL,
   `badge_description`      VARCHAR(45)   NOT NULL, # we will insist on 
@@ -195,9 +195,9 @@ COMMENT = 'Stores various badges the users are rewarded with when
 
 
 -- -----------------------------------------------------
--- Table `QuizWebsite`.`users_badges`
+-- Table `MockQuizWebsite`.`users_badges`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `QuizWebsite`.`users_badges` (
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`users_badges` (
 
   `user_id`      INT NOT NULL, # FK points to `users` table
   `badge_id`     INT NOT NULL, # FK points to `badges` table
@@ -211,10 +211,10 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`users_badges` (
   /* Adding foreign key constraints. */ 
   CONSTRAINT `fk_users_badges_to_user`
     FOREIGN KEY (`user_id`)
-    REFERENCES `QuizWebsite`.`users` (`user_id`),
+    REFERENCES `MockQuizWebsite`.`users` (`user_id`),
   CONSTRAINT `fk_users_badges_to_badge`
     FOREIGN KEY (`badge_id`)
-    REFERENCES `QuizWebsite`.`badges` (`badge_id`))
+    REFERENCES `MockQuizWebsite`.`badges` (`badge_id`))
 
 ENGINE = InnoDB
 COMMENT = 'Implements many-to-many relation between users and badges, allowing
@@ -222,9 +222,9 @@ COMMENT = 'Implements many-to-many relation between users and badges, allowing
 
 
 -- -----------------------------------------------------
--- Table `QuizWebsite`.`question_response`
+-- Table `MockQuizWebsite`.`question_response`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `QuizWebsite`.`question_response` (
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`question_response` (
 
   `problem_id`               INT     NOT NULL, 
   `question`                 TEXT    NOT NULL,
@@ -238,7 +238,7 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`question_response` (
 
   CONSTRAINT `fk_question_response_to_quiz`
     FOREIGN KEY (`quiz_id`)
-    REFERENCES `QuizWebsite`.`quizzes` (`quiz_id`))
+    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_id`))
 
 ENGINE = InnoDB
 COMMENT = 'Stores problems of type "Queston-response". Each entry
@@ -247,9 +247,9 @@ COMMENT = 'Stores problems of type "Queston-response". Each entry
 
 
 -- -----------------------------------------------------
--- Table `QuizWebsite`.`question_response_correct_answers`
+-- Table `MockQuizWebsite`.`question_response_correct_answers`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `QuizWebsite`.`question_response_correct_answers` (
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`question_response_correct_answers` (
     
   `answer_id`                    INT    NOT NULL,
   `problem_id`                   INT    NOT NULL, # FK
@@ -262,7 +262,7 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`question_response_correct_answers` (
 
   CONSTRAINT `fk_correct_answers_to_question_response`
     FOREIGN KEY (`problem_id`)
-    REFERENCES `QuizWebsite`.`question_response` (`problem_id`))
+    REFERENCES `MockQuizWebsite`.`question_response` (`problem_id`))
 
 ENGINE = InnoDB
 COMMENT = 'Stores correct answers for "Question-response" problems.
@@ -271,9 +271,9 @@ COMMENT = 'Stores correct answers for "Question-response" problems.
 
 
 -- -----------------------------------------------------
--- Table `QuizWebsite`.`fill_in_blank`
+-- Table `MockQuizWebsite`.`fill_in_blank`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `QuizWebsite`.`fill_in_blank` (
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`fill_in_blank` (
 
   `problem_id`        INT     NOT NULL,
   `question`          TEXT    NOT NULL,
@@ -287,7 +287,7 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`fill_in_blank` (
 
   CONSTRAINT `fk_fill_in_blank_problem_to_quiz`
     FOREIGN KEY (`quiz_id`)
-    REFERENCES `QuizWebsite`.`quizzes` (`quiz_id`))
+    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_id`))
 
 ENGINE = InnoDB
 COMMENT = 'Stores problems of type "Fill in the blank". Each entry
@@ -295,9 +295,9 @@ COMMENT = 'Stores problems of type "Fill in the blank". Each entry
 
 
 -- -----------------------------------------------------
--- Table `QuizWebsite`.`fill_in_blank_correct_answers`
+-- Table `MockQuizWebsite`.`fill_in_blank_correct_answers`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `QuizWebsite`.`fill_in_blank_correct_answers` (
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`fill_in_blank_correct_answers` (
 
   `answer_id`                     INT    NOT NULL,
   `problem_id`                    INT    NOT NULL,  # FK
@@ -310,7 +310,7 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`fill_in_blank_correct_answers` (
 
   CONSTRAINT `fk_correct_answer_to_fill_in_blank`
     FOREIGN KEY (`problem_id`)
-    REFERENCES `QuizWebsite`.`fill_in_blank` (`problem_id`))
+    REFERENCES `MockQuizWebsite`.`fill_in_blank` (`problem_id`))
 
 ENGINE = InnoDB
 COMMENT = 'Stores answers for particular "Fill in the blank" question that are considered correct.
@@ -318,9 +318,9 @@ COMMENT = 'Stores answers for particular "Fill in the blank" question that are c
 
 
 -- -----------------------------------------------------
--- Table `QuizWebsite`.`multiple_choise`
+-- Table `MockQuizWebsite`.`multiple_choise`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `QuizWebsite`.`multiple_choise` (
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`multiple_choise` (
 
   `problem_id`             INT      NOT NULL,
   `quiz_id`                INT      NOT NULL, # FK
@@ -334,7 +334,7 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`multiple_choise` (
 
   CONSTRAINT `fk_multiple_choise_problem_to_quiz`
     FOREIGN KEY (`quiz_id`)
-    REFERENCES `QuizWebsite`.`quizzes` (`quiz_id`))
+    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_id`))
 
 ENGINE = InnoDB
 COMMENT = 'Stores problems of type "Multiple choise". Each entry
@@ -343,9 +343,9 @@ COMMENT = 'Stores problems of type "Multiple choise". Each entry
 
 
 -- -----------------------------------------------------
--- Table `QuizWebsite`.`multiple_choise_answers`
+-- Table `MockQuizWebsite`.`multiple_choise_answers`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `QuizWebsite`.`multiple_choise_answers` (
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`multiple_choise_answers` (
 
   `answer_id`                     INT             NOT NULL,
   `problem_id`                    INT             NOT NULL, # FK
@@ -359,16 +359,16 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`multiple_choise_answers` (
 
   CONSTRAINT `fk_answer_to_multiple_choise_problem`
     FOREIGN KEY (`problem_id`)
-    REFERENCES `QuizWebsite`.`multiple_choise` (`problem_id`))
+    REFERENCES `MockQuizWebsite`.`multiple_choise` (`problem_id`))
 
 ENGINE = InnoDB
 COMMENT = 'Stores answers for particula "Multiple choise" problem.';
 
 
 -- -----------------------------------------------------
--- Table `QuizWebsite`.`picture_response`
+-- Table `MockQuizWebsite`.`picture_response`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `QuizWebsite`.`picture_response` (
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`picture_response` (
 
   `problem_id`          INT    NOT NULL,
   `quiz_id`             INT    NOT NULL,
@@ -383,16 +383,16 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`picture_response` (
 
   CONSTRAINT `picture_response_to_quiz`
     FOREIGN KEY (`quiz_id`)
-    REFERENCES `QuizWebsite`.`quizzes` (`quiz_id`))
+    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_id`))
 
 ENGINE = InnoDB
 COMMENT = 'Stores problems of type "Picture-response".';
 
 
 -- -----------------------------------------------------
--- Table `QuizWebsite`.`picture_response_correct_answers`
+-- Table `MockQuizWebsite`.`picture_response_correct_answers`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `QuizWebsite`.`picture_response_correct_answers` (
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`picture_response_correct_answers` (
 
   `problem_id`   INT    NOT NULL,
   `answer`       TEXT   NOT NULL,
@@ -404,7 +404,7 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`picture_response_correct_answers` (
 
   CONSTRAINT `fk_correct_answer_to_picture_response`
     FOREIGN KEY (`problem_id`)
-    REFERENCES `QuizWebsite`.`picture_response` (`problem_id`))
+    REFERENCES `MockQuizWebsite`.`picture_response` (`problem_id`))
 
 ENGINE = InnoDB
 COMMENT = 'Stores correct responses for Picture-response problems';

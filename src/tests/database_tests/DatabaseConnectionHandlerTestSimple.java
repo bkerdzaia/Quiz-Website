@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import database.DatabaseConnectionHandler;
+import database.DefaultDatabaseConnectionHandler;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,16 +15,17 @@ import org.junit.Test;
  * @author dav23r
  * Trivial test ConnectionHandler. Ensure creation of 
  * valid connection with database and it's subsequent
- * termination.
+ * termination. Test is performed on real database,
+ * not mock one.
  */
 public class DatabaseConnectionHandlerTestSimple {
 
 	DatabaseConnectionHandler conHandler = null;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp(){
 		conHandler = 
-				DatabaseConnectionHandler.getConnectionHandler();
+				DefaultDatabaseConnectionHandler.getConnectionHandler();
 	}
 
 	@Test
