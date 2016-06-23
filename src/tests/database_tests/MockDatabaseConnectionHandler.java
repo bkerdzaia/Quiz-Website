@@ -30,12 +30,13 @@ public class MockDatabaseConnectionHandler implements
 	 */
 	@Override
 	public Connection getConnection(){
-		String driverName = "com.mysql.jdbc.Driver";
+		String driverName = DRIVER_NAME;
 		Connection currentConnection = null;
 		try{
 			Class.forName(driverName); // ensure existence of driver
 			currentConnection = DriverManager.getConnection(
-					"jdbc:mysql://" + DatabaseParameters.SERVER_ADDRESS,
+					"jdbc:mysql://" + DatabaseParameters.SERVER_ADDRESS + 
+					"/" + getDatabaseName(),
 					DatabaseParameters.LOGIN, 
 					DatabaseParameters.PASSWORD);
 		}catch(Exception e){}
@@ -53,5 +54,5 @@ public class MockDatabaseConnectionHandler implements
 	public String getDatabaseName() {
 		return mockSchemaName;
 	}
-
+	
 }

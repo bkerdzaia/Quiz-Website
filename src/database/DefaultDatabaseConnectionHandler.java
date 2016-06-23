@@ -34,12 +34,12 @@ public class DefaultDatabaseConnectionHandler implements
 			return mysqlConnection;
 		/* Otherwise try to establish connection, save it in the 
 		   corresponding field and pass back to the client. */
-		String driverName = "com.mysql.jdbc.Driver";
 		Connection currentConnection = null;
 		try{
-			Class.forName(driverName); // ensure existence of driver
+			Class.forName(DRIVER_NAME); // ensure existence of driver
 			currentConnection = DriverManager.getConnection(
-					"jdbc:mysql://" + DatabaseParameters.SERVER_ADDRESS,
+					"jdbc:mysql://" + DatabaseParameters.SERVER_ADDRESS + 
+					"/" + getDatabaseName(),
 					DatabaseParameters.LOGIN, 
 					DatabaseParameters.PASSWORD);
 		}catch(SQLException e){
@@ -87,5 +87,6 @@ public class DefaultDatabaseConnectionHandler implements
 	public String getDatabaseName() {
 		return DatabaseParameters.SCHEMA_NAME;
 	}
+
 }
 	

@@ -1,7 +1,8 @@
 package tests.database_tests;
 
-import static org.junit.Assert.*;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 
 import org.junit.Before;
@@ -9,8 +10,8 @@ import org.junit.Test;
 
 import database.DatabaseConnectionHandler;
 import database.DatabaseGrabber;
+import database.DefaultDatabaseGrabber;
 import factory.DatabaseFactory;
-import factory.DefaultDatabaseFactory;
 
 /**
  * @author dav23r
@@ -39,7 +40,8 @@ public class DatabaseGrabberTestSimpleMocking {
 
 	@Test(expected=NullPointerException.class)
 	public void connectionTest() throws SQLException {
-		DatabaseGrabber dbGrabber = new DatabaseGrabber(corruptedFactory);
+		DatabaseGrabber dbGrabber = new DefaultDatabaseGrabber(corruptedFactory);
+		dbGrabber.authenticateUser("Sam", "asfd");
 		dbGrabber.connect();
 	}
 

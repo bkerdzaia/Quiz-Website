@@ -15,9 +15,13 @@ public interface DatabaseParameters {
 	public static final String SCHEMA_NAME = "QuizWebsite";
 	public static final String LOGIN = "root";
 	public static final String PASSWORD = "xp4m4dav"; 
+	public static final String DRIVER_NAME = "com.mysql.jdbc.Driver";
 	
-	public static final String INIT_DB_SCRIPT = "";
-	public static final String DROP_DB_SCRIPT = "";
+	/* Scripts-related constants */
+	public static final String DB_INIT_SCRIPT = "init_db.sql";
+	public static final String DB_DROP_SCRIPT = "drop_db.sql";
+	public static final String DB_TRUNCATE_SCRIPT = "truncate_db.sql";
+	
 
 	/* SQL related constants */
 	

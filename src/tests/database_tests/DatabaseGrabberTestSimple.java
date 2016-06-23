@@ -1,9 +1,12 @@
 package tests.database_tests;
 
 import database.DatabaseGrabber;
+import database.DefaultDatabaseGrabber;
 import factory.DatabaseFactory;
 import factory.DefaultDatabaseFactory;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 
 import org.junit.Before;
@@ -22,12 +25,14 @@ public class DatabaseGrabberTestSimple {
 	public void setUp() {
 		DatabaseFactory dbFactory = 
 				DefaultDatabaseFactory.getFactoryInstance();
-		dbGrabber = new DatabaseGrabber(dbFactory);
+		dbGrabber = new DefaultDatabaseGrabber(dbFactory);
 	}
 
 	@Test
-	public void test() throws SQLException {
+	public void test() throws SQLException,
+			FileNotFoundException, IOException {
 		dbGrabber.connect();
+		dbGrabber.truncateDatabase();
 		dbGrabber.close();
 	}
 

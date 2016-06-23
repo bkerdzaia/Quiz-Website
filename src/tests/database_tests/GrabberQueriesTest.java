@@ -1,15 +1,17 @@
 package tests.database_tests;
 
 import database.DatabaseConnectionHandler;
-import factory.DefaultDatabaseFactory;
 import static org.junit.Assert.*;
 
-import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import database.DatabaseGrabber;
+import database.DefaultDatabaseGrabber;
 import factory.DatabaseFactory;
 
 /**
@@ -18,18 +20,32 @@ import factory.DatabaseFactory;
  * methods; connection to mock database is initialized, which can be
  * manually filled with various sample entries; afterwards results of 
  * methods (internally queries) are examined.
+ * 
+ * !! Note, it may take a while to complete, since for each test 
+ *    tables are truncated, with code read from file, so be patient !!
  */
 public class GrabberQueriesTest {
 
-	private DatabaseFactory mockDbFactory = null;
+	private static DatabaseFactory mockDbFactory = null;
 	
-	@Before
-	public void setUp() throws Exception {
-		// Surprisingly this kind of recursive definition works
+	// Create mock factory
+	@BeforeClass
+	public static void init(){
 		mockDbFactory = new DatabaseFactory(){
+			String pathToScripts =  new File("").getAbsolutePath() + 
+									"/src/tests/database_tests/" +
+									"mock_database_scripts/";
 			@Override
 			public DatabaseGrabber getDatabaseGrabber() {
-				return new DatabaseGrabber(mockDbFactory); // no, not null, but itself
+				// Surprisingly this kind of recursive definition works
+				return new DefaultDatabaseGrabber(mockDbFactory){
+					@Override
+					public void truncateDatabase() throws IOException, SQLException{
+						// Change path variable, else is the same, so delegate via super.
+						truncateScriptPath = pathToScripts + "truncate_mock_db.sql";
+						super.truncateDatabase();
+					}
+				}; 
 			}
 			@Override
 			public DatabaseConnectionHandler getDatabaseConnectionHandler() {
@@ -39,14 +55,31 @@ public class GrabberQueriesTest {
 		};
 	}
 
-	@Test
-	public void test() throws SQLException, FileNotFoundException {
+	
+	// Empty all tables to make clear state for each test.
+	@Before
+	public void setUp() throws Exception {
 		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
 		dbGrabber.connect();
-		// Remove all entries
-		dbGrabber.dropDatabase();
+		dbGrabber.truncateDatabase();
+	}
+
+
+	// Tests empty database not to contain particular entry.
+	@Test
+	public void emptyDatabase() throws SQLException, IOException {
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		dbGrabber.connect();
 		// Surely, there should not be such entry
 		assertNull(dbGrabber.authenticateUser("Esteban", "asdf"));
+	}
+	
+
+	// Tests registration of user.
+	@Test
+	public void registrationTest(){
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+
 	}
 
 }
