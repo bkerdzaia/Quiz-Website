@@ -3,11 +3,11 @@ package quiz;
 public class User {
 	
 	private String name;
-	private String password;
+	private String passwordHash;
 	private FriendList friends;
 	private UserMessageList messages;
-	private QuizCollection createdQuiz;
-	private QuizCollection madeQuiz;
+	private QuizCollection createdQuizzes;
+	private QuizCollection takenQuizzes;
 	private String aboutMe;
 	private String pictureUrl;
 	private History history;
@@ -17,17 +17,33 @@ public class User {
 	public String getName() {
 		return name;
 	}
+	
+	public void setAboutMe(String aboutMe){
+		this.aboutMe = aboutMe;
+	}
+	
+	public String getAboutMe(){
+		return aboutMe;
+	}
+	
+	public void setPictureUrl(String pictureUrl){
+		this.pictureUrl = pictureUrl;
+	}
+	
+	public String getPictureUrl(){
+		return pictureUrl;
+	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getPasswordHash() {
+		return passwordHash;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setPasswordHash(String passwordHash) {
+		this.passwordHash = passwordHash;
 	}
 
 	public History getHistory() {
@@ -54,20 +70,20 @@ public class User {
 		this.messages = messages;
 	}
 
-	public QuizCollection getCreatedQuiz() {
-		return createdQuiz;
+	public QuizCollection getCreatedQuizzes() {
+		return createdQuizzes;
 	}
 
-	public void setCreatedQuiz(QuizCollection createdQuiz) {
-		this.createdQuiz = createdQuiz;
+	public void setCreatedQuizzes(QuizCollection createdQuizzes) {
+		this.createdQuizzes = createdQuizzes;
 	}
 
-	public QuizCollection getMadeQuiz() {
-		return madeQuiz;
+	public QuizCollection getTakenQuizzes() {
+		return takenQuizzes;
 	}
 
-	public void setMadeQuiz(QuizCollection madeQuiz) {
-		this.madeQuiz = madeQuiz;
+	public void setTakenQuizzes(QuizCollection takenQuizzes) {
+		this.takenQuizzes = takenQuizzes;
 	}
 
 	@Override

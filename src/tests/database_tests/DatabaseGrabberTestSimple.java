@@ -4,6 +4,7 @@ import database.DatabaseGrabber;
 import database.DefaultDatabaseGrabber;
 import factory.DatabaseFactory;
 import factory.DefaultDatabaseFactory;
+import factory.UserFactory;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -25,7 +26,8 @@ public class DatabaseGrabberTestSimple {
 	public void setUp() {
 		DatabaseFactory dbFactory = 
 				DefaultDatabaseFactory.getFactoryInstance();
-		dbGrabber = new DefaultDatabaseGrabber(dbFactory);
+		
+		dbGrabber = dbFactory.getDatabaseGrabber();
 	}
 
 	@Test

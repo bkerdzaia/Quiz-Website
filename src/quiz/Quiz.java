@@ -5,6 +5,7 @@ public class Quiz {
 	private String name;
 	private String description;
 	private User creator;
+	private String category;
 	private double summaryStatistics;
 	private QuizQuestions questions;
 	private QuizProperty property;
@@ -17,6 +18,14 @@ public class Quiz {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public void setCategory(String category){
+		this.category = category;
+	}
+	
+	public String getCategory(){
+		return category;
 	}
 	
 	public void setDescription(String description) {

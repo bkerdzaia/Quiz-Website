@@ -32,7 +32,9 @@ public class DefaultDatabaseFactory implements DatabaseFactory{
 	// Constructs DatabaseGrabber, is fed with default factory
 	@Override
 	public DatabaseGrabber getDatabaseGrabber() {
-		return new DefaultDatabaseGrabber(getFactoryInstance());
+		return new DefaultDatabaseGrabber(getFactoryInstance(),
+								DefaultUserFactory.getFactoryInstance(),
+								DefaultQuizFactory.getFactoryInstance());
 	}
 	
 	// Constructs DefaultDatabaseConnectionHandler object

@@ -29,7 +29,17 @@ public interface DatabaseParameters {
 	public static final int USER_ID = 1;
 	public static final int USERNAME = 2;
 	public static final int PASSW_HASH = 3;
-	public static final int PROFILE_PICTURE_URL = 3;
-	public static final int ABOUT_ME = 4;
+	public static final int PROFILE_PICTURE_URL = 4;
+	public static final int ABOUT_ME = 5;
 	
+	// 'Quiz' columns
+	public static final int QUIZ_ID = 1;
+	public static final int QUIZ_NAME = 2;
+	public static final int DATE_CREATION = 3;
+	public static final int CATEGORY_ID = 4;
+	public static final int CREATOR_ID = 5;
+	public static final int RANDOM_ORDER = 6;
+	public static final int INSTANT_CORRECTION = 7;
+	public static final int ONE_MULTIPLE_PAGE_MODE = 8;
+	public static final int QUIZ_DESCRIPTION = 9;
 }

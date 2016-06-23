@@ -13,6 +13,8 @@ import org.junit.Test;
 import database.DatabaseGrabber;
 import database.DefaultDatabaseGrabber;
 import factory.DatabaseFactory;
+import factory.DefaultQuizFactory;
+import factory.DefaultUserFactory;
 
 /**
  * @author dav23r
@@ -38,7 +40,9 @@ public class GrabberQueriesTest {
 			@Override
 			public DatabaseGrabber getDatabaseGrabber() {
 				// Surprisingly this kind of recursive definition works
-				return new DefaultDatabaseGrabber(mockDbFactory){
+				return new DefaultDatabaseGrabber(mockDbFactory,
+								DefaultUserFactory.getFactoryInstance(),
+								DefaultQuizFactory.getFactoryInstance()){
 					@Override
 					public void truncateDatabase() throws IOException, SQLException{
 						// Change path variable, else is the same, so delegate via super.
