@@ -2,9 +2,9 @@ package quiz;
 
 import java.util.ArrayList;
 
-import questions.QuestionType;
+import questions.Question;
 
 @SuppressWarnings("serial")
-public class QuizQuestions extends ArrayList<QuestionType> {
+public class QuizQuestions extends ArrayList<Question> {
 	
 }

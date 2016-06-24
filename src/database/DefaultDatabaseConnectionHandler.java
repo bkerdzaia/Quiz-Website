@@ -39,7 +39,7 @@ public class DefaultDatabaseConnectionHandler implements
 			Class.forName(DRIVER_NAME); // ensure existence of driver
 			currentConnection = DriverManager.getConnection(
 					"jdbc:mysql://" + DatabaseParameters.SERVER_ADDRESS + 
-					"/" + getDatabaseName(),
+					"/" + getDatabaseName() + NO_SSL,
 					DatabaseParameters.LOGIN, 
 					DatabaseParameters.PASSWORD);
 		}catch(SQLException e){

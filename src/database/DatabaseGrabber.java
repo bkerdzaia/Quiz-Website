@@ -33,7 +33,7 @@ public interface DatabaseGrabber {
 	 * @return registration status (boolean)
 	 * @throws SQLException 
 	 */
-	public boolean registerUser(String userName, String password) 
+	public boolean registerUser(String userName, String passwHash) 
 			throws SQLException;
 	
 

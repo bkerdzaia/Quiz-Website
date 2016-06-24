@@ -16,6 +16,7 @@ public interface DatabaseParameters {
 	public static final String LOGIN = "root";
 	public static final String PASSWORD = "xp4m4dav"; 
 	public static final String DRIVER_NAME = "com.mysql.jdbc.Driver";
+	public static final String NO_SSL = "?useSSL=no";
 	
 	/* Scripts-related constants */
 	public static final String DB_INIT_SCRIPT = "init_db.sql";

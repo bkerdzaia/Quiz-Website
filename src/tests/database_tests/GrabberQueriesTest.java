@@ -15,6 +15,7 @@ import database.DefaultDatabaseGrabber;
 import factory.DatabaseFactory;
 import factory.DefaultQuizFactory;
 import factory.DefaultUserFactory;
+import quiz.User;
 
 /**
  * @author dav23r
@@ -66,6 +67,7 @@ public class GrabberQueriesTest {
 		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
 		dbGrabber.connect();
 		dbGrabber.truncateDatabase();
+		dbGrabber.close();
 	}
 
 
@@ -76,14 +78,54 @@ public class GrabberQueriesTest {
 		dbGrabber.connect();
 		// Surely, there should not be such entry
 		assertNull(dbGrabber.authenticateUser("Esteban", "asdf"));
+		dbGrabber.close();
 	}
 	
 
 	// Tests registration of user.
 	@Test
-	public void registrationTest(){
+	public void registrationTest() throws SQLException{
 		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
-
+		dbGrabber.connect();
+		dbGrabber.registerUser("David", "bla1");
+		dbGrabber.registerUser("Sandro", "bla2");
+		dbGrabber.registerUser("Baduri", "bla3");
+		User david = dbGrabber.loadUser("David");
+		User sandro = dbGrabber.loadUser("Sandro");
+		User baduri = dbGrabber.loadUser("Baduri");
+		// Ensure none of the users is null
+		assertNotNull(david);
+		assertNotNull(sandro);
+		assertNotNull(baduri);
+		// Ensure valid passwords
+		assertEquals("bla1", david.getPasswordHash());
+		assertEquals("bla2", sandro.getPasswordHash());
+		assertEquals("bla3", baduri.getPasswordHash());
+		// Assert other parameters to be 'null'
+		assertNull(david.getAboutMe());
+		assertNull(sandro.getHistory());
+		assertNull(baduri.getTakenQuizzes());
+		// Now try to register again same users
+		assertFalse(dbGrabber.registerUser("David", "bla1"));
+		assertFalse(dbGrabber.registerUser("Sandro", "different"));
+		assertFalse(dbGrabber.registerUser("Baduri", "asdf"));
+		dbGrabber.close();
+	}
+	
+	
+	// Tests authentication of user
+	@Test
+	public void authenticationTest() throws SQLException{
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		dbGrabber.connect();
+		dbGrabber.registerUser("Armando", "1234");
+		User armando = dbGrabber.authenticateUser("Armando", "1234");
+		assertNotNull(armando);
+		assertEquals("1234", armando.getPasswordHash());
+		// pass wrong credentials
+		assertNull(dbGrabber.authenticateUser("Armando", "12345"));
+		assertNull(dbGrabber.authenticateUser("Sam", "1234"));
+		dbGrabber.close();
 	}
 
 }

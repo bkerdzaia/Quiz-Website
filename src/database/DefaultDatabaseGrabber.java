@@ -2,15 +2,12 @@ package database;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
-
-import com.mysql.jdbc.Connection;
 
 import application.UIParameters;
 import factory.DatabaseFactory;
@@ -61,16 +58,16 @@ public class DefaultDatabaseGrabber implements
 
 	// Register user in database
 	@Override
-	public boolean registerUser(String userName, String password) throws SQLException {
+	public boolean registerUser(String userName, String passwHash) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlNumberEntriesSameName = 
-				"SELECT COUNT(*) "
+				"SELECT user_id "
 				+ "FROM users "
 				+ "WHERE username = " + "'" + userName + "'"+ ";";
 		
 		ResultSet rs = stmt.executeQuery(sqlNumberEntriesSameName);
 		// If database already contains entry with same name terminate.
-		if (!rs.next()){
+		if (rs.next()){
 			stmt.close();
 			return false;
 		}
@@ -78,7 +75,7 @@ public class DefaultDatabaseGrabber implements
 		String sqlAddNewUser = 
 				"INSERT INTO users (username, passw_hash) " +
 				"VALUES "+ "(" + "'" + userName + "'" + "," + " " + 
-						"'" + password + "'" + ");";
+						"'" + passwHash + "'" + ");";
 				
 		stmt.executeUpdate(sqlAddNewUser);
 		stmt.close();
@@ -96,12 +93,17 @@ public class DefaultDatabaseGrabber implements
 				+ "WHERE username = " + "'" + userName + "';";
 		ResultSet rs = stmt.executeQuery(queryUser);
 		// User with provided userName doesn't exist in database
-		if (!rs.next())
+		if (!rs.next()){
+			stmt.close();
 			return null;
+		}
 		// Otherwise check if stored hash and provided one are equal
-		if (rs.getString(PASSW_HASH).equals(passwHash))
+		if (!rs.getString(PASSW_HASH).equals(passwHash)){
+			stmt.close();
 			return null;
+		}
 		// If valid credentials are provided, return corresponding user.
+		stmt.close();
 		return loadUser(userName);	
 	}
 
