@@ -34,7 +34,8 @@ public class DefaultDatabaseFactory implements DatabaseFactory{
 	public DatabaseGrabber getDatabaseGrabber() {
 		return new DefaultDatabaseGrabber(getFactoryInstance(),
 								DefaultUserFactory.getFactoryInstance(),
-								DefaultQuizFactory.getFactoryInstance());
+								DefaultQuizFactory.getFactoryInstance(),
+								DefaultQuestionFactory.getFactoryInstance());
 	}
 	
 	// Constructs DefaultDatabaseConnectionHandler object

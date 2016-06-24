@@ -12,7 +12,7 @@ public class History implements Iterable<QuizPerformance> {
 		perfomance = new ArrayList<QuizPerformance>();
 	}
 	
-	public void addQuiz(QuizPerformance quiz) {
+	public void addPerformance(QuizPerformance quiz) {
 		perfomance.add(quiz);
 	}
 	

@@ -11,10 +11,13 @@ import java.util.Date;
 
 import application.UIParameters;
 import factory.DatabaseFactory;
+import factory.QuestionFactory;
 import factory.QuizFactory;
 import factory.UserFactory;
+import quiz.History;
 import quiz.Quiz;
 import quiz.QuizCollection;
+import quiz.QuizPerformance;
 import quiz.User;
 import quiz.UserList;
 
@@ -24,12 +27,13 @@ import quiz.UserList;
  * used to interact with database in production code. 
  */
 public class DefaultDatabaseGrabber implements 
-				DatabaseGrabber, DatabaseParameters {
+				DatabaseGrabber, DatabaseParameters, UIParameters {
 	
 	// Factory is used to acquire connection handler.
 	private DatabaseFactory dbFactory = null;
 	private UserFactory userFactory = null;
 	private QuizFactory quizFactory = null;
+	private QuestionFactory questionFactory = null;
 	private DatabaseConnectionHandler conHandler = null;
 	
 	/* Following to are paths to database scripts (initialize and drop).
@@ -42,10 +46,12 @@ public class DefaultDatabaseGrabber implements
 	// Accept and store factories, to compose objects later.
 	public DefaultDatabaseGrabber(DatabaseFactory dbFactory,
 									UserFactory userFactory,
-									QuizFactory quizFactory) {
+									QuizFactory quizFactory,
+									QuestionFactory questionFactory) {
 		this.dbFactory = dbFactory;
 		this.userFactory = userFactory;
 		this.quizFactory = quizFactory;
+		this.questionFactory = questionFactory;
 	}
 
 
@@ -98,7 +104,7 @@ public class DefaultDatabaseGrabber implements
 			return null;
 		}
 		// Otherwise check if stored hash and provided one are equal
-		if (!rs.getString(PASSW_HASH).equals(passwHash)){
+		if (!rs.getString(USER.PASSW_HASH.num()).equals(passwHash)){
 			stmt.close();
 			return null;
 		}
@@ -135,12 +141,58 @@ public class DefaultDatabaseGrabber implements
 			return null;
 		User retrievedUser = userFactory.getUser();
 		// Fill user bean
-		retrievedUser.setName(rs.getString(USERNAME));
-		retrievedUser.setPictureUrl(rs.getString(PROFILE_PICTURE_URL));
-		retrievedUser.setAboutMe(rs.getString(ABOUT_ME));
-		retrievedUser.setPasswordHash(rs.getString(PASSW_HASH));
-		// TODO Complex fields are empty !!
+		retrievedUser.setName(rs.getString(USER.USERNAME.num()));
+		retrievedUser.setPictureUrl(rs.getString(USER.PROFILE_PICTURE_URL.num()));
+		retrievedUser.setAboutMe(rs.getString(USER.ABOUT_ME.num()));
+		retrievedUser.setPasswordHash(rs.getString(USER.PASSW_HASH.num()));
+		// Fill more complex fields, first list of created quizzes
+		retrievedUser.setCreatedQuizzes(
+				getCreatedQuizzesByUserId(rs.getInt(USER.USER_ID.num())));
+		// Now, history of performance
+		History userHistory = fillHistoryByUserId(rs.getInt(USER.USER_ID.num()));
+		retrievedUser.setHistory(userHistory);
 		return retrievedUser;
+	}
+
+
+	/* Given user id, constructs record of user's performance,
+	 * and hands back corresponding 'history' object.
+	 */
+	private History fillHistoryByUserId(int userId) throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		History userHistory = userFactory.getHistory();
+		String sqlTakenQuizzes = 
+				"SELECT * FROM quizzes_taken " +
+				"WHERE quiz_id = " + "'" + userId + "' " +
+				"ORDER BY attempt_date DESC;";
+		ResultSet rs = stmt.executeQuery(sqlTakenQuizzes);
+		// Iterate over result set and collect performance objects.
+		while (rs.next() && rs.getRow() < MAX_HISTORY_ENTRIES_FOR_USER){
+			// Create new performance object
+			QuizPerformance curPerformance = quizFactory.getQuizPerformance();
+			// And fill with corresponding values
+			curPerformance.setDate(rs.getDate(QUIZ_TAKEN.ATTEMPT_DATE.num()));
+			curPerformance.setAmountTime(rs.getTime(QUIZ_TAKEN.AMOUNT_TIME.num()));
+			curPerformance.setPercentCorrect(rs.getInt(QUIZ_TAKEN.AMOUNT_TIME.num()));
+			// Add performance entry to history
+			userHistory.addPerformance(curPerformance);
+		}
+		return userHistory;
+	}
+
+
+	private QuizCollection getCreatedQuizzesByUserId(int userId) 
+			throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlQuizIdByUserId = 
+				"SELECT quiz_name FROM quizzes " +
+				"WHERE quiz_creator_id = " + "'" + userId + "';";
+		ResultSet rs = stmt.executeQuery(sqlQuizIdByUserId);
+		// Acquire new QuizCollection and start filling
+		QuizCollection createdQuizzes = quizFactory.getQuizCollection();
+		while (rs.next())
+			createdQuizzes.add(loadQuiz(rs.getString(1))); // only one column
+		return null;
 	}
 
 
@@ -164,8 +216,8 @@ public class DefaultDatabaseGrabber implements
 			return null;
 		Quiz retrievedQuiz = quizFactory.getQuiz();
 		// Fill quiz bean
-		retrievedQuiz.setName(rs.getString(QUIZ_NAME));
-		retrievedQuiz.setDescription(rs.getString(QUIZ_DESCRIPTION));
+		retrievedQuiz.setName(rs.getString(QUIZ.QUIZ_NAME.num()));
+		retrievedQuiz.setDescription(rs.getString(QUIZ.QUIZ_DESCRIPTION.num()));
 		// TODO Complex fields are empty !!
 		return retrievedQuiz;
 	}
@@ -173,7 +225,8 @@ public class DefaultDatabaseGrabber implements
 
 	@Override
 	public QuizCollection getPopularQuizzes() throws SQLException {
-		// TODO Auto-generated method stub
+		// TODO everything
+		Statement stmt = conHandler.getConnection().createStatement();
 		return null;
 	}
 
@@ -188,7 +241,7 @@ public class DefaultDatabaseGrabber implements
 		ResultSet rs = stmt.executeQuery(sqlRecentCreatedQuizzes);
 		QuizCollection recentQuizzes = quizFactory.getQuizCollection();
 		while (rs.next())
-			recentQuizzes.add(loadQuiz(rs.getString(QUIZ_NAME)));
+			recentQuizzes.add(loadQuiz(rs.getString(QUIZ.QUIZ_NAME.num())));
 		return recentQuizzes;
 	}
 
@@ -205,11 +258,11 @@ public class DefaultDatabaseGrabber implements
 						"users.user_id = quizzes_taken.user_id " +
 						" AND " +
 						"attempt_date > " + date + " " +
-				"ORDER BY attempt_date ASC";
+				"ORDER BY attempt_date DESC";
 		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
 		UserList recentTakers = userFactory.getUserList();
 		while (rs.next())
-			recentTakers.add(loadUser(rs.getString(USERNAME)));
+			recentTakers.add(loadUser(rs.getString(1)));
 		return recentTakers;
 	}
 
@@ -227,11 +280,11 @@ public class DefaultDatabaseGrabber implements
 						"users.user_id = quizzes_taken.user_id " +
 						" AND " +
 						"attempt_date > " + date + " " +
-				"ORDER BY score";
+				"ORDER BY score DESC";
 		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
 		UserList highestPerformers = userFactory.getUserList();
 		while (rs.next())
-			highestPerformers.add(loadUser(rs.getString(USERNAME)));
+			highestPerformers.add(loadUser(rs.getString(USER.USERNAME.num())));
 		return highestPerformers;
 	}
 

@@ -7,7 +7,6 @@ public class User {
 	private FriendList friends;
 	private UserMessageList messages;
 	private QuizCollection createdQuizzes;
-	private QuizCollection takenQuizzes;
 	private String aboutMe;
 	private String pictureUrl;
 	private History history;
@@ -76,14 +75,6 @@ public class User {
 
 	public void setCreatedQuizzes(QuizCollection createdQuizzes) {
 		this.createdQuizzes = createdQuizzes;
-	}
-
-	public QuizCollection getTakenQuizzes() {
-		return takenQuizzes;
-	}
-
-	public void setTakenQuizzes(QuizCollection takenQuizzes) {
-		this.takenQuizzes = takenQuizzes;
 	}
 
 	@Override

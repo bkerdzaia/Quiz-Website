@@ -97,11 +97,12 @@ COMMENT = 'Stores quiz properties; actual content will be composed by joining ot
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `QuizWebsite`.`quizzes_taken` (
 
-  `quiz_id`         INT  NOT NULL,  # FK
-  `attempt_id`      INT  NOT NULL,
-  `user_id`         INT  NOT NULL,  # FK
-  `score`           INT  NOT NULL,
-  `attempt_date`    DATE NOT NULL,
+  `quiz_id`          INT  NOT NULL,  # FK
+  `attempt_id`       INT  NOT NULL,
+  `user_id`          INT  NOT NULL,  # FK
+  `percent_correct`  INT  NOT NULL,
+  `attempt_date`     DATE NOT NULL,
+  `time_amount_secs` INT  NOT NULL,
   
   PRIMARY KEY (`attempt_id`),
   

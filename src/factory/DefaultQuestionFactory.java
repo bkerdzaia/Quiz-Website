@@ -22,7 +22,7 @@ public class DefaultQuestionFactory implements QuestionFactory {
 	// Hide constructor
 	private DefaultQuestionFactory() {}
 	
-	public static QuestionFactory getDefaultQuestionFactory(){
+	public static QuestionFactory getFactoryInstance(){
 		if (defFactoryInstance == null)
 			defFactoryInstance = new DefaultQuestionFactory();
 		return defFactoryInstance;

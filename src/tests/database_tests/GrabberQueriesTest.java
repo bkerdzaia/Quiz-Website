@@ -13,6 +13,7 @@ import org.junit.Test;
 import database.DatabaseGrabber;
 import database.DefaultDatabaseGrabber;
 import factory.DatabaseFactory;
+import factory.DefaultQuestionFactory;
 import factory.DefaultQuizFactory;
 import factory.DefaultUserFactory;
 import quiz.User;
@@ -41,9 +42,11 @@ public class GrabberQueriesTest {
 			@Override
 			public DatabaseGrabber getDatabaseGrabber() {
 				// Surprisingly this kind of recursive definition works
-				return new DefaultDatabaseGrabber(mockDbFactory,
+				return new DefaultDatabaseGrabber(
+								mockDbFactory,
 								DefaultUserFactory.getFactoryInstance(),
-								DefaultQuizFactory.getFactoryInstance()){
+								DefaultQuizFactory.getFactoryInstance(),
+								DefaultQuestionFactory.getFactoryInstance()){
 					@Override
 					public void truncateDatabase() throws IOException, SQLException{
 						// Change path variable, else is the same, so delegate via super.
@@ -104,7 +107,7 @@ public class GrabberQueriesTest {
 		// Assert other parameters to be 'null'
 		assertNull(david.getAboutMe());
 		assertNull(sandro.getHistory());
-		assertNull(baduri.getTakenQuizzes());
+		assertNull(baduri.getHistory());
 		// Now try to register again same users
 		assertFalse(dbGrabber.registerUser("David", "bla1"));
 		assertFalse(dbGrabber.registerUser("Sandro", "different"));

@@ -101,7 +101,8 @@ public interface DatabaseGrabber {
 	/**
 	 * Returns 'QuizCollection' object filled with most popular 
 	 * quizzes for time being. Threshold for amount of quizzes 
-	 * is specified in 'UIParameters' interface.
+	 * is specified in 'UIParameters' interface. Quizzes are 
+	 * in order of decreasing popularity.
 	 * @return 'QuizCollection' object of popular quizzes.
 	 * @throws SQLException
 	 */
@@ -110,8 +111,9 @@ public interface DatabaseGrabber {
 	/**
 	 * Returns 'QuizCollection' object populated with most recently
 	 * created quizzes. Threshold for amount of quizzes of contained
-	 * in collection is specified in 'UIParameters' interface.
-	 * @return 'QuizCollection' object of recent quizzes.
+	 * in collection is specified in 'UIParameters' interface. Quizzes
+	 * are in order of decreasing date (newest first)
+	 * @return 'QuizCollection' object of recent quizzes. 
 	 * @throws SQLException
 	 */
 	public QuizCollection getRecentlyCreatedQuizzes() 
@@ -120,7 +122,8 @@ public interface DatabaseGrabber {
 	/**
 	 * For particular quizName , retrieves most recent quiz taker
 	 * users. Threshold for amount of user is specified in 
-	 * 'UIParameters' interface.
+	 * 'UIParameters' interface. Users are in order of decreasing
+	 * date of taking (most recent taker first)
 	 * @param quizName
 	 * @return UserList of recent takers of the quiz.
 	 * @throws SQLException
@@ -128,6 +131,16 @@ public interface DatabaseGrabber {
 	public UserList getRecentTestTakers(String quizName, Date date) 
 			throws SQLException; 
 	
+	/**
+	 * For particular quizName, retrieves users who performed
+	 * best on the quiz. Threshold for amount of users is in 
+	 * 'UIParameters'. Users in list are arranged in decreasing
+	 * order of score (best performer - first).
+	 * @param quizName
+	 * @param date - min date of attempt
+	 * @return UserList of best performers.
+	 * @throws SQLException
+	 */
 	public UserList highestPerformers(String quizName, Date date) 
 			throws SQLException;
 	

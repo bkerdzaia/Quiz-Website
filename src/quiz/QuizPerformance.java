@@ -7,7 +7,7 @@ public class QuizPerformance {
 	
 	private Quiz quiz;
 	private Date date;
-	private Time amountTime;
+	private int amountTimeSecs;
 	private int percentCorrect;
 	
 	public QuizPerformance() {
@@ -30,12 +30,12 @@ public class QuizPerformance {
 		this.date = date;
 	}
 
-	public Time getAmountTime() {
-		return amountTime;
+	public int getAmountTime() {
+		return amountTimeSecs;
 	}
 
 	public void setAmountTime(Time amountTime) {
-		this.amountTime = amountTime;
+		this.amountTimeSecs = amountTimeSecs;
 	}
 
 	public int getPercentCorrect() {

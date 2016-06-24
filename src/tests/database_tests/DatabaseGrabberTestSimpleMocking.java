@@ -12,6 +12,7 @@ import database.DatabaseConnectionHandler;
 import database.DatabaseGrabber;
 import database.DefaultDatabaseGrabber;
 import factory.DatabaseFactory;
+import factory.DefaultQuestionFactory;
 import factory.DefaultQuizFactory;
 import factory.DefaultUserFactory;
 
@@ -44,7 +45,8 @@ public class DatabaseGrabberTestSimpleMocking {
 	public void connectionTest() throws SQLException {
 		DatabaseGrabber dbGrabber = new DefaultDatabaseGrabber(corruptedFactory,
 											DefaultUserFactory.getFactoryInstance(),
-											DefaultQuizFactory.getFactoryInstance());
+											DefaultQuizFactory.getFactoryInstance(),
+											DefaultQuestionFactory.getFactoryInstance());
 		dbGrabber.authenticateUser("Sam", "asfd");
 		dbGrabber.connect();
 	}

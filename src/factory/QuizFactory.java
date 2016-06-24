@@ -11,20 +11,32 @@ public interface QuizFactory {
 
 	/**
 	 * Encapsulates creation of 'QuizCollection' object.
-	 * @return QuizCollection
+	 * @return new QuizCollection
 	 */
 	public QuizCollection getQuizCollection();
 	
 	/**
 	 * Encapsulates creation of single 'Quiz' object.
-	 * @return Quiz
+	 * @return new Quiz
 	 */
 	public Quiz getQuiz();
 	
 	/**
 	 * Encapsulates creation of 'QuizQuestions'
-	 * @return QuizQuestions
+	 * @return new QuizQuestions
 	 */
 	public QuizQuestions getQuizQuestions();
 
+	/**
+	 * Encapsulates creation of 'QuizPerformance' object
+	 * @return new QuizPerformance
+	 */
+	public QuizPerformance getQuizPerformance();
+	
+	/**
+	 * Encapsulates creation of 'QuizProperty' object
+	 * @return new QuizProperty
+	 */
+	public QuizProperty getQuizProperty();
+	
 }

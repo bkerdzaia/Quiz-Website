@@ -2,6 +2,8 @@ package factory;
 
 import quiz.Quiz;
 import quiz.QuizCollection;
+import quiz.QuizPerformance;
+import quiz.QuizProperty;
 import quiz.QuizQuestions;
 import quiz.UserMessageList;
 
@@ -42,8 +44,17 @@ public class DefaultQuizFactory implements QuizFactory {
 
 	@Override
 	public QuizQuestions getQuizQuestions() {
-		// TODO Auto-generated method stub
-		return null;
+		return new QuizQuestions();
+	}
+
+	@Override
+	public QuizPerformance getQuizPerformance() {
+		return new QuizPerformance();
+	}
+
+	@Override
+	public QuizProperty getQuizProperty() {
+		return new QuizProperty();
 	}
 
 }
