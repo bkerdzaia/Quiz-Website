@@ -1,10 +1,13 @@
 package quiz;
 
+import java.util.Date;
+
 public class Quiz {
 
 	private String name;
 	private String description;
 	private User creator;
+	private Date creationDate;
 	private String category;
 	private double summaryStatistics;
 	private QuizQuestions questions;
@@ -18,6 +21,14 @@ public class Quiz {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public void setCreationDate(Date date){
+		creationDate = date;
+	}
+	
+	public Date getCreationDate(){
+		return creationDate;
 	}
 
 	public void setCategory(String category){

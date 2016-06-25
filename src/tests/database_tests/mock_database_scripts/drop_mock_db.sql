@@ -2,7 +2,7 @@
 # Script drops all the tables in Quiz_Website database. All the information
 # will be permanently lost. 
 
-USE DATABASE MockQuizWebsite;
+USE MockQuizWebsite;
 
 # Get rid of various constraints.
 SET UNIQUE_CHECKS=0;

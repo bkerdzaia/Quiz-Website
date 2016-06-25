@@ -8,8 +8,9 @@ package application;
  */
 public interface UIParameters {
 	
-	public static final int MAX_POPULAR_QUIZZES_NUM = 5;
-	public static final int MAX_RECENTRY_CREATED_QUIZZES_NUM = 5;
-	public static final int MAX_HISTORY_ENTRIES_FOR_USER = 20;
-
+	public static final int MAX_POPULAR_QUIZZES = 5;
+	public static final int MAX_RECENTRY_CREATED_QUIZZES = 5;
+	public static final int MAX_HISTORY_ENTRIES = 20;
+	public static final int MAX_CREATED_QUIZZES = 5;
+	public static final int MAX_RECENTLY_CREATED_BY_USER = 10;
 }

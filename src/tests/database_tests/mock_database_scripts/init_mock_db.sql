@@ -31,13 +31,12 @@ USE `MockQuizWebsite` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`users` (
 
-  `user_id`           INT          NOT NULL AUTO_INCREMENT,
-  `username`          VARCHAR(45)  NOT NULL,
-  `passw_hash`        CHAR(20)     NOT NULL,
-  `profile_pic_url`   TEXT         NULL, # default
-  `description`       TEXT         NULL, # to null
+  `username`          CHARACTER(45)  NOT NULL,
+  `passw_hash`        CHAR(20)       NOT NULL,
+  `profile_pic_url`   TEXT           NULL, # default
+  `description`       TEXT           NULL, # to null
 
-  PRIMARY KEY (`user_id`))
+  PRIMARY KEY (`username`))
 
 ENGINE = InnoDB
 COMMENT = 'Table stores users of system.';
@@ -62,33 +61,34 @@ COMMENT = 'Stores thematic categories, e.g. Geograpy, Math...';
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`quizzes` (
 
-  `quiz_id`             INT            NOT NULL,
-  `quiz_name`           VARCHAR(45)    NOT NULL,
+  `quiz_name`           CHARACTER(45)  NOT NULL,
   `creation_date`       DATE           NOT NULL,
-  `category_id`         INT            NOT NULL,  # FK 
-  `quiz_creator_id`     INT            NOT NULL,  # FK 
+  `quiz_creator`        CHARACTER(45)  NOT NULL,  # FK 
   `random_order`        ENUM('0','1')  NOT NULL,  # ENUM('0', '1')
   `instant_correction`  ENUM('0','1')  NOT NULL,  # is just a way
   `one_mult_page`       ENUM('0','1')  NOT NULL,  # of storing booleans
+  `quiz_description`    TEXT           NULL,      # creator supplied
 
-  PRIMARY KEY (`quiz_id`, `quiz_creator_id`),
+  PRIMARY KEY (`quiz_name`),
 
   /* Indexing foreign keys */
-  INDEX `quiz_to_category_idx` (`category_id` ASC),
-  INDEX `quiz_to_creator_idx` (`quiz_creator_id` ASC),
+  /*INDEX `quiz_to_category_idx` (`category_id` ASC), */
+  INDEX `quiz_to_creator_idx` (`quiz_creator` ASC),
 
-  /* Adding foreign key constraint to `category_id` and `quiz_creator_id`. */ 
+  /* Adding foreign key constraint to `category_id` and `quiz_creator`. */
+/** 
   CONSTRAINT `quiz_to_category`
     FOREIGN KEY (`category_id`)
     REFERENCES `MockQuizWebsite`.`quiz_categories` (`category_id`),
+**/
   CONSTRAINT `quiz_to_creator`
-    FOREIGN KEY (`quiz_creator_id`)
-    REFERENCES `MockQuizWebsite`.`users` (`user_id`))
+    FOREIGN KEY (`quiz_creator`)
+    REFERENCES `MockQuizWebsite`.`users` (`username`))
 
 ENGINE = InnoDB
 COMMENT = 'Stores quiz properties; actual content will be composed by joining other tables.
            `category_id` column implements one-to-many relation between categories and quizzes.
-           `quiz_creator_id` column points to user_id, who is the author of particular quiz,
+           `quiz_creator_id` column points to username, who is the author of particular quiz,
            implements one-to-many relation between users(authors) and created quzzes';
 
 
@@ -97,26 +97,26 @@ COMMENT = 'Stores quiz properties; actual content will be composed by joining ot
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`quizzes_taken` (
 
-  `quiz_id`          INT  NOT NULL,  # FK
-  `attempt_id`       INT  NOT NULL,
-  `user_id`          INT  NOT NULL,  # FK
-  `percent_correct`  INT  NOT NULL,
-  `attempt_date`     DATE NOT NULL,
-  `time_amount_secs` INT  NOT NULL,
+  `quiz_name`        CHARACTER(45)  NOT NULL,  # FK
+  `attempt_id`       INT            NOT NULL,
+  `username`         CHARACTER(45)  NOT NULL,  # FK
+  `percent_correct`  INT            NOT NULL,
+  `attempt_date`     DATE           NOT NULL,
+  `time_amount_secs` INT            NOT NULL,
   
   PRIMARY KEY (`attempt_id`),
   
   /* Indexing foreign keys */
-  INDEX `quiz_idx` (`user_id` ASC),
-  INDEX `user_idx` (`quiz_id` ASC),
+  INDEX `quiz_idx` (`quiz_name` ASC),
+  INDEX `user_idx` (`username` ASC),
 
   /* Adding foreign key constraints. */ 
   CONSTRAINT `quiz`
-    FOREIGN KEY (`quiz_id`)
-    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_id`),
+    FOREIGN KEY (`quiz_name`)
+    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`),
   CONSTRAINT `user`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `MockQuizWebsite`.`users` (`user_id`))
+    FOREIGN KEY (`username`)
+    REFERENCES `MockQuizWebsite`.`users` (`username`))
 
 ENGINE = InnoDB
 COMMENT = 'Implements many-to-many relationship between users and
@@ -128,24 +128,24 @@ COMMENT = 'Implements many-to-many relationship between users and
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`friends` (
 
-  `first_user_id`      INT            NOT NULL,  # initiator of friendship
-  `second_user_id`     INT            NOT NULL,  # the one to accept
-  `status`             ENUM('0','1')  NOT NULL,  # pending / accepted (by second user)
-  `friendship_id`      INT            NOT NULL, 
+  `first_user_name`      CHARACTER(45)     NOT NULL,  # initiator of friendship
+  `second_user_name`     CHARACTER(45)     NOT NULL,  # the one to accept
+  `status`               ENUM('0','1')     NOT NULL,  # pending / accepted (by second user)
+  `friendship_id`        INT               NOT NULL, 
 
   PRIMARY KEY (`friendship_id`),
 
   /* Indexing foreign keys */
-  INDEX `fk_first_user_to_users_idx` (`first_user_id` ASC),
-  INDEX `fk_second_user_to_users_idx` (`second_user_id` ASC),
+  INDEX `fk_first_user_to_users_idx` (`first_user_name` ASC),
+  INDEX `fk_second_user_to_users_idx` (`second_user_name` ASC),
 
   /* Adding foreign key constraints. */ 
   CONSTRAINT `first_user_to_users`
-    FOREIGN KEY (`first_user_id`)
-    REFERENCES `MockQuizWebsite`.`users` (`user_id`),
+    FOREIGN KEY (`first_user_name`)
+    REFERENCES `MockQuizWebsite`.`users` (`username`),
   CONSTRAINT `second_user_to_users`
-    FOREIGN KEY (`second_user_id`)
-    REFERENCES `MockQuizWebsite`.`users` (`user_id`))
+    FOREIGN KEY (`second_user_name`)
+    REFERENCES `MockQuizWebsite`.`users` (`username`))
 
 ENGINE = InnoDB
 COMMENT = 'Links users to each other implementing \'friends\' feature.
@@ -201,19 +201,19 @@ COMMENT = 'Stores various badges the users are rewarded with when
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`users_badges` (
 
-  `user_id`      INT NOT NULL, # FK points to `users` table
-  `badge_id`     INT NOT NULL, # FK points to `badges` table
+  `username`      CHARACTER(45)  NOT NULL, # FK points to `users` table
+  `badge_id`      INT            NOT NULL, # FK points to `badges` table
 
-  PRIMARY KEY (`user_id`, `badge_id`), # as usual for many-to-many
+  PRIMARY KEY (`username`, `badge_id`), # as usual for many-to-many
 
   /* Indexing foreign keys */
   INDEX `fk_users_badges_to_user_idx` (`badge_id` ASC),
-  INDEX `fk_users_badges_to_badge_idx` (`user_id` ASC),
+  INDEX `fk_users_badges_to_badge_idx` (`username` ASC),
 
   /* Adding foreign key constraints. */ 
   CONSTRAINT `fk_users_badges_to_user`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `MockQuizWebsite`.`users` (`user_id`),
+    FOREIGN KEY (`username`)
+    REFERENCES `MockQuizWebsite`.`users` (`username`),
   CONSTRAINT `fk_users_badges_to_badge`
     FOREIGN KEY (`badge_id`)
     REFERENCES `MockQuizWebsite`.`badges` (`badge_id`))
@@ -228,23 +228,23 @@ COMMENT = 'Implements many-to-many relation between users and badges, allowing
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`question_response` (
 
-  `problem_id`               INT     NOT NULL, 
-  `question`                 TEXT    NOT NULL,
-  `quiz_id`                  INT     NOT NULL, # FK
-  `rel_position`             INT,    # may be null in case of random order
+  `problem_id`               INT               NOT NULL AUTO_INCREMENT, 
+  `question`                 TEXT              NOT NULL,
+  `quiz_name`                CHARACTER(45)     NOT NULL, # FK
+  `rel_position`             INT,     # may be null in case of random order
 
   PRIMARY KEY (`problem_id`),
 
   /* Indexing foreign keys */
-  INDEX `fk_question_response_to_quiz_idx` (`quiz_id` ASC),
+  INDEX `fk_question_response_to_quiz_idx` (`quiz_name` ASC),
 
   CONSTRAINT `fk_question_response_to_quiz`
-    FOREIGN KEY (`quiz_id`)
-    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_id`))
+    FOREIGN KEY (`quiz_name`)
+    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`))
 
 ENGINE = InnoDB
 COMMENT = 'Stores problems of type "Queston-response". Each entry
-           is associated with particular quiz via `quiz_id` attribute.
+           is associated with particular quiz via `quiz_name` attribute.
            Relationship between quizzes and question_response is `one-to-many`';
 
 
@@ -253,11 +253,8 @@ COMMENT = 'Stores problems of type "Queston-response". Each entry
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`question_response_correct_answers` (
     
-  `answer_id`                    INT    NOT NULL,
   `problem_id`                   INT    NOT NULL, # FK
   `correct_answer`               TEXT   NOT NULL,
-
-  PRIMARY KEY (`answer_id`),
 
   /* Indexing foreign keys */
   INDEX `fk_correct_answers_to_question_response_idx` (`problem_id` ASC),
@@ -277,23 +274,23 @@ COMMENT = 'Stores correct answers for "Question-response" problems.
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`fill_in_blank` (
 
-  `problem_id`        INT     NOT NULL,
-  `question`          TEXT    NOT NULL,
-  `quiz_id`           INT     NOT NULL,
+  `problem_id`        INT               NOT NULL AUTO_INCREMENT,
+  `question`          TEXT              NOT NULL,
+  `quiz_name`         CHARACTER(45)     NOT NULL,
   `rel_position`      INT,     # may be null in case of random order
 
   PRIMARY KEY (`problem_id`),
 
   /* Indexing foreign keys */
-  INDEX `fk_quiz_idx` (`quiz_id` ASC),
+  INDEX `fk_quiz_idx` (`quiz_name` ASC),
 
   CONSTRAINT `fk_fill_in_blank_problem_to_quiz`
-    FOREIGN KEY (`quiz_id`)
-    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_id`))
+    FOREIGN KEY (`quiz_name`)
+    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`))
 
 ENGINE = InnoDB
 COMMENT = 'Stores problems of type "Fill in the blank". Each entry
-           is associated with particular quiz via `quiz_id` attribute.';
+           is associated with particular quiz via `quiz_name` attribute.';
 
 
 -- -----------------------------------------------------
@@ -301,11 +298,8 @@ COMMENT = 'Stores problems of type "Fill in the blank". Each entry
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`fill_in_blank_correct_answers` (
 
-  `answer_id`                     INT    NOT NULL,
   `problem_id`                    INT    NOT NULL,  # FK
   `correct_answer`                TEXT   NOT NULL,
-
-  PRIMARY KEY (`answer_id`),
 
   /* Indexing foreign keys */
   INDEX `fk_correct_answers_to_fill_in_blank_idx` (`problem_id` ASC),
@@ -316,7 +310,7 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`fill_in_blank_correct_answers` (
 
 ENGINE = InnoDB
 COMMENT = 'Stores answers for particular "Fill in the blank" question that are considered correct.
-            Each entry is associated with particular quiz via `quiz_id` attribute.';
+            Each entry is associated with particular quiz via `quiz_name` attribute.';
 
 
 -- -----------------------------------------------------
@@ -324,23 +318,23 @@ COMMENT = 'Stores answers for particular "Fill in the blank" question that are c
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`multiple_choise` (
 
-  `problem_id`             INT      NOT NULL,
-  `quiz_id`                INT      NOT NULL, # FK
-  `question`               TEXT     NOT NULL,
+  `problem_id`             INT             NOT NULL AUTO_INCREMENT,
+  `quiz_name`              CHARACTER(45)   NOT NULL, # FK
+  `question`               TEXT            NOT NULL,
   `rel_position`           INT,     # may be null in case of random order
 
   PRIMARY KEY (`problem_id`),
 
   /* Indexing foreign keys */
-  INDEX `fk_multiple_choise_problem_to_quiz_idx` (`quiz_id` ASC),
+  INDEX `fk_multiple_choise_problem_to_quiz_idx` (`quiz_name` ASC),
 
   CONSTRAINT `fk_multiple_choise_problem_to_quiz`
-    FOREIGN KEY (`quiz_id`)
-    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_id`))
+    FOREIGN KEY (`quiz_name`)
+    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`))
 
 ENGINE = InnoDB
 COMMENT = 'Stores problems of type "Multiple choise". Each entry
-           is associated with particular quiz via `quiz_id` attribute.
+           is associated with particular quiz via `quiz_name` attribute.
            Relationship between quizzes and `multiple_choise` is one-to-many';
 
 
@@ -349,12 +343,9 @@ COMMENT = 'Stores problems of type "Multiple choise". Each entry
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`multiple_choise_answers` (
 
-  `answer_id`                     INT             NOT NULL,
   `problem_id`                    INT             NOT NULL, # FK
   `answer`                        TEXT            NOT NULL,
   `is_correct`                    ENUM('0','1')   NOT NULL,
-
-  PRIMARY KEY (`answer_id`),
 
   /* Indexing foreign keys */
   INDEX `fk_answer_to_multiple_choise_problem_idx` (`problem_id` ASC),
@@ -372,20 +363,20 @@ COMMENT = 'Stores answers for particula "Multiple choise" problem.';
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`picture_response` (
 
-  `problem_id`          INT    NOT NULL,
-  `quiz_id`             INT    NOT NULL,
-  `question`            TEXT   NOT NULL,
-  `image_url`           TEXT   NOT NULL,
+  `problem_id`          INT              NOT NULL AUTO_INCREMENT,
+  `quiz_name`           CHARACTER(45)    NOT NULL,
+  `question`            TEXT             NOT NULL,
+  `image_url`           TEXT             NOT NULL,
   `rel_position`        INT,    # may be null in case of random order
 
   PRIMARY KEY (`problem_id`),
 
   /* Indexing foreign keys */
-  INDEX `fk_picture_response_to_quiz_idx` (`quiz_id` ASC),
+  INDEX `fk_picture_response_to_quiz_idx` (`quiz_name` ASC),
 
   CONSTRAINT `picture_response_to_quiz`
-    FOREIGN KEY (`quiz_id`)
-    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_id`))
+    FOREIGN KEY (`quiz_name`)
+    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`))
 
 ENGINE = InnoDB
 COMMENT = 'Stores problems of type "Picture-response".';
@@ -401,8 +392,6 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`picture_response_correct_answers` 
 
   /* Indexing foreign keys */
   INDEX `correct_answer_to_picture_response_idx` (`problem_id` ASC),
-
-  PRIMARY KEY (`problem_id`),
 
   CONSTRAINT `fk_correct_answer_to_picture_response`
     FOREIGN KEY (`problem_id`)

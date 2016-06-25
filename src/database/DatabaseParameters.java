@@ -23,16 +23,17 @@ public interface DatabaseParameters {
 	public static final String DB_DROP_SCRIPT = "drop_db.sql";
 	public static final String DB_TRUNCATE_SCRIPT = "truncate_db.sql";
 	
-
-	/* SQL related constants */
+	/* Constraints on stored data */
+	public static final int QUIZ_NAME_MAX_LEN = 45;
+	public static final int USER_NAME_MAX_LEN = 45;
+	
 	
 	// 'User' columns enumeration
 	public enum USER{
-		USER_ID 				(1),
-		USERNAME 				(2),
-		PASSW_HASH 				(3),
-		PROFILE_PICTURE_URL 	(4),
-		ABOUT_ME 				(5);
+		USERNAME 				(1),
+		PASSW_HASH 				(2),
+		PROFILE_PICTURE_URL 	(3),
+		ABOUT_ME 				(4);
 	
 		private int index;
 		private USER(int num){ index = num; }
@@ -42,15 +43,13 @@ public interface DatabaseParameters {
 	
 	// 'Quiz' columns enumeration
 	public enum QUIZ{
-		QUIZ_ID 				(1),
-		QUIZ_NAME  				(2),
-		DATE_CREATION  			(3),
-		CATEGORY_ID  			(4),
-		CREATOR_ID  			(5),
-		RANDOM_ORDER  			(6),
-		INSTANT_CORRECTION 		(7),
-		ONE_MULTIPLE_PAGE_MODE 	(8),
-		QUIZ_DESCRIPTION  		(9);
+		QUIZ_NAME  				(1),
+		DATE_CREATION  			(2),
+		CREATOR_NAME 			(3),
+		RANDOM_ORDER  			(4),
+		INSTANT_CORRECTION 		(4),
+		ONE_MULTIPLE_PAGE_MODE 	(5),
+		QUIZ_DESCRIPTION  		(7);
 		
 		private int index;
 		private QUIZ(int num) { index = num; }
@@ -60,9 +59,9 @@ public interface DatabaseParameters {
 	
 	// 'Quizzes_taken' columns enumeration 
 	public enum QUIZ_TAKEN{
-		QUIZ_ID  				(1),
+		QUIZ_NAME  				(1),
 		ATTEMPT_ID 				(2),
-		USER_IDd  				(3),
+		USER_NAME  				(3),
 		PERCENT_CORRECT  		(4), 
 		ATTEMPT_DATE  			(5),
 		AMOUNT_TIME 			(6);

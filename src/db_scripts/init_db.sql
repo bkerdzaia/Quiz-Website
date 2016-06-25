@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`quizzes` (
   `random_order`        ENUM('0','1')  NOT NULL,  # ENUM('0', '1')
   `instant_correction`  ENUM('0','1')  NOT NULL,  # is just a way
   `one_mult_page`       ENUM('0','1')  NOT NULL,  # of storing booleans
-  `quiz_description`    TEXT           NULL       # creator supplied
+  `quiz_description`    TEXT           NULL,      # creator supplied
 
   PRIMARY KEY (`quiz_id`, `quiz_creator_id`),
 
