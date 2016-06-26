@@ -1,11 +1,13 @@
 package application;
 
 import java.io.*;
+import java.sql.SQLException;
+
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
-import database.DatabaseGrabber;
+import database.*;
 import factory.*;
 import quiz.*;
 
@@ -25,32 +27,38 @@ public class LoginServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		System.out.println("login servlet");
 		DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DatabaseListener.ATTRIBUTE_NAME);
-		/*
 		if (db == null) {
-			db = DatabaseFactory.getDatabase();
+			db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
 			request.getServletContext().setAttribute(DatabaseListener.ATTRIBUTE_NAME, db);
 		}
-		*/
 		// read all information and pass home page as session
 		HttpSession session = request.getSession();
-		User user = db.loadUser(request.getParameter("userName"));
-		session.setAttribute("userName", user);
-		QuizCollection popularQuizzes = db.getPopularQuizzes();
-		session.setAttribute("popularQuizzes", popularQuizzes);
-		QuizCollection recentlyCreatedQuiz = db.getRecentlyCreatedQuizzes();
-		session.setAttribute("recentQuizzes", recentlyCreatedQuiz);
-		db.connect();
-		String name = request.getParameter("userName");
-		String password = request.getParameter("password");
-		Encryption encryption = UserFactory.getEncryption();
-		String encryptPassword = encryption.encrypt(password);
-		String address = "login.html";
-		if(db.findUser(name, encryptPassword)) {
-			address = "homepage.jsp?name=" + name;
-		} 
-		db.close();
-		RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-		dispatcher.forward(request, response);
+		try {
+			db.connect();
+			String name = request.getParameter("userName");
+			String password = request.getParameter("password");
+			Encryption encryption = new Encryption();
+			String encryptPassword = encryption.encrypt(password);
+			User user = db.authenticateUser(name, encryptPassword);
+			String address = "login.html";
+			if(user != null) {
+				session.setAttribute("userName", user);
+				QuizCollection popularQuizzes = db.getPopularQuizzes();
+				session.setAttribute("popularQuizzes", popularQuizzes);
+				QuizCollection recentlyCreatedQuiz = db.getRecentlyCreatedQuizzes();
+				session.setAttribute("recentQuizzes", recentlyCreatedQuiz);
+				address = "homepage.jsp?name=" + name;
+				System.out.println("user isn't null: " + user + " name: " + name + " pass: " + password);
+			} else {
+				
+				System.out.println("user is null: " + user);
+			}
+			db.close();
+//			RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+//			dispatcher.forward(request, response);
+		} catch (SQLException e) {
+			System.out.println("exception: " + e);
+		}
 	}
 
 }

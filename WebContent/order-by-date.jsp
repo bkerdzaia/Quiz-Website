@@ -3,5 +3,5 @@
 <% 
 	User user = (User) session.getAttribute("userName");
 	History history = user.getHistory(); 
-	history.orderBy(null);
+	history.sort(null);
 %>

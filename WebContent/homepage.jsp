@@ -43,12 +43,12 @@
 
 	<div>
 		<p>list of user's recent quiz taking activities</p>
-		<%= getHtmlQuizzes(user.getMadeQuiz()) %>
+		<%= user.getHistory() %>
 	</div>
 
 	<div>
 		<p>list of user's created quizzes</p>
-		<%= getHtmlQuizzes(user.getCreatedQuiz()) %>
+		<%= getHtmlQuizzes(user.getCreatedQuizzes()) %>
 	</div>
 
 	<div>
@@ -66,8 +66,8 @@
 		<%
 			FriendList friends = user.getFriends();
 			for (User friend : friends) {
-				out.println(getHtmlQuizzes(friend.getMadeQuiz()));
-				out.println(getHtmlQuizzes(friend.getCreatedQuiz()));
+				out.println(friend.getHistory());
+				out.println(getHtmlQuizzes(friend.getCreatedQuizzes()));
 			}
 		%>
 	</div>

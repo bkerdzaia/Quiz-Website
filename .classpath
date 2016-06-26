@@ -13,6 +13,10 @@
 	</classpathentry>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry exported="true" kind="lib" path="/home/dav23r/Desktop/mysql-connector-java-5.1.39.zip"/>
+	<classpathentry kind="lib" path="D:/eclipse/plugins/org.junit_4.12.0.v201504281640/junit.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://junit-team.github.io/junit/javadoc/latest/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
