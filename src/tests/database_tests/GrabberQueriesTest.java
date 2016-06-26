@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -241,9 +242,31 @@ public class GrabberQueriesTest {
 		assertEquals(prop.isInstantlyMarked(), sameProp.isInstantlyMarked());
 		assertEquals(prop.isRandomSeq(), sameProp.isRandomSeq());
 	
-		// Test question-response
 		QuizQuestions sameQuestions = sameQuiz.getQuestions();
 		assertEquals(3, sameQuestions.size());
+
+		// Test question-response
+		QuestionResponce sameQr = (QuestionResponce) sameQuestions.get(0);
+		assertEquals(qr.getQuestionText(), sameQr.getQuestionText());
+		assertTrue(setsEqual(qr.getCorrectAnswers(), sameQr.getCorrectAnswers()));
+		
+		// Test multiple-choise
+		MultipleChoise sameMch = (MultipleChoise) sameQuestions.get(2);
+		assertEquals(mch.getQuestionText(), sameMch.getQuestionText());
+		assertEquals(mch.getPossibleChoises(), sameMch.getPossibleChoises());
+		assertTrue(sameMch.isCorrectAnswer("b"));
+	}
+
+	/* Helper method for determining whether two sets contain same elements */
+	private boolean setsEqual(Set<String> firstSet, Set<String> secondSet) {
+		if (firstSet.size() != secondSet.size())
+			return false;
+		Iterator<String> it = firstSet.iterator();
+		while (it.hasNext()){
+			if (!secondSet.contains(it.next()))
+				return false;
+		}
+		return true;
 	}
 
 

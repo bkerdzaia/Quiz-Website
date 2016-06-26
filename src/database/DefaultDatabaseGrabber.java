@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -45,6 +46,20 @@ public class DefaultDatabaseGrabber implements
 	private QuestionFactory questionFactory = null;
 	private DatabaseConnectionHandler conHandler = null;
 	
+	// Little tuple for sorting questions (by position)
+	class Positioner implements Comparable<Positioner>{
+
+		Question question;
+		int position;
+
+		Positioner(Question q, int p) {question = q; position = p;}
+
+		@Override
+		public int compareTo(Positioner o) {
+			return this.position - o.position;
+		}
+	}
+
 	/* Following to are paths to database scripts (initialize and drop).
 	 * 'protected' to make possible for subclasses to override. */
 	protected String truncateScriptPath = 
@@ -370,21 +385,25 @@ public class DefaultDatabaseGrabber implements
 		prop.setOnePage(rs.getBoolean(QUIZ.ONE_MULTIPLE_PAGE_MODE.num()));
 		retrievedQuiz.setProperty(prop);
 		// Collect questions
-		QuizQuestions questions = quizFactory.getQuizQuestions();
-		questions.addAll(collectQuestionResponse(quizName));
-		questions.addAll(collectFillBlank(quizName));
-		questions.addAll(collectMultipleChoise(quizName));
-		questions.addAll(collectPictureResponse(quizName));
+		ArrayList<Positioner> positioner = 
+				new ArrayList<Positioner>(); // inner class for sorting
+		collectQuestionResponse(quizName, positioner);
+		collectFillBlank(quizName, positioner);
+		collectMultipleChoise(quizName, positioner);
+		collectPictureResponse(quizName, positioner);
 		// Add question to retrivedQuiz
+		Collections.sort(positioner);  // Sort questions to appear in order
+		QuizQuestions questions = quizFactory.getQuizQuestions();
+		for (Positioner p : positioner)
+			questions.add(p.question);
 		retrievedQuiz.setQuestions(questions);
 		return retrievedQuiz;
 	}
 
 
-	private QuizQuestions collectPictureResponse(String quizName) 
+	private void collectPictureResponse(String quizName, ArrayList<Positioner> positioner) 
 			throws SQLException {
 		ResultSet rs = getQuestionsOfQuiz("picture_response", quizName);
-		QuizQuestions questions = quizFactory.getQuizQuestions();
 		while (rs.next()){
 			// Create new question and fill
 			PictureResponse curQuestion = questionFactory.getPictureResponseQuestion();
@@ -394,17 +413,17 @@ public class DefaultDatabaseGrabber implements
 			int id = rs.getInt(PICTURE_RESPONSE.PROBLEM_ID.num());
 			curQuestion.setCorrectAnswers(
 					collectAnswers("picture_response_correct_answers", id));
-			questions.add(curQuestion);
+			positioner.add(new Positioner(curQuestion, 
+					rs.getInt(PICTURE_RESPONSE.REL_POSITION.num())));
 		}
-		return questions;
+
 	}
 
 
-	private QuizQuestions collectMultipleChoise(String quizName) 
+	private void collectMultipleChoise(String quizName, ArrayList<Positioner> positioner) 
 			throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
-		ResultSet rs = getQuestionsOfQuiz("picture_response", quizName);
-		QuizQuestions questions = quizFactory.getQuizQuestions();
+		ResultSet rs = getQuestionsOfQuiz("multiple_choise", quizName);
 		while (rs.next()){
 			// Create new question, filling corresponding fields
 			MultipleChoise curQuestion = questionFactory.getMultipleChoiseQuestion();
@@ -423,16 +442,15 @@ public class DefaultDatabaseGrabber implements
 			// Add the evaluated data about possible choises and correct one
 			curQuestion.setPossibleChoises(toStore);
 			curQuestion.setCorrectAnswerIndex(correctIndex);
-			questions.add(curQuestion);
+			positioner.add(new Positioner(curQuestion, 
+					rs.getInt(MULTIPLE_CHOISE.REL_POSITION.num())));
 		}
-		return questions;
 	}
 
 
-	private List<Question> collectFillBlank(String quizName) 
+	private void collectFillBlank(String quizName, ArrayList<Positioner> positioner) 
 			throws SQLException{
 		ResultSet rs = getQuestionsOfQuiz("fill_in_blank", quizName);
-		QuizQuestions questions = quizFactory.getQuizQuestions();
 		while (rs.next()){
 			// Create new question and fill the bean
 			FillBlank curQuestion = questionFactory.getFillBlankQuestion();
@@ -441,16 +459,15 @@ public class DefaultDatabaseGrabber implements
 			int id = rs.getInt(FILL_BLANK.PROBLEM_ID.num());
 			curQuestion.setCorrectAnswers(
 					collectAnswers("fill_in_blank_correct_answers", id));
-			questions.add(curQuestion);
+			positioner.add(new Positioner(curQuestion, 
+					rs.getInt(FILL_BLANK.REL_POSITION.num())));
 		}
-		return questions;
 	}
 
 
-	private QuizQuestions collectQuestionResponse(String quizName) 
+	private void collectQuestionResponse(String quizName, ArrayList<Positioner> positioner) 
 			throws SQLException {
 		ResultSet rs = getQuestionsOfQuiz("question_response", quizName);
-		QuizQuestions questions = quizFactory.getQuizQuestions(); 
 		while (rs.next()){
 			// Get new Question-response object and start filling
 			QuestionResponce curQuestion = questionFactory.getQuestionResponceQuestion();
@@ -459,9 +476,9 @@ public class DefaultDatabaseGrabber implements
 			int id = rs.getInt(QUESTION_RESPONSE.PROBLEM_ID.num());
 			curQuestion.setCorrectAnswers(
 				collectAnswers("question_response_correct_answers", id));
-			questions.add(curQuestion);
+			positioner.add(new Positioner(curQuestion, 
+					rs.getInt(QUESTION_RESPONSE.REL_POSITION.num())));
 		}
-		return questions;
 	}
 
 	private ResultSet getQuestionsOfQuiz(String table, String quizName) 
@@ -540,6 +557,7 @@ public class DefaultDatabaseGrabber implements
 		UserList recentTakers = userFactory.getUserList();
 		while (rs.next())
 			recentTakers.add(rs.getString(1)); // username column
+		stmt.close();
 		return recentTakers;
 	}
 
@@ -562,6 +580,7 @@ public class DefaultDatabaseGrabber implements
 		UserList highestPerformers = userFactory.getUserList();
 		while (rs.next())
 			highestPerformers.add(rs.getString(1)); // username column
+		stmt.close();
 		return highestPerformers;
 	}
 
