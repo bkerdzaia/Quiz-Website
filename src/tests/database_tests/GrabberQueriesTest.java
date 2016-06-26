@@ -218,7 +218,12 @@ public class GrabberQueriesTest {
 		mch.setCorrectAnswerIndex(1);
 		
 		Quiz sample = new Quiz();
-		
+		sample.setCreator("Sam");
+		sample.setCreationDate(new Timestamp(new Date().getTime()));
+		sample.setDescription("descr");
+		sample.setName("name");
+		sample.setProperty(prop);
+
 	}
 
 }

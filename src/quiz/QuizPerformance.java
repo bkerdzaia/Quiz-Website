@@ -3,6 +3,11 @@ package quiz;
 import java.sql.Time;
 import java.util.Date;
 
+/**
+ * Encapsulates user's particular attemp, it's performance
+ * on some quiz. The bean provides getters/setters for 
+ * data manipualtion.
+ */
 public class QuizPerformance {
 	
 	private String quiz;
@@ -10,9 +15,8 @@ public class QuizPerformance {
 	private int amountTimeSecs;
 	private int percentCorrect;
 	
-	public QuizPerformance() {
-		// TODO Auto-generated constructor stub
-	}
+	/** Empty constructor **/
+	public QuizPerformance() {}
 
 	public String getQuiz() {
 		return quiz;
