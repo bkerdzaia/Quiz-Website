@@ -185,7 +185,7 @@ public class DefaultDatabaseGrabber implements
 			curPerformance.setPercentCorrect(rs.getInt(QUIZ_TAKEN.PERCENT_CORRECT.num()));
 			curPerformance.setQuiz(rs.getString(QUIZ_TAKEN.QUIZ_NAME.num()));
 			// Add performance entry to history
-			userHistory.addPerformance(curPerformance);
+			userHistory.add(curPerformance);
 		}
 		return userHistory;
 	}

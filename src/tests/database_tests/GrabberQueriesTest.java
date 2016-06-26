@@ -8,10 +8,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
@@ -25,6 +25,9 @@ import factory.DefaultQuizFactory;
 import factory.DefaultUserFactory;
 import factory.QuestionFactory;
 import questions.FillBlank;
+import questions.MultipleChoise;
+import questions.PictureResponse;
+import questions.QuestionResponce;
 import quiz.Quiz;
 import quiz.QuizPerformance;
 import quiz.QuizProperty;
@@ -86,7 +89,6 @@ public class GrabberQueriesTest {
 		dbGrabber.close();
 	}
 
-/*
 	// Tests empty database not to contain particular entry.
 	@Test
 	public void emptyDatabase() throws SQLException, IOException {
@@ -144,7 +146,7 @@ public class GrabberQueriesTest {
 		assertNull(dbGrabber.authenticateUser("Sam", "1234"));
 		dbGrabber.close();
 	}
-*/	
+	
 	// Tests uploading/dowloading quiz from database.
 	@Test
 	public void quizTest() throws SQLException{
@@ -184,6 +186,39 @@ public class GrabberQueriesTest {
 		assertEquals(true, sameQuizProp.isInstantlyMarked());
 		assertEquals(true, sameQuizProp.isOnePage());
 		dbGrabber.close();
+	}
+	
+	// Test other 3 types of questions.
+	@Test
+	public void testAllTypesQuestions() throws SQLException{
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		QuestionFactory questFactory = DefaultQuestionFactory.getFactoryInstance();
+		dbGrabber.connect();
+		dbGrabber.registerUser("Sam", "123");
+		QuizProperty prop = new QuizProperty(false, true, false);
+		Set<String> correct1 = new HashSet<String>();
+		correct1.add("correct");
+		correct1.add("perfect");
+		Set<String> correct2 = new HashSet<String>();
+		correct2.add("wonderful");
+		ArrayList<String> choises = (ArrayList<String>) Arrays.asList(new String[]{"a", "b", "c"});
+		
+		QuestionResponce qr = questFactory.getQuestionResponceQuestion();
+		qr.setQuestionText("Whats up");
+		qr.setCorrectAnswers(correct1);
+		
+		PictureResponse pr = questFactory.getPictureResponseQuestion();
+		pr.setQuestionText("How your doin");
+		pr.setCorrectAnswers(correct2);
+		pr.setPictureUrl("www.xel.ge");
+		
+		MultipleChoise mch = questFactory.getMultipleChoiseQuestion();
+		mch.setQuestionText("bla");
+		mch.setPossibleChoises(choises);
+		mch.setCorrectAnswerIndex(1);
+		
+		Quiz sample = new Quiz();
+		
 	}
 
 }

@@ -8,7 +8,6 @@ public class Quiz {
 	private String description;
 	private String creator;
 	private Date creationDate;
-	private String category;
 	private double summaryStatistics;
 	private QuizQuestions questions;
 	private QuizProperty property;
@@ -31,14 +30,6 @@ public class Quiz {
 		return creationDate;
 	}
 
-	public void setCategory(String category){
-		this.category = category;
-	}
-	
-	public String getCategory(){
-		return category;
-	}
-	
 	public void setDescription(String description) {
 		this.description = description;
 	}
