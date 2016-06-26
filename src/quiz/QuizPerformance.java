@@ -5,20 +5,20 @@ import java.util.Date;
 
 public class QuizPerformance {
 	
-	private Quiz quiz;
+	private String quiz;
 	private Date date;
-	private Time amountTimeSecs;
+	private int amountTimeSecs;
 	private int percentCorrect;
 	
 	public QuizPerformance() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Quiz getQuiz() {
+	public String getQuiz() {
 		return quiz;
 	}
 
-	public void setQuiz(Quiz quiz) {
+	public void setQuiz(String quiz) {
 		this.quiz = quiz;
 	}
 
@@ -30,11 +30,11 @@ public class QuizPerformance {
 		this.date = date;
 	}
 
-	public Time getAmountTime() {
+	public int getAmountTime() {
 		return amountTimeSecs;
 	}
 
-	public void setAmountTime(Time amountTimeSecs) {
+	public void setAmountTime(int amountTimeSecs) {
 		this.amountTimeSecs = amountTimeSecs;
 	}
 

@@ -1,10 +1,13 @@
 package questions;
 
+import java.util.ArrayList;
+import java.util.Set;
+
 import factory.QuestionFactory;
 
 public class MultipleChoise extends Question {
 
-	String[] possibleChoises = null;
+	ArrayList<String> possibleChoises = null;
 	int correctAnswerIndex;
 	
 	/**
@@ -29,7 +32,7 @@ public class MultipleChoise extends Question {
 	 * Setter for possibleChoises field.
 	 * @param possibleChoises - that would be displayed
 	 */
-	public void setPossibleChoises(String[] possibleChoises){
+	public void setPossibleChoises(ArrayList<String> possibleChoises){
 		this.possibleChoises = possibleChoises;
 	}
 	
@@ -37,7 +40,7 @@ public class MultipleChoise extends Question {
 	 * Getter for possibleChoises field.
 	 * @return possible choices that should be displayed
 	 */
-	public String[] getPossibleChoises(){
+	public ArrayList<String> getPossibleChoises(){
 		return possibleChoises;
 	}
 	
@@ -53,7 +56,7 @@ public class MultipleChoise extends Question {
 
 	@Override
 	public boolean isCorrectAnswer(String answer) {
-		return possibleChoises[correctAnswerIndex].equals(answer);
+		return possibleChoises.get(correctAnswerIndex).equals(answer);
 	}
 
 }

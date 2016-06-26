@@ -6,7 +6,7 @@ public class Quiz {
 
 	private String name;
 	private String description;
-	private User creator;
+	private String creator;
 	private Date creationDate;
 	private String category;
 	private double summaryStatistics;
@@ -47,11 +47,11 @@ public class Quiz {
 		return description;
 	}
 	
-	public User getCreator() {
+	public String getCreator() {
 		return creator;
 	}
 
-	public void setCreator(User creator) {
+	public void setCreator(String creator) {
 		this.creator = creator;
 	}
 	

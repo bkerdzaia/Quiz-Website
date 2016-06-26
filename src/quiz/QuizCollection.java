@@ -3,6 +3,4 @@ package quiz;
 import java.util.*;
 
 @SuppressWarnings("serial")
-public class QuizCollection extends ArrayList<Quiz> {
-	
-}
+public class QuizCollection extends ArrayList<String> {}
