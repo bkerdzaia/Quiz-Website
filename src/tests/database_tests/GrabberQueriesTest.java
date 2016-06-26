@@ -201,7 +201,8 @@ public class GrabberQueriesTest {
 		correct1.add("perfect");
 		Set<String> correct2 = new HashSet<String>();
 		correct2.add("wonderful");
-		ArrayList<String> choises = (ArrayList<String>) Arrays.asList(new String[]{"a", "b", "c"});
+		ArrayList<String> choises = new ArrayList<String>(
+				Arrays.asList(new String[]{"a", "b", "c"}));
 		
 		QuestionResponce qr = questFactory.getQuestionResponceQuestion();
 		qr.setQuestionText("Whats up");
@@ -223,7 +224,27 @@ public class GrabberQueriesTest {
 		sample.setDescription("descr");
 		sample.setName("name");
 		sample.setProperty(prop);
+		QuizQuestions questions = new QuizQuestions();
+		questions.add(qr);
+		questions.add(pr);
+		questions.add(mch);
+		sample.setQuestions(questions);
 
+		// The moment of truth
+		dbGrabber.uploadQuiz(sample);
+		
+		Quiz sameQuiz = dbGrabber.loadQuiz("name");
+		assertNotNull(sameQuiz);
+		assertEquals("Sam", sameQuiz.getCreator());
+		assertEquals("descr", sameQuiz.getDescription());
+		QuizProperty sameProp = sameQuiz.getProperty();
+		assertEquals(prop.isInstantlyMarked(), sameProp.isInstantlyMarked());
+		assertEquals(prop.isRandomSeq(), sameProp.isRandomSeq());
+	
+		// Test question-response
+		QuizQuestions sameQuestions = sameQuiz.getQuestions();
+		assertEquals(3, sameQuestions.size());
 	}
+
 
 }

@@ -347,7 +347,7 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`multiple_choise_answers` (
 
   `problem_id`                    INT             NOT NULL, # FK
   `answer`                        TEXT            NOT NULL,
-  `is_correct`                    ENUM('0','1')   NOT NULL,
+  `is_correct`                    BIT             NOT NULL,
 
   /* Indexing foreign keys */
   INDEX `fk_answer_to_multiple_choise_problem_idx` (`problem_id` ASC),
@@ -389,8 +389,8 @@ COMMENT = 'Stores problems of type "Picture-response".';
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`picture_response_correct_answers` (
 
-  `problem_id`   INT    NOT NULL,
-  `answer`       TEXT   NOT NULL,
+  `problem_id`           INT    NOT NULL,
+  `correct_answer`       TEXT   NOT NULL,
 
   /* Indexing foreign keys */
   INDEX `correct_answer_to_picture_response_idx` (`problem_id` ASC),

@@ -250,7 +250,7 @@ public class DefaultDatabaseGrabber implements
 		String sqlAddMultChoiseQuestion = 
 				"INSERT INTO multiple_choise " + 
 					"VALUES(NULL," + "'" + quizName + "','" + 
-						curQuestion.getQuestionText() + "'," + position + ";";
+						curQuestion.getQuestionText() + "'," + position + ");";
 		stmt.executeUpdate(sqlAddMultChoiseQuestion);
 		// Now add answers to corresponding table
 		int questionId = getLastAutoIncrement(stmt);
@@ -258,7 +258,7 @@ public class DefaultDatabaseGrabber implements
 			String sqlAddChoise = 
 					"INSERT INTO multiple_choise_answers " + 
 						"VALUES(" + questionId + ",'" + possibleAnswer + "'," + 
-							curQuestion.isCorrectAnswer(possibleAnswer) + ";";
+							curQuestion.isCorrectAnswer(possibleAnswer) + ");";
 			stmt.executeUpdate(sqlAddChoise);
 		}
 		stmt.close();
@@ -266,7 +266,6 @@ public class DefaultDatabaseGrabber implements
 
 
 	private int getLastAutoIncrement(Statement stmt) throws SQLException {
-		//Statement stmt = conHandler.getConnection().createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID();");
 		rs.next();
 		return rs.getInt(1); // Only one column (id)
@@ -280,14 +279,14 @@ public class DefaultDatabaseGrabber implements
 		String sqlAddPictureResponseQuestion = 
 				"INSERT INTO picture_response " +
 					"VALUES(NULL," + "'" + quizName + "','" + curQuestion.getQuestionText() +
-					"','" + curQuestion.getPictureUrl() + "," + position + ";";
+					"','" + curQuestion.getPictureUrl() + "'," + position + ");";
 		stmt.executeUpdate(sqlAddPictureResponseQuestion);
 		// Add answers
 		int questionId = getLastAutoIncrement(stmt);
 		for (String correctAnswer : curQuestion.getCorrectAnswers()){
 			String sqlAddCorrect = 
 					"INSERT INTO picture_response_correct_answers " + 
-						"VALUES(" + questionId + ",'" + correctAnswer + "';";
+						"VALUES(" + questionId + ",'" + correctAnswer + "');";
 			stmt.executeUpdate(sqlAddCorrect);
 		}
 		stmt.close();
@@ -301,14 +300,14 @@ public class DefaultDatabaseGrabber implements
 		String sqlAddQuestionResponce = 
 				"INSERT INTO question_response " + 
 					"VALUES(NULL,'" + curQuestion.getQuestionText() + "','" +
-						quizName + "'," + position + ";";
+						quizName + "'," + position + ");";
 		stmt.executeUpdate(sqlAddQuestionResponce);
 		// Populate answers
 		int questionId = getLastAutoIncrement(stmt);
 		for (String correctAnswer : curQuestion.getCorrectAnswers()){
 			String sqlAddCorrect = 
 					"INSERT INTO question_response_correct_answers " + 
-						"VALUES(" + questionId + ",'" + correctAnswer + "';"; 
+						"VALUES(" + questionId + ",'" + correctAnswer + "');"; 
 			stmt.executeUpdate(sqlAddCorrect);
 		}
 		stmt.close();
@@ -394,7 +393,7 @@ public class DefaultDatabaseGrabber implements
 			// Add answers
 			int id = rs.getInt(PICTURE_RESPONSE.PROBLEM_ID.num());
 			curQuestion.setCorrectAnswers(
-					collectAnswers("picture_response", id));
+					collectAnswers("picture_response_correct_answers", id));
 			questions.add(curQuestion);
 		}
 		return questions;
