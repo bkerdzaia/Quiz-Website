@@ -1,6 +1,5 @@
 SET FOREIGN_KEY_CHECKS=0;
 TRUNCATE TABLE `users`;
-TRUNCATE TABLE `quiz_categories`;
 TRUNCATE TABLE `quizzes`;
 TRUNCATE TABLE `quizzes_taken`;
 TRUNCATE TABLE `friends`;

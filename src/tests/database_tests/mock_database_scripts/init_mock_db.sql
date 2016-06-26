@@ -62,11 +62,11 @@ COMMENT = 'Stores thematic categories, e.g. Geograpy, Math...';
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`quizzes` (
 
   `quiz_name`           CHARACTER(45)  NOT NULL,
-  `creation_date`       DATE           NOT NULL,
+  `creation_date`       TIMESTAMP      NOT NULL,
   `quiz_creator`        CHARACTER(45)  NOT NULL,  # FK 
-  `random_order`        ENUM('0','1')  NOT NULL,  # ENUM('0', '1')
-  `instant_correction`  ENUM('0','1')  NOT NULL,  # is just a way
-  `one_mult_page`       ENUM('0','1')  NOT NULL,  # of storing booleans
+  `random_order`        BIT            NOT NULL,  # 
+  `instant_correction`  BIT            NOT NULL,  # is just a way
+  `one_mult_page`       BIT            NOT NULL,  # of storing booleans
   `quiz_description`    TEXT           NULL,      # creator supplied
 
   PRIMARY KEY (`quiz_name`),
@@ -277,7 +277,9 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`fill_in_blank` (
   `problem_id`        INT               NOT NULL AUTO_INCREMENT,
   `question`          TEXT              NOT NULL,
   `quiz_name`         CHARACTER(45)     NOT NULL,
+  `field_position`    INT               NOT NULL,
   `rel_position`      INT,     # may be null in case of random order
+  
 
   PRIMARY KEY (`problem_id`),
 
