@@ -6,6 +6,13 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -16,6 +23,12 @@ import factory.DatabaseFactory;
 import factory.DefaultQuestionFactory;
 import factory.DefaultQuizFactory;
 import factory.DefaultUserFactory;
+import factory.QuestionFactory;
+import questions.FillBlank;
+import quiz.Quiz;
+import quiz.QuizPerformance;
+import quiz.QuizProperty;
+import quiz.QuizQuestions;
 import quiz.User;
 
 /**
@@ -73,7 +86,7 @@ public class GrabberQueriesTest {
 		dbGrabber.close();
 	}
 
-
+/*
 	// Tests empty database not to contain particular entry.
 	@Test
 	public void emptyDatabase() throws SQLException, IOException {
@@ -104,10 +117,11 @@ public class GrabberQueriesTest {
 		assertEquals("bla1", david.getPasswordHash());
 		assertEquals("bla2", sandro.getPasswordHash());
 		assertEquals("bla3", baduri.getPasswordHash());
-		// Assert other parameters to be 'null'
+		// Assert other parameters to be empty
 		assertNull(david.getAboutMe());
-		assertNull(sandro.getHistory());
-		assertNull(baduri.getHistory());
+		assertFalse(sandro.getHistory().iterator().hasNext());
+		assertFalse(baduri.getHistory().iterator().hasNext());
+		assertFalse(david.getCreatedQuizzes().iterator().hasNext());
 		// Now try to register again same users
 		assertFalse(dbGrabber.registerUser("David", "bla1"));
 		assertFalse(dbGrabber.registerUser("Sandro", "different"));
@@ -128,6 +142,47 @@ public class GrabberQueriesTest {
 		// pass wrong credentials
 		assertNull(dbGrabber.authenticateUser("Armando", "12345"));
 		assertNull(dbGrabber.authenticateUser("Sam", "1234"));
+		dbGrabber.close();
+	}
+*/	
+	// Tests uploading/dowloading quiz from database.
+	@Test
+	public void quizTest() throws SQLException{
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		QuestionFactory questFactory = DefaultQuestionFactory.getFactoryInstance();
+		dbGrabber.connect();
+		dbGrabber.registerUser("Sam", "123");
+		// Create quiz with two 'FillInBlank' questions.
+		Quiz sampleQuiz = new Quiz();
+		sampleQuiz.setCreationDate(new Timestamp(new Date().getTime()));
+		sampleQuiz.setCreator("Sam");
+		sampleQuiz.setDescription("abcd");
+		sampleQuiz.setName("abc");
+		QuizProperty prop = new QuizProperty(true, true, true);
+		sampleQuiz.setProperty(prop);
+		FillBlank fb1 = questFactory.getFillBlankQuestion();
+		FillBlank fb2 = fb1; // shallow copy
+		fb1.setQuestionText("??");
+		fb1.setFieldPositionIndex(2);
+		Set<String> ans = new HashSet<String>();
+		ans.add("!!");
+		ans.add("ee");
+		fb1.setCorrectAnswers(ans);
+		QuizQuestions questions = new QuizQuestions();
+		questions.add(fb1);
+		questions.add(fb2);
+		sampleQuiz.setQuestions(questions);
+		// Testing
+		assertTrue(dbGrabber.uploadQuiz(sampleQuiz));
+		assertNull(dbGrabber.loadQuiz("doesntexist")); // some nonsential name
+		Quiz sameQuiz = dbGrabber.loadQuiz("abc");
+		assertNotNull(sameQuiz);
+		assertEquals("Sam", sameQuiz.getCreator());
+		assertEquals("abcd", sameQuiz.getDescription());
+		QuizProperty sameQuizProp = sameQuiz.getProperty();
+		assertEquals(true, sameQuizProp.isRandomSeq());
+		assertEquals(true, sameQuizProp.isInstantlyMarked());
+		assertEquals(true, sameQuizProp.isOnePage());
 		dbGrabber.close();
 	}
 
