@@ -4,10 +4,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import questions.*;
 import application.UIParameters;
 import factory.DatabaseFactory;
@@ -19,6 +26,7 @@ import quiz.Quiz;
 import quiz.QuizCollection;
 import quiz.QuizPerformance;
 import quiz.QuizProperty;
+import quiz.QuizQuestions;
 import quiz.User;
 import quiz.UserList;
 
@@ -173,11 +181,11 @@ public class DefaultDatabaseGrabber implements
 			QuizPerformance curPerformance = quizFactory.getQuizPerformance();
 			// And fill with corresponding values
 			curPerformance.setDate(rs.getDate(QUIZ_TAKEN.ATTEMPT_DATE.num()));
-			curPerformance.setAmountTime(rs.getTime(QUIZ_TAKEN.AMOUNT_TIME.num()));
+			curPerformance.setAmountTime(rs.getInt(QUIZ_TAKEN.AMOUNT_TIME.num()));
 			curPerformance.setPercentCorrect(rs.getInt(QUIZ_TAKEN.PERCENT_CORRECT.num()));
-			curPerformance.setQuiz(loadQuiz(rs.getString(QUIZ_TAKEN.QUIZ_NAME.num())));
+			curPerformance.setQuiz(rs.getString(QUIZ_TAKEN.QUIZ_NAME.num()));
 			// Add performance entry to history
-			userHistory.add(curPerformance);
+			userHistory.addPerformance(curPerformance);
 		}
 		return userHistory;
 	}
@@ -196,7 +204,7 @@ public class DefaultDatabaseGrabber implements
 		// Acquire new QuizCollection and start filling
 		QuizCollection createdQuizzes = quizFactory.getQuizCollection();
 		while (rs.next())
-			createdQuizzes.add(loadQuiz(rs.getString(1))); //there's only one column
+			createdQuizzes.add(rs.getString(1)); //there's only one column
 		return createdQuizzes;
 	}
 
@@ -208,13 +216,13 @@ public class DefaultDatabaseGrabber implements
 		if (quizAlredyInDatabase(quiz.getName())) return false;
 		// Upload quiz fields
 		QuizProperty prop = quiz.getProperty();
-		String creator = quiz.getCreator().getName();
+		String creator = quiz.getCreator();
 		String sqlNewQuiz = 
 				"INSERT INTO quizzes " + 
-				"VALUES ('" + quiz.getName() + "'," + quiz.getCreationDate() + "," +
+				"VALUES ('" + quiz.getName() + "','" + quiz.getCreationDate() + "'," +
 						 "'" + creator + "'," + prop.isRandomSeq() + "," + 
 						 prop.isInstantlyMarked() + "," + prop.isOnePage() + "," +
-						 "'" + quiz.getDescription() + "'";
+						 "'" + quiz.getDescription() + "');";
 		stmt.executeUpdate(sqlNewQuiz);
 		// Now populate question tables
 		int position = 0; // to keep track of question's position in quiz
@@ -245,21 +253,23 @@ public class DefaultDatabaseGrabber implements
 						curQuestion.getQuestionText() + "'," + position + ";";
 		stmt.executeUpdate(sqlAddMultChoiseQuestion);
 		// Now add answers to corresponding table
-		int questionId = getLastAutoIncrement();
+		int questionId = getLastAutoIncrement(stmt);
 		for (String possibleAnswer : curQuestion.getPossibleChoises()){
 			String sqlAddChoise = 
 					"INSERT INTO multiple_choise_answers " + 
 						"VALUES(" + questionId + ",'" + possibleAnswer + "'," + 
-							curQuestion.isCorrectAnswer(possibleAnswer);
+							curQuestion.isCorrectAnswer(possibleAnswer) + ";";
 			stmt.executeUpdate(sqlAddChoise);
 		}
 		stmt.close();
 	}
 
 
-	private int getLastAutoIncrement() throws SQLException {
-		Statement stmt = conHandler.getConnection().createStatement();
-		return stmt.executeQuery("SELECT LAST_INSERT_ID();").getInt(1);
+	private int getLastAutoIncrement(Statement stmt) throws SQLException {
+		//Statement stmt = conHandler.getConnection().createStatement();
+		ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID();");
+		rs.next();
+		return rs.getInt(1); // Only one column (id)
 	}
 
 
@@ -270,10 +280,10 @@ public class DefaultDatabaseGrabber implements
 		String sqlAddPictureResponseQuestion = 
 				"INSERT INTO picture_response " +
 					"VALUES(NULL," + "'" + quizName + "','" + curQuestion.getQuestionText() +
-					"','" + curQuestion.getPictureUrl() + "," + position;
+					"','" + curQuestion.getPictureUrl() + "," + position + ";";
 		stmt.executeUpdate(sqlAddPictureResponseQuestion);
 		// Add answers
-		int questionId = getLastAutoIncrement();
+		int questionId = getLastAutoIncrement(stmt);
 		for (String correctAnswer : curQuestion.getCorrectAnswers()){
 			String sqlAddCorrect = 
 					"INSERT INTO picture_response_correct_answers " + 
@@ -284,16 +294,45 @@ public class DefaultDatabaseGrabber implements
 	}
 
 
-	private void addQuestionResponce(Question question, int position, String quizName) throws SQLException{
-		// TODO Auto-generated method stub
-		
+	private void addQuestionResponce(Question question, int position, String quizName) 
+			throws SQLException{
+		Statement stmt = conHandler.getConnection().createStatement();
+		QuestionResponce curQuestion = (QuestionResponce) question;
+		String sqlAddQuestionResponce = 
+				"INSERT INTO question_response " + 
+					"VALUES(NULL,'" + curQuestion.getQuestionText() + "','" +
+						quizName + "'," + position + ";";
+		stmt.executeUpdate(sqlAddQuestionResponce);
+		// Populate answers
+		int questionId = getLastAutoIncrement(stmt);
+		for (String correctAnswer : curQuestion.getCorrectAnswers()){
+			String sqlAddCorrect = 
+					"INSERT INTO question_response_correct_answers " + 
+						"VALUES(" + questionId + ",'" + correctAnswer + "';"; 
+			stmt.executeUpdate(sqlAddCorrect);
+		}
+		stmt.close();
 	}
 
 
 	private void addFillBlank(Question question, int position, String quizName) 
 			throws SQLException {
-		// TODO Auto-generated method stub
-		
+		Statement stmt = conHandler.getConnection().createStatement();
+		FillBlank curQuestion = (FillBlank) question;
+		String sqlAddFillBlankQuestion = 
+				"INSERT INTO fill_in_blank " +
+					"VALUES(NULL,'" +  curQuestion.getQuestionText() + "','" + quizName + 
+					"'," + curQuestion.getFieldPositionIndex() + "," + position + ");";
+		stmt.executeUpdate(sqlAddFillBlankQuestion);
+		// Move on to answers
+		int questionId = getLastAutoIncrement(stmt);
+		for (String correctAnswer : curQuestion.getCorrectAnswers()){
+			String sqlAddCorrect = 
+						"INSERT INTO fill_in_blank_correct_answers " + 
+							"VALUES (" + questionId + ",'" + correctAnswer + "');";
+			stmt.executeUpdate(sqlAddCorrect);
+		}
+		stmt.close();
 	}
 
 
@@ -304,7 +343,7 @@ public class DefaultDatabaseGrabber implements
 		String sqlQuizWithSameName = 
 				"SELECT * FROM quizzes " +
 				"WHERE quiz_name = " + "'" + quizName + "';";
-		return (!stmt.executeQuery(sqlQuizWithSameName).next());
+		return (stmt.executeQuery(sqlQuizWithSameName).next());
 	}
 
 
@@ -314,7 +353,7 @@ public class DefaultDatabaseGrabber implements
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlGetQuiz =
 				"SELECT * FROM quizzes " +
-				"wHERE quizname = " + "'" + quizName + "';";
+				"WHERE quiz_name = " + "'" + quizName + "';";
 		ResultSet rs = stmt.executeQuery(sqlGetQuiz);
 		// If doesn't exist, return null
 		if (!rs.next())
@@ -323,10 +362,133 @@ public class DefaultDatabaseGrabber implements
 		// Fill quiz bean
 		retrievedQuiz.setName(rs.getString(QUIZ.QUIZ_NAME.num()));
 		retrievedQuiz.setDescription(rs.getString(QUIZ.QUIZ_DESCRIPTION.num()));
-		// TODO Complex fields are empty !!
+		retrievedQuiz.setCreationDate(rs.getTimestamp(QUIZ.DATE_CREATION.num()));
+		retrievedQuiz.setCreator(rs.getString(QUIZ.CREATOR_NAME.num()));
+		// Fill property bean
+		QuizProperty prop = quizFactory.getQuizProperty();
+		prop.setInstantCorrection(rs.getBoolean(QUIZ.INSTANT_CORRECTION.num()));
+		prop.setRandomQuestion(rs.getBoolean(QUIZ.RANDOM_ORDER.num()));
+		prop.setOnePage(rs.getBoolean(QUIZ.ONE_MULTIPLE_PAGE_MODE.num()));
+		retrievedQuiz.setProperty(prop);
+		// Collect questions
+		QuizQuestions questions = quizFactory.getQuizQuestions();
+		questions.addAll(collectQuestionResponse(quizName));
+		questions.addAll(collectFillBlank(quizName));
+		questions.addAll(collectMultipleChoise(quizName));
+		questions.addAll(collectPictureResponse(quizName));
+		// Add question to retrivedQuiz
+		retrievedQuiz.setQuestions(questions);
 		return retrievedQuiz;
 	}
 
+
+	private QuizQuestions collectPictureResponse(String quizName) 
+			throws SQLException {
+		ResultSet rs = getQuestionsOfQuiz("picture_response", quizName);
+		QuizQuestions questions = quizFactory.getQuizQuestions();
+		while (rs.next()){
+			// Create new question and fill
+			PictureResponse curQuestion = questionFactory.getPictureResponseQuestion();
+			curQuestion.setQuestionText(rs.getString(PICTURE_RESPONSE.QUESTION.num()));
+			curQuestion.setPictureUrl(rs.getString(PICTURE_RESPONSE.IMAGE_URL.num()));
+			// Add answers
+			int id = rs.getInt(PICTURE_RESPONSE.PROBLEM_ID.num());
+			curQuestion.setCorrectAnswers(
+					collectAnswers("picture_response", id));
+			questions.add(curQuestion);
+		}
+		return questions;
+	}
+
+
+	private QuizQuestions collectMultipleChoise(String quizName) 
+			throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		ResultSet rs = getQuestionsOfQuiz("picture_response", quizName);
+		QuizQuestions questions = quizFactory.getQuizQuestions();
+		while (rs.next()){
+			// Create new question, filling corresponding fields
+			MultipleChoise curQuestion = questionFactory.getMultipleChoiseQuestion();
+			curQuestion.setQuestionText(rs.getString(MULTIPLE_CHOISE.QUESTION.num()));
+			int id = rs.getInt(MULTIPLE_CHOISE.PROBLEM_ID.num());
+			String sqlPossibleChoises = 
+					"SELECT answer, is_correct FROM multiple_choise_answers " + 
+					"WHERE problem_id = " + id + ";";
+			ResultSet choisesRS = stmt.executeQuery(sqlPossibleChoises);
+			ArrayList<String> toStore = new ArrayList<String>();
+			int correctIndex = -1;
+			while (choisesRS.next()){
+				toStore.add(choisesRS.getString(1)); // answer column
+				if (choisesRS.getBoolean(2)) correctIndex = choisesRS.getRow() - 1; 
+			}
+			// Add the evaluated data about possible choises and correct one
+			curQuestion.setPossibleChoises(toStore);
+			curQuestion.setCorrectAnswerIndex(correctIndex);
+			questions.add(curQuestion);
+		}
+		return questions;
+	}
+
+
+	private List<Question> collectFillBlank(String quizName) 
+			throws SQLException{
+		ResultSet rs = getQuestionsOfQuiz("fill_in_blank", quizName);
+		QuizQuestions questions = quizFactory.getQuizQuestions();
+		while (rs.next()){
+			// Create new question and fill the bean
+			FillBlank curQuestion = questionFactory.getFillBlankQuestion();
+			curQuestion.setQuestionText(rs.getString(FILL_BLANK.QUESTION.num()));
+			// Add answers
+			int id = rs.getInt(FILL_BLANK.PROBLEM_ID.num());
+			curQuestion.setCorrectAnswers(
+					collectAnswers("fill_in_blank_correct_answers", id));
+			questions.add(curQuestion);
+		}
+		return questions;
+	}
+
+
+	private QuizQuestions collectQuestionResponse(String quizName) 
+			throws SQLException {
+		ResultSet rs = getQuestionsOfQuiz("question_response", quizName);
+		QuizQuestions questions = quizFactory.getQuizQuestions(); 
+		while (rs.next()){
+			// Get new Question-response object and start filling
+			QuestionResponce curQuestion = questionFactory.getQuestionResponceQuestion();
+			curQuestion.setQuestionText(rs.getString(QUESTION_RESPONSE.QUESTION.num()));
+			// Add answers
+			int id = rs.getInt(QUESTION_RESPONSE.PROBLEM_ID.num());
+			curQuestion.setCorrectAnswers(
+				collectAnswers("question_response_correct_answers", id));
+			questions.add(curQuestion);
+		}
+		return questions;
+	}
+
+	private ResultSet getQuestionsOfQuiz(String table, String quizName) 
+			throws SQLException{
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlRetrieveQuestionResponse = 
+				"SELECT * FROM " + table + " " + 
+				"WHERE quiz_name = '" + quizName + "' " + 
+				"ORDER BY rel_position ;";
+		return stmt.executeQuery(sqlRetrieveQuestionResponse);	
+	}
+
+	private Set<String> collectAnswers(String table, int id) 
+			throws SQLException{
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlAnswers = 
+				"SELECT correct_answer FROM " + table + " " + 
+				"WHERE problem_id = " + id + ";";
+		ResultSet rs = stmt.executeQuery(sqlAnswers);
+		Set<String> answers = new HashSet<String>();
+		while (rs.next()){
+			answers.add(rs.getString(1)); // correct_answer column
+		}
+		stmt.close();
+		return answers;
+	}
 
 	@Override
 	public QuizCollection getPopularQuizzes() throws SQLException {
@@ -342,26 +504,26 @@ public class DefaultDatabaseGrabber implements
 		// Create quiz collection and starting filling
 		QuizCollection popularQuizzes = quizFactory.getQuizCollection();
 		while (rs.next())
-			popularQuizzes.add(loadQuiz(rs.getString(1))); // name column
+			popularQuizzes.add(rs.getString(1)); // name column
 		return popularQuizzes;
 	}
 
-
+	// Returns list of recently created quizzes
 	@Override
 	public QuizCollection getRecentlyCreatedQuizzes() throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlRecentCreatedQuizzes = 
-				"SELECT * FROM quizzes " +
+				"SELECT quiz_name FROM quizzes " +
 				"SORT BY creation_date DESC " + 
 				"LIMIT " + MAX_RECENTRY_CREATED_QUIZZES + ";";
 		ResultSet rs = stmt.executeQuery(sqlRecentCreatedQuizzes);
 		QuizCollection recentQuizzes = quizFactory.getQuizCollection();
 		while (rs.next())
-			recentQuizzes.add(loadQuiz(rs.getString(QUIZ.QUIZ_NAME.num())));
+			recentQuizzes.add(rs.getString(1)); // quizName column
 		return recentQuizzes;
 	}
 
-
+	// Returns list of recent quiz takers
 	@Override
 	public UserList getRecentTestTakers(String quizName, Date date) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
@@ -373,11 +535,12 @@ public class DefaultDatabaseGrabber implements
 						"users.user_id = quizzes_taken.user_id " +
 						" AND " +
 						"attempt_date > " + date + " " +
-				"ORDER BY attempt_date DESC";
+				"ORDER BY attempt_date DESC " + 
+				"LIMIT " + MAX_RECENT_TAKERS + ";";
 		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
 		UserList recentTakers = userFactory.getUserList();
 		while (rs.next())
-			recentTakers.add(loadUser(rs.getString(1)));
+			recentTakers.add(rs.getString(1)); // username column
 		return recentTakers;
 	}
 
@@ -394,11 +557,12 @@ public class DefaultDatabaseGrabber implements
 						"users.user_id = quizzes_taken.user_id " +
 						" AND " +
 						"attempt_date > " + date + " " +
-				"ORDER BY score DESC";
+				"ORDER BY score DESC " + 
+				"LIMIT " + MAX_HIGHEST_PERFORMERS + ";";
 		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
 		UserList highestPerformers = userFactory.getUserList();
 		while (rs.next())
-			highestPerformers.add(loadUser(rs.getString(USER.USERNAME.num())));
+			highestPerformers.add(rs.getString(1)); // username column
 		return highestPerformers;
 	}
 

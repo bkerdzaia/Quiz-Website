@@ -5,7 +5,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import factory.*;
+import factory.DatabaseFactory;
 
 /**
  * Application Lifecycle Listener implementation class DatabaseListener
@@ -28,7 +28,7 @@ public class DatabaseListener implements ServletContextListener {
      */
     public void contextDestroyed(ServletContextEvent arg0)  { 
          ServletContext contex =  arg0.getServletContext();
-         contex.setAttribute(ATTRIBUTE_NAME, DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber());
+         // contex.setAttribute(ATTRIBUTE_NAME, DatabaseFactory.getDatabase());
     }
 
 	/**

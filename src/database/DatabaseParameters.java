@@ -1,7 +1,5 @@
 package database;
 
-import PrivateSection.DBPassword;
-
 /**
  * @author dav23r
  * Stores various parameters such as MYSQL login,
@@ -13,10 +11,10 @@ import PrivateSection.DBPassword;
 public interface DatabaseParameters {
 
 	/* Server-related constants */
-	public static final String SERVER_ADDRESS = "localhost:3306";
+	public static final String SERVER_ADDRESS = "localhost";
 	public static final String SCHEMA_NAME = "QuizWebsite";
 	public static final String LOGIN = "root";
-	public static final String PASSWORD = DBPassword.PASSWORD; 
+	public static final String PASSWORD = "xp4m4dav"; 
 	public static final String DRIVER_NAME = "com.mysql.jdbc.Driver";
 	public static final String NO_SSL = "?useSSL=no";
 	
@@ -71,8 +69,56 @@ public interface DatabaseParameters {
 		private int index;
 		private QUIZ_TAKEN(int num) { index = num; }
 		public int num() { return index; }
-
 	}
 		
+	// 'Question_response' columns enumeration
+	public enum QUESTION_RESPONSE{
+		PROBLEM_ID    		(1),         
+		QUESTION            (2),   
+		QUIZ_NAME           (3),   
+		REL_POSITION       	(4);
+		
+		private int index;
+		private QUESTION_RESPONSE(int num) { index = num; }
+		public int num() { return index; }
+	}
+	
+	// 'Fill in blank' columns enumeration
+	public enum FILL_BLANK{
+		PROBLEM_ID    		(1),         
+		QUESTION            (2),   
+		QUIZ_NAME           (3),
+		FIELD_POSITION 		(4),
+		REL_POSITION       	(5);
+		
+		private int index;
+		private FILL_BLANK(int num) { index = num; }
+		public int num() { return index; }
+	}
+	
+	// 'Picture response' columns enumeration
+	public enum PICTURE_RESPONSE{
+		PROBLEM_ID    		(1),         
+		QUIZ_NAME           (2),
+		QUESTION            (3),   
+		IMAGE_URL			(4),
+		REL_POSITION       	(5);
+		
+		private int index;
+		private PICTURE_RESPONSE(int num) { index = num; }
+		public int num() { return index; }
+	}
+
+	// 'Multiple choise' columns enumeration
+	public enum MULTIPLE_CHOISE{
+		PROBLEM_ID    		(1),         
+		QUIZ_NAME           (2),
+		QUESTION            (3),   
+		REL_POSITION       	(4);
+		
+		private int index;
+		private MULTIPLE_CHOISE(int num) { index = num; }
+		public int num() { return index; }
+	}
 	
 }
