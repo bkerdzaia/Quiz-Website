@@ -1,7 +1,6 @@
-<%@page import="questions.QuestionType"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="application.*, quiz.*"%>
+<%@ page import="application.*, quiz.*, questions.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -16,16 +15,16 @@
 		Quiz quiz = (Quiz) session.getAttribute("quizName");
 		QuizQuestions questions = quiz.getQuestions();
 		int questionIndex = Integer.parseInt(request.getParameter("question"));
-		QuestionType question = questions.get(questionIndex - 1);
+		Question question = questions.get(questionIndex - 1);
 	%>
 	
-	<p>Question is: <b><%= question.getQuestion() %></b></p>
+	<p>Question is: <b><%= question.getQuestionText() %></b></p>
 	<p>Possible answers are: <b>
-	<% 
+	<%-- 
 		for(String answer : question.getPossibleAnswers()) {
 			out.println("<p>" + answer + "</p>");
 		}
-	%></b></p>
+	--%></b></p>
 	
 	<%
 		if (questions.size() > questionIndex - 1) {

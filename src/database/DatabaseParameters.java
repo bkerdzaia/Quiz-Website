@@ -11,7 +11,7 @@ package database;
 public interface DatabaseParameters {
 
 	/* Server-related constants */
-	public static final String SERVER_ADDRESS = "localhost";
+	public static final String SERVER_ADDRESS = "localhost:3306";
 	public static final String SCHEMA_NAME = "QuizWebsite";
 	public static final String LOGIN = "root";
 	public static final String PASSWORD = "xp4m4dav"; 

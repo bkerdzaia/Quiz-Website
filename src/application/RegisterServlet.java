@@ -1,12 +1,15 @@
 package application;
 
 import java.io.*;
+import java.sql.SQLException;
+
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
-import factory.UserFactory;
-import quiz.User;
+import database.*;
+import factory.*;
+import quiz.*;
 
 /**
  * Servlet implementation class RegisterServlet
@@ -25,19 +28,22 @@ public class RegisterServlet extends HttpServlet {
 		System.out.println("register servlet");
 		String name = request.getParameter("userName");
 		String password = request.getParameter("password");
-		Encryption encryption = UserFactory.getEncryption();
+		Encryption encryption = new Encryption();
 		String encryptPassword = encryption.encrypt(password);
-		Database db = (Database) request.getServletContext().getAttribute(DatabaseListener.ATTRIBUTE_NAME);
-		db.connect();
+		DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DatabaseListener.ATTRIBUTE_NAME);
 		String address = "login.html";
-		if (!db.findUser(name, encryptPassword)) {
-			User newUser = UserFactory.getUser();
-			newUser.setName(name);
-			newUser.setPassword(encryptPassword);
-			newUser.setHistory(UserFactory.getHistory());
-			address = "homepage.jsp?name=" + name;
-		}
-		db.close();
+		try {
+			db.connect();
+			User user = db.authenticateUser(name, encryptPassword);
+			if (user == null) {
+				User newUser = DefaultUserFactory.getFactoryInstance().getUser();
+				newUser.setName(name);
+				newUser.setPasswordHash(encryptPassword);
+				db.registerUser(name, encryptPassword);
+				address = "homepage.jsp?name=" + name;
+			}
+			db.close();
+		} catch (SQLException e) {}
 		RequestDispatcher dispatcher = request.getRequestDispatcher(address);
 		dispatcher.forward(request, response);
 	}
