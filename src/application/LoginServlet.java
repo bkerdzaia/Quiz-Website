@@ -48,14 +48,10 @@ public class LoginServlet extends HttpServlet {
 				QuizCollection recentlyCreatedQuiz = db.getRecentlyCreatedQuizzes();
 				session.setAttribute("recentQuizzes", recentlyCreatedQuiz);
 				address = "homepage.jsp?name=" + name;
-				System.out.println("user isn't null: " + user + " name: " + name + " pass: " + password);
-			} else {
-				
-				System.out.println("user is null: " + user);
-			}
+			} 
 			db.close();
-//			RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-//			dispatcher.forward(request, response);
+			RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+			dispatcher.forward(request, response);
 		} catch (SQLException e) {
 			System.out.println("exception: " + e);
 		}
