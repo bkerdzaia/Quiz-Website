@@ -44,6 +44,10 @@ public class RegisterServlet extends HttpServlet {
 				user = DefaultUserFactory.getFactoryInstance().getUser();
 				user.setName(name);
 				user.setPasswordHash(encryptPassword);
+				user.setHistory(DefaultUserFactory.getFactoryInstance().getHistory());
+				user.setMessages(DefaultUserFactory.getFactoryInstance().getMessageList());
+				user.setCreatedQuizzes(DefaultQuizFactory.getFactoryInstance().getQuizCollection());
+				user.setFriends(DefaultUserFactory.getFactoryInstance().getFriendList());
 				session.setAttribute("userName", user);
 				QuizCollection popularQuizzes = db.getPopularQuizzes();
 				session.setAttribute("popularQuizzes", popularQuizzes);

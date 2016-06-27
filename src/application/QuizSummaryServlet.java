@@ -2,8 +2,6 @@ package application;
 
 import java.io.*;
 import java.sql.SQLException;
-import java.util.Date;
-
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
@@ -25,6 +23,7 @@ public class QuizSummaryServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		System.out.println("quiz summary page");
 		DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DatabaseListener.ATTRIBUTE_NAME);
 		if (db == null) {
 			db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
@@ -35,8 +34,15 @@ public class QuizSummaryServlet extends HttpServlet {
 			db.connect();
 			String quizName = request.getParameter("name");
 			Quiz quiz = db.loadQuiz(quizName);
+			if (quiz == null) {
+				quiz = new Quiz();
+				quiz.setCreator("go");
+				quiz.setDescription("description");
+				quiz.setName(quizName);
+				quiz.setSummaryStatistics(0);
+			}
+			System.out.println("quizname: "+ quizName);
 			session.setAttribute("quizName", quiz);
-			System.out.println("quiz: " + quiz);
 			UserList highestPerformers = db.highestPerformers(quizName, null);
 			UserList topPerformersLastDay = db.highestPerformers(quizName, null);
 			UserList recentPerformers = db.getRecentTestTakers(quizName, null);
