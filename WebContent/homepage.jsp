@@ -28,8 +28,7 @@
 		}
 	%>
 
-	<p>Hello ${param.name}</p>
-	<p><b>user name: <%= user.getName() %></b></p>
+	<p><b>Hello ${param.name}</b></p>
 
 	<div>
 		<p>list of popular quizzes</p>

@@ -25,16 +25,19 @@ public class RegisterServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		System.out.println("register servlet");
-		String name = request.getParameter("userName");
-		String password = request.getParameter("password");
-		Encryption encryption = new Encryption();
-		String encryptPassword = encryption.encrypt(password);
+//		System.out.println("register servlet");
 		DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DatabaseListener.ATTRIBUTE_NAME);
 		if (db == null) {
 			db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
 			request.getServletContext().setAttribute(DatabaseListener.ATTRIBUTE_NAME, db);
 		}
+
+		
+		String name = request.getParameter("userName");
+		String password = request.getParameter("password");
+		Encryption encryption = new Encryption();
+		String encryptPassword = encryption.encrypt(password);
+		
 		HttpSession session = request.getSession();
 		String address = "login.html";
 		try {

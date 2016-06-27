@@ -31,24 +31,33 @@ public class LoginServlet extends HttpServlet {
 			db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
 			request.getServletContext().setAttribute(DatabaseListener.ATTRIBUTE_NAME, db);
 		}
+	
 		// read all information and pass home page as session
 		HttpSession session = request.getSession();
 		try {
 			db.connect();
 			String name = request.getParameter("userName");
-			String password = request.getParameter("password");
 			Encryption encryption = new Encryption();
-			String encryptPassword = encryption.encrypt(password);
+			String encryptPassword = encryption.encrypt(request.getParameter("password"));
 			User user = db.authenticateUser(name, encryptPassword);
-			String address = "login.html";
-			if(user != null) {
+			String address = "login.html";			
+			if(request.getParameter("register") != null){
+				user = DefaultUserFactory.getFactoryInstance().getUser();
+				user.setName(name);
+				user.setPasswordHash(encryptPassword);
+				user.setHistory(DefaultUserFactory.getFactoryInstance().getHistory());
+				user.setMessages(DefaultUserFactory.getFactoryInstance().getMessageList());
+				user.setCreatedQuizzes(DefaultQuizFactory.getFactoryInstance().getQuizCollection());
+				user.setFriends(DefaultUserFactory.getFactoryInstance().getFriendList());
+			}
+			if(user!=null){
 				session.setAttribute("userName", user);
 				QuizCollection popularQuizzes = db.getPopularQuizzes();
 				session.setAttribute("popularQuizzes", popularQuizzes);
 				QuizCollection recentlyCreatedQuiz = db.getRecentlyCreatedQuizzes();
 				session.setAttribute("recentQuizzes", recentlyCreatedQuiz);
 				address = "homepage.jsp?name=" + name;
-			} 
+			}
 			db.close();
 			RequestDispatcher dispatcher = request.getRequestDispatcher(address);
 			dispatcher.forward(request, response);
