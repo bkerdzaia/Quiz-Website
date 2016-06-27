@@ -577,17 +577,13 @@ public class DefaultDatabaseGrabber implements
 
 	// Returns list of highest performer user for particular quiz, starting from given date
 	@Override
-	public UserList highestPerformers(String quizName, Timestamp date) throws SQLException {
+	public UserList getHighestPerformers(String quizName, Timestamp date) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlUserJoinQuizzes = 
-				"SELECT users.username FROM users " +
-					"JOIN quizzes_taken ON " +
-						"quiz_name = " + quizName +
-						" AND " +
-						"users.user_id = quizzes_taken.user_id " +
-						" AND " +
-						"attempt_date > " + date + " " +
-				"ORDER BY score DESC " + 
+				"SELECT username FROM quizzes_taken " +
+				"WHERE quiz_name = '" + quizName + "' " + 
+					"AND attempt_date > '" + date + "' " +
+				"ORDER BY percent_correct DESC " + 
 				"LIMIT " + MAX_HIGHEST_PERFORMERS + ";";
 		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
 		UserList highestPerformers = userFactory.getUserList();

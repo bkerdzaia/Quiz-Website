@@ -82,6 +82,15 @@ public class GrabberQueriesTest {
 				return new MockDatabaseConnectionHandler();
 			}
 		};
+	}
+
+	
+	// Empty all tables to make clear state for each test.
+	@Before
+	public void setUp() throws Exception {
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		dbGrabber.connect();
+		dbGrabber.truncateDatabase();
 		
 		// Populate sample quiz and sample user with values
 		sampleUser = new User();
@@ -96,18 +105,10 @@ public class GrabberQueriesTest {
 		sampleQuiz.setSummaryStatistics(0);
 		sampleQuiz.setQuestions(new QuizQuestions());
 		sampleQuiz.setName("samsfirst");
-	}
-
-	
-	// Empty all tables to make clear state for each test.
-	@Before
-	public void setUp() throws Exception {
-		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
-		dbGrabber.connect();
-		dbGrabber.truncateDatabase();
 		dbGrabber.close();
 	}
- /* 
+
+  
 	// Tests empty database not to contain particular entry.
 	@Test
 	public void emptyDatabase() throws SQLException, IOException {
@@ -277,7 +278,7 @@ public class GrabberQueriesTest {
 		dbGrabber.deleteQuiz("name");
 		assertNull(dbGrabber.loadQuiz("name"));
 	}
-*/
+
 	/* Helper method for determining whether two sets contain same elements */
 	private boolean setsEqual(Set<String> firstSet, Set<String> secondSet) {
 		if (firstSet.size() != secondSet.size())
@@ -289,7 +290,7 @@ public class GrabberQueriesTest {
 		}
 		return true;
 	}
-/*
+
 	@Test
 	public void testGetCreatedQuizzes() throws SQLException{
 		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
@@ -322,7 +323,7 @@ public class GrabberQueriesTest {
 		assertEquals("samsfirst", sams.get(0));
 		assertEquals("samssecond", sams.get(1));
 	}
-*/	
+	
 	
 	@Test
 	public void testStoreAttempt() throws SQLException {
@@ -355,17 +356,36 @@ public class GrabberQueriesTest {
 		dbGrabber.connect();
 		assertEquals(0, dbGrabber.getPopularQuizzes().size());
 		dbGrabber.registerUser("sam", "12");
-		dbGrabber.uploadQuiz(sampleQuiz);
+		assertTrue(dbGrabber.uploadQuiz(sampleQuiz));
+		
+		String oldName = sampleQuiz.getName(), newName = "newSample";
+		sampleQuiz.setName(newName);
+		assertTrue(dbGrabber.uploadQuiz(sampleQuiz));
 		
 		QuizPerformance perf = new QuizPerformance();
 		perf.setAmountTime(1);
 		perf.setDate(new Timestamp(new Date().getTime()));
 		perf.setPercentCorrect(100);
 		perf.setUser(sampleQuiz.getCreator()); 
-		perf.setQuiz(sampleQuiz.getName());     
+		perf.setQuiz(oldName);
 
 		dbGrabber.storeAttempt(perf);
 		dbGrabber.storeAttempt(perf);
+		
+		perf.setQuiz(newName);
+		dbGrabber.storeAttempt(perf);
+		QuizCollection popular = dbGrabber.getPopularQuizzes();
+		assertEquals(2, popular.size());
+		// Ensure that first quiz is the one with two attemtps
+		assertEquals(oldName, popular.get(0));
 		dbGrabber.close();
+	}
+	
+	@Test
+	public void testHighestPerformers() throws SQLException {
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		dbGrabber.connect();
+		Timestamp now = new Timestamp(new Date().getTime());
+		assertEquals(0, dbGrabber.getHighestPerformers(sampleQuiz.getName(), now).size());
 	}
 }
