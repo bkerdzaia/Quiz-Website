@@ -41,7 +41,6 @@ public class QuizSummaryServlet extends HttpServlet {
 				quiz.setName(quizName);
 				quiz.setSummaryStatistics(0);
 			}
-			System.out.println("quizname: "+ quizName);
 			session.setAttribute("quizName", quiz);
 			UserList highestPerformers = db.highestPerformers(quizName, null);
 			UserList topPerformersLastDay = db.highestPerformers(quizName, null);
