@@ -1,5 +1,6 @@
 package quiz;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Quiz {
@@ -7,7 +8,7 @@ public class Quiz {
 	private String name;
 	private String description;
 	private String creator;
-	private Date creationDate;
+	private Timestamp creationDate;
 	private double summaryStatistics;
 	private QuizQuestions questions;
 	private QuizProperty property;
@@ -22,7 +23,7 @@ public class Quiz {
 		this.name = name;
 	}
 	
-	public void setCreationDate(Date date){
+	public void setCreationDate(Timestamp date){
 		creationDate = date;
 	}
 	
