@@ -87,7 +87,6 @@ public interface DatabaseGrabber {
 	 */
 	public boolean uploadQuiz (Quiz quiz) throws SQLException; 
 
-	/* History, createdQuiz public */
 	
 	/**
 	 * Provided with new quiz object, that represents alteration
@@ -127,6 +126,7 @@ public interface DatabaseGrabber {
 	 * Method returns list of quiz names that are created
 	 * by user with provided userName. It is assumed that
 	 * userName is a valid name that is contained in database.
+	 * Quizzes are in decreasing order of date (recent - first)
 	 * @param userName
 	 * @return collection of quzzes created by user with 'userName'
 	 * @throws SQLException
@@ -163,15 +163,15 @@ public interface DatabaseGrabber {
 			throws SQLException;
 	
 	/**
-	 * For particular quizName , retrieves most recent quiz taker
-	 * users. Threshold for amount of user is specified in 
+	 * Method retrieves stats of most recent quiz takers.
+	 * Threshold for amount of user is specified in 
 	 * 'UIParameters' interface. Users are in order of decreasing
 	 * date of taking (most recent taker first)
 	 * @param quizName
 	 * @return UserList of recent takers of the quiz.
 	 * @throws SQLException
 	 */
-	public UserList getRecentTestTakers(String quizName, Date date) 
+	public History getRecentTakersStats(Date date) 
 			throws SQLException; 
 	
 	/**

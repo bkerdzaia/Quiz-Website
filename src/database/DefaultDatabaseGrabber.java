@@ -552,24 +552,26 @@ public class DefaultDatabaseGrabber implements
 
 	// Returns list of recent quiz takers
 	@Override
-	public UserList getRecentTestTakers(String quizName, Date date) throws SQLException {
+	public History getRecentTakersStats(Date date) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlUserJoinQuizzes = 
-				"SELECT username FROM users " + 
-					"JOIN quizzes_taken ON " + 
-						"quiz_name = " + quizName +
-						" AND " +
-						"users.user_id = quizzes_taken.user_id " +
-						" AND " +
-						"attempt_date > " + date + " " +
+		String sqlRecentStats = 
+				"SELECT * FROM quizzes_taken " + 
+				"WHERE attempt_date > " + date + " " +
 				"ORDER BY attempt_date DESC " + 
-				"LIMIT " + MAX_RECENT_TAKERS + ";";
-		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
-		UserList recentTakers = userFactory.getUserList();
-		while (rs.next())
-			recentTakers.add(rs.getString(1)); // username column
+				"LIMIT " + MAX_RECENT_TAKERS_STATS + ";";
+		ResultSet rs = stmt.executeQuery(sqlRecentStats);
+		History recentStats = userFactory.getHistory();
+		while (rs.next()){
+			QuizPerformance curPerf = quizFactory.getQuizPerformance();
+			curPerf.setDate(rs.getTimestamp(QUIZ_TAKEN.ATTEMPT_DATE.num()));
+			curPerf.setAmountTime(rs.getInt(QUIZ_TAKEN.AMOUNT_TIME.num()));
+			curPerf.setPercentCorrect(rs.getDouble(QUIZ_TAKEN.PERCENT_CORRECT.num()));
+			curPerf.setUser(rs.getString(QUIZ_TAKEN.USER_NAME.num()));
+			curPerf.setQuiz(rs.getString(QUIZ_TAKEN.QUIZ_NAME.num()));
+			recentStats.add(curPerf);
+		}
 		stmt.close();
-		return recentTakers;
+		return recentStats;
 	}
 
 
