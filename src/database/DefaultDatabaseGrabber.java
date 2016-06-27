@@ -521,10 +521,10 @@ public class DefaultDatabaseGrabber implements
 	public QuizCollection getPopularQuizzes() throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlQuizJoinTaken = 
-				"SELECT quiz_name, COUNT(*) AS popularity FROM quizzes " +
-					"JOIN quiz_taken " +
-						"ON quiz_taken.quiz_id = quizzes.quiz_id " + 
-				"GROUP_BY quizzes.quiz_id " + 
+				"SELECT quizzes.quiz_name, COUNT(*) AS popularity FROM quizzes " +
+					"JOIN quizzes_taken " +
+						"ON quizzes_taken.quiz_name = quizzes.quiz_name " + 
+				"GROUP BY quizzes.quiz_name " + 
 				"ORDER BY popularity DESC " +
 				"LIMIT " + MAX_POPULAR_QUIZZES + ";";
 		ResultSet rs = stmt.executeQuery(sqlQuizJoinTaken);
@@ -552,11 +552,11 @@ public class DefaultDatabaseGrabber implements
 
 	// Returns list of recent quiz takers
 	@Override
-	public History getRecentTakersStats(Date date) throws SQLException {
+	public History getRecentTakersStats(Timestamp date) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlRecentStats = 
 				"SELECT * FROM quizzes_taken " + 
-				"WHERE attempt_date > " + date + " " +
+				"WHERE attempt_date > '" + date + "' " +
 				"ORDER BY attempt_date DESC " + 
 				"LIMIT " + MAX_RECENT_TAKERS_STATS + ";";
 		ResultSet rs = stmt.executeQuery(sqlRecentStats);
@@ -577,7 +577,7 @@ public class DefaultDatabaseGrabber implements
 
 	// Returns list of highest performer user for particular quiz, starting from given date
 	@Override
-	public UserList highestPerformers(String quizName, Date date) throws SQLException {
+	public UserList highestPerformers(String quizName, Timestamp date) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlUserJoinQuizzes = 
 				"SELECT users.username FROM users " +
@@ -645,7 +645,7 @@ public class DefaultDatabaseGrabber implements
 		String addPerformanceRecord = 
 				"INSERT INTO quizzes_taken " + 
 				"VALUES ('" + quizName + "',NULL,'" + userName + "'," +
-				percentCorrect + ",'" + date + "'," + timeTaken + ";";
+				percentCorrect + ",'" + date + "'," + timeTaken + ");";
 		stmt.executeUpdate(addPerformanceRecord);
 		stmt.close();
 	}

@@ -2,6 +2,7 @@ package database;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import quiz.*;
@@ -171,7 +172,7 @@ public interface DatabaseGrabber {
 	 * @return UserList of recent takers of the quiz.
 	 * @throws SQLException
 	 */
-	public History getRecentTakersStats(Date date) 
+	public History getRecentTakersStats(Timestamp date) 
 			throws SQLException; 
 	
 	/**
@@ -184,7 +185,7 @@ public interface DatabaseGrabber {
 	 * @return UserList of best performers.
 	 * @throws SQLException
 	 */
-	public UserList highestPerformers(String quizName, Date date) 
+	public UserList highestPerformers(String quizName, Timestamp date) 
 			throws SQLException;
 	
 	/**
