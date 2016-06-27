@@ -380,4 +380,12 @@ public class GrabberQueriesTest {
 		assertEquals(oldName, popular.get(0));
 		dbGrabber.close();
 	}
+	
+	@Test
+	public void testHighestPerformers() throws SQLException {
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		dbGrabber.connect();
+		Timestamp now = new Timestamp(new Date().getTime());
+		assertEquals(0, dbGrabber.getHighestPerformers(sampleQuiz.getName(), now).size());
+	}
 }

@@ -185,7 +185,7 @@ public interface DatabaseGrabber {
 	 * @return UserList of best performers.
 	 * @throws SQLException
 	 */
-	public UserList highestPerformers(String quizName, Timestamp date) 
+	public UserList getHighestPerformers(String quizName, Timestamp date) 
 			throws SQLException;
 	
 	/**
