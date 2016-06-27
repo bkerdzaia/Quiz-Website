@@ -2,6 +2,7 @@ package application;
 
 import java.io.*;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import javax.servlet.*;
 import javax.servlet.annotation.*;
@@ -24,8 +25,7 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		System.out.println("login servlet");
+		System.out.println(new Timestamp(System.currentTimeMillis()-24*60*60*1000));
 		DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DatabaseListener.ATTRIBUTE_NAME);
 		if (db == null) {
 			db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
@@ -57,6 +57,7 @@ public class LoginServlet extends HttpServlet {
 				QuizCollection recentlyCreatedQuiz = db.getRecentlyCreatedQuizzes();
 				session.setAttribute("recentQuizzes", recentlyCreatedQuiz);
 				address = "homepage.jsp?name=" + name;
+				System.out.println("Successfull Login");
 			}
 			db.close();
 			RequestDispatcher dispatcher = request.getRequestDispatcher(address);

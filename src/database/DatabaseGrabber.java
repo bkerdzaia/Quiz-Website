@@ -192,4 +192,10 @@ public interface DatabaseGrabber {
 	 * Frees up resources associated with current connection.
 	 */
 	public void close();
+
+
+	UserList getRecentTestTakers(String quizName, Date date) throws SQLException;
+
+
+	UserList highestPerformers(String quizName, Date date) throws SQLException;
 }
