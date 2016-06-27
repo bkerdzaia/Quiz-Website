@@ -30,6 +30,7 @@ import questions.MultipleChoise;
 import questions.PictureResponse;
 import questions.QuestionResponce;
 import quiz.Quiz;
+import quiz.QuizCollection;
 import quiz.QuizPerformance;
 import quiz.QuizProperty;
 import quiz.QuizQuestions;
@@ -48,6 +49,8 @@ import quiz.User;
 public class GrabberQueriesTest {
 
 	private static DatabaseFactory mockDbFactory = null;
+	private static Quiz sampleQuiz = null;
+	private static User sampleUser = null;
 	
 	// Create mock factory
 	@BeforeClass
@@ -78,6 +81,16 @@ public class GrabberQueriesTest {
 				return new MockDatabaseConnectionHandler();
 			}
 		};
+		
+		// Populate sample quiz and sample user with values
+		sampleQuiz = new Quiz();
+		sampleQuiz.setCreator("sam");
+		sampleQuiz.setDescription("bla");
+		sampleQuiz.setCreationDate(new Timestamp(new Date().getTime()));
+		sampleQuiz.setProperty(new QuizProperty(false, true, false));
+		sampleQuiz.setSummaryStatistics(0);
+		sampleQuiz.setQuestions(new QuizQuestions());
+		sampleQuiz.setName("samsfirst");
 	}
 
 	
@@ -89,7 +102,7 @@ public class GrabberQueriesTest {
 		dbGrabber.truncateDatabase();
 		dbGrabber.close();
 	}
-/*
+
 	// Tests empty database not to contain particular entry.
 	@Test
 	public void emptyDatabase() throws SQLException, IOException {
@@ -187,7 +200,7 @@ public class GrabberQueriesTest {
 		assertEquals(true, sameQuizProp.isOnePage());
 		dbGrabber.close();
 	}
-*/	
+	
 	// Test other 3 types of questions.
 	@Test
 	public void testAllTypesQuestions() throws SQLException{
@@ -272,5 +285,53 @@ public class GrabberQueriesTest {
 		return true;
 	}
 
+	@Test
+	public void testGetCreatedQuizzes() throws SQLException{
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		dbGrabber.connect();
+		dbGrabber.registerUser("sam", "12");
+		dbGrabber.registerUser("buddy", "23");
+		// test getCreatedQuizzes by name
+		Quiz samsFirst = new Quiz();
+		samsFirst.setCreator("sam");
+		samsFirst.setDescription("bla");
+		samsFirst.setCreationDate(new Timestamp(new Date().getTime()));
+		samsFirst.setProperty(new QuizProperty(false, true, false));
+		samsFirst.setSummaryStatistics(0);
+		samsFirst.setQuestions(new QuizQuestions());
+		samsFirst.setName("samsfirst");
+		
+		dbGrabber.uploadQuiz(samsFirst);
+		Quiz samsSecond = samsFirst;
+		samsSecond.setName("samssecond");
+		Timestamp samsTime = samsFirst.getCreationDate();
+		samsSecond.setCreationDate(new Timestamp(samsTime.getTime() + 22));
+		dbGrabber.uploadQuiz(samsSecond);
+		
+		Quiz buddysFirst = samsFirst;
+		buddysFirst.setName("buddysfirst");
+		buddysFirst.setCreator("buddy");
+		dbGrabber.uploadQuiz(buddysFirst);
+		
+		QuizCollection sams = dbGrabber.getCreatedQuizzesByUserName("sam");
+		assertEquals("samsfirst", sams.get(0));
+		assertEquals("samssecond", sams.get(1));
+	}
+	
+	
+	@Test
+	public void testStoreAttempt() throws SQLException {
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		dbGrabber.connect();
+		dbGrabber.uploadQuiz(sampleQuiz);
+		QuizPerformance perf = new QuizPerformance();
+		perf.setAmountTime(1);
+		perf.setDate(new Timestamp(new Date().getTime()));
+		perf.setPercentCorrect(100);
+		perf.setUser(sampleQuiz.getCreator());
+		perf.setQuiz(sampleQuiz.getName());
+
+		dbGrabber.storeAttempt(perf);
+	}
 
 }

@@ -27,7 +27,7 @@ public class Quiz {
 		creationDate = date;
 	}
 	
-	public Date getCreationDate(){
+	public Timestamp getCreationDate(){
 		return creationDate;
 	}
 

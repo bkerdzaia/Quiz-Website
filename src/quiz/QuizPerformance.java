@@ -13,7 +13,7 @@ public class QuizPerformance {
 	private String quiz;
 	private Timestamp date;
 	private int amountTimeSecs;
-	private int percentCorrect;
+	private double percentCorrect;
 	
 	/** Empty constructor **/
 	public QuizPerformance() {}
@@ -50,11 +50,11 @@ public class QuizPerformance {
 		this.amountTimeSecs = amountTimeSecs;
 	}
 
-	public int getPercentCorrect() {
+	public double getPercentCorrect() {
 		return percentCorrect;
 	}
 
-	public void setPercentCorrect(int percentCorrect) {
+	public void setPercentCorrect(double percentCorrect) {
 		this.percentCorrect = percentCorrect;
 	}
 
