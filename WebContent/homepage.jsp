@@ -53,23 +53,23 @@
 
 	<div>
 		<p>received messages</p>
-		<%
+		<%--
 			UserMessageList messages = user.getMessages();
 			for (Message message : messages) {
 				
 			}
-		%>
+		--%>
 	</div>
 
 	<div>
 		<p>friends recent activities (quizzes taken or created)</p>
-		<%
+		<%--
 			FriendList friends = user.getFriends();
 			for (User friend : friends) {
 				out.println(friend.getHistory());
 				out.println(getHtmlQuizzes(friend.getCreatedQuizzes()));
 			}
-		%>
+		--%>
 	</div>
 
 </body>

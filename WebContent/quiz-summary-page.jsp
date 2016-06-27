@@ -73,7 +73,7 @@
 		<%
 			History history = user.getHistory(); 
 			for (QuizPerformance madeQuiz : history) {
-				if (quiz.equals(madeQuiz.getQuiz())) {
+				if (quiz.getName().equals(madeQuiz.getQuiz())) {
 					out.println("<p>quiz: " + madeQuiz.getQuiz() + " date: " +
 							madeQuiz.getDate() + " percent correct: " + madeQuiz.getPercentCorrect() + "%</p>");
 				}

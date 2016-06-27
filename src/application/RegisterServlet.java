@@ -31,22 +31,36 @@ public class RegisterServlet extends HttpServlet {
 		Encryption encryption = new Encryption();
 		String encryptPassword = encryption.encrypt(password);
 		DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DatabaseListener.ATTRIBUTE_NAME);
+		if (db == null) {
+			db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
+			request.getServletContext().setAttribute(DatabaseListener.ATTRIBUTE_NAME, db);
+		}
+		HttpSession session = request.getSession();
 		String address = "login.html";
 		try {
 			db.connect();
 			User user = null;
 			if (user == null) {
-				User newUser = DefaultUserFactory.getFactoryInstance().getUser();
-				newUser.setName(name);
-				newUser.setPasswordHash(encryptPassword);
-				db.registerUser(name, encryptPassword);
+				user = DefaultUserFactory.getFactoryInstance().getUser();
+				user.setName(name);
+				user.setPasswordHash(encryptPassword);
+				user.setHistory(DefaultUserFactory.getFactoryInstance().getHistory());
+				user.setMessages(DefaultUserFactory.getFactoryInstance().getMessageList());
+				user.setCreatedQuizzes(DefaultQuizFactory.getFactoryInstance().getQuizCollection());
+				user.setFriends(DefaultUserFactory.getFactoryInstance().getFriendList());
+				session.setAttribute("userName", user);
+				QuizCollection popularQuizzes = db.getPopularQuizzes();
+				session.setAttribute("popularQuizzes", popularQuizzes);
+				QuizCollection recentlyCreatedQuiz = db.getRecentlyCreatedQuizzes();
+				session.setAttribute("recentQuizzes", recentlyCreatedQuiz);
+				//db.registerUser(name, encryptPassword);
 				address = "homepage.jsp?name=" + name;
 			}
 			
 			db.close();
-		} catch (SQLException e) {}
-		RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-		dispatcher.forward(request, response);
+			RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+			dispatcher.forward(request, response);
+		} catch (SQLException e) { e.printStackTrace();}
 	}
 
 }

@@ -1,4 +1,4 @@
-<%@ page import="application.*, quiz.*, java.util.*"%>
+<%@ page import="application.*, quiz.*"%>
 <p><b>order by date</b></p>
 <% 
 	User user = (User) session.getAttribute("userName");

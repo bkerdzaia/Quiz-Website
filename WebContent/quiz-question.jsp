@@ -15,7 +15,7 @@
 		Quiz quiz = (Quiz) session.getAttribute("quizName");
 		QuizQuestions questions = quiz.getQuestions();
 		int questionIndex = Integer.parseInt(request.getParameter("question"));
-		Question question = questions.get(questionIndex - 1);
+		Question question = questions.get(questionIndex-1);
 	%>
 	
 	<p>Question is: <b><%= question.getQuestionText() %></b></p>
