@@ -98,10 +98,10 @@ COMMENT = 'Stores quiz properties; actual content will be composed by joining ot
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`quizzes_taken` (
 
   `quiz_name`        CHARACTER(45)  NOT NULL,  # FK
-  `attempt_id`       INT            NOT NULL,
+  `attempt_id`       INT            NOT NULL AUTO_INCREMENT,
   `username`         CHARACTER(45)  NOT NULL,  # FK
-  `percent_correct`  INT            NOT NULL,
-  `attempt_date`     DATE           NOT NULL,
+  `percent_correct`  FLOAT          NOT NULL,
+  `attempt_date`     TIMESTAMP      NOT NULL,
   `time_amount_secs` INT            NOT NULL,
   
   PRIMARY KEY (`attempt_id`),
@@ -240,13 +240,13 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`question_response` (
 
   CONSTRAINT `fk_question_response_to_quiz`
     FOREIGN KEY (`quiz_name`)
-    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`))
-    ON DELETE CASCADE
+    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`)
+    ON DELETE CASCADE)
 
 ENGINE = InnoDB
 COMMENT = 'Stores problems of type "Queston-response". Each entry
            is associated with particular quiz via `quiz_name` attribute.
-           Relationship between quizzes and question_response is `one-to-many`';
+           Relationship between quizzes and question_response  is `one-to-many`';
 
 
 -- -----------------------------------------------------
@@ -262,7 +262,8 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`question_response_correct_answers`
 
   CONSTRAINT `fk_correct_answers_to_question_response`
     FOREIGN KEY (`problem_id`)
-    REFERENCES `MockQuizWebsite`.`question_response` (`problem_id`))
+    REFERENCES `MockQuizWebsite`.`question_response` (`problem_id`)
+    ON DELETE CASCADE)
 
 ENGINE = InnoDB
 COMMENT = 'Stores correct answers for "Question-response" problems.
@@ -289,8 +290,8 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`fill_in_blank` (
 
   CONSTRAINT `fk_fill_in_blank_problem_to_quiz`
     FOREIGN KEY (`quiz_name`)
-    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`))
-    ON DELETE CASCADE
+    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`)
+    ON DELETE CASCADE)
 
 ENGINE = InnoDB
 COMMENT = 'Stores problems of type "Fill in the blank". Each entry
@@ -310,7 +311,8 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`fill_in_blank_correct_answers` (
 
   CONSTRAINT `fk_correct_answer_to_fill_in_blank`
     FOREIGN KEY (`problem_id`)
-    REFERENCES `MockQuizWebsite`.`fill_in_blank` (`problem_id`))
+    REFERENCES `MockQuizWebsite`.`fill_in_blank` (`problem_id`)
+    ON DELETE CASCADE)
 
 ENGINE = InnoDB
 COMMENT = 'Stores answers for particular "Fill in the blank" question that are considered correct.
@@ -334,8 +336,8 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`multiple_choise` (
 
   CONSTRAINT `fk_multiple_choise_problem_to_quiz`
     FOREIGN KEY (`quiz_name`)
-    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`))
-    ON DELETE CASCADE
+    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`)
+    ON DELETE CASCADE)
 
 ENGINE = InnoDB
 COMMENT = 'Stores problems of type "Multiple choise". Each entry
@@ -357,7 +359,8 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`multiple_choise_answers` (
 
   CONSTRAINT `fk_answer_to_multiple_choise_problem`
     FOREIGN KEY (`problem_id`)
-    REFERENCES `MockQuizWebsite`.`multiple_choise` (`problem_id`))
+    REFERENCES `MockQuizWebsite`.`multiple_choise` (`problem_id`)
+    ON DELETE CASCADE)
 
 ENGINE = InnoDB
 COMMENT = 'Stores answers for particula "Multiple choise" problem.';
@@ -381,8 +384,8 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`picture_response` (
 
   CONSTRAINT `picture_response_to_quiz`
     FOREIGN KEY (`quiz_name`)
-    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`))
-    ON DELETE CASCADE
+    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`)
+    ON DELETE CASCADE)
 
 ENGINE = InnoDB
 COMMENT = 'Stores problems of type "Picture-response".';
@@ -401,7 +404,8 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`picture_response_correct_answers` 
 
   CONSTRAINT `fk_correct_answer_to_picture_response`
     FOREIGN KEY (`problem_id`)
-    REFERENCES `MockQuizWebsite`.`picture_response` (`problem_id`))
+    REFERENCES `MockQuizWebsite`.`picture_response` (`problem_id`)
+    ON DELETE CASCADE)
 
 ENGINE = InnoDB
 COMMENT = 'Stores correct responses for Picture-response problems';

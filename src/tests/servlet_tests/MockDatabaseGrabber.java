@@ -6,10 +6,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import database.DatabaseGrabber;
-import quiz.Quiz;
-import quiz.QuizCollection;
-import quiz.User;
-import quiz.UserList;
 import factory.*;
 
 public class MockDatabaseGrabber implements DatabaseGrabber {
@@ -96,6 +92,18 @@ public class MockDatabaseGrabber implements DatabaseGrabber {
 	public boolean deleteQuiz(String quizName) throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public QuizCollection getCreatedQuizzesByUserName(String userName) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void storeAttempt(QuizPerformance perf) throws SQLException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

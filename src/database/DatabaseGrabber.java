@@ -124,6 +124,24 @@ public interface DatabaseGrabber {
 	
 
 	/**
+	 * Method returns list of quiz names that are created
+	 * by user with provided userName. It is assumed that
+	 * userName is a valid name that is contained in database.
+	 * @param userName
+	 * @return collection of quzzes created by user with 'userName'
+	 * @throws SQLException
+	 */
+	public QuizCollection getCreatedQuizzesByUserName(String userName) 
+			throws SQLException;
+
+	/**
+	 * Given performance summary of user's attempt on particular
+	 * quiz stores that record in database. It is assumed that
+	 * 'perf' has valid quiz and user names.
+	 */
+	public void storeAttempt(QuizPerformance perf) throws SQLException;
+
+	/**
 	 * Returns 'QuizCollection' object filled with most popular 
 	 * quizzes for time being. Threshold for amount of quizzes 
 	 * is specified in 'UIParameters' interface. Quizzes are 
