@@ -13,7 +13,7 @@
 	</classpathentry>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="D:/eclipse/plugins/org.junit_4.12.0.v201504281640/junit.jar">
+	<classpathentry exported="true" kind="lib" path="D:/eclipse/plugins/org.junit_4.12.0.v201504281640/junit.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://junit-team.github.io/junit/javadoc/latest/"/>
 		</attributes>

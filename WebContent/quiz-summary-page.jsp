@@ -42,9 +42,9 @@
 		private String getHtmlUsers(UserList  users) {
 			if (users == null) return "";
 			String htmlUser = "";
-			for (User user : users) {
-				htmlUser += "<p><a href=\"homepage.jsp?name=" + user.getName() + "\">" 
-						+ user.getName() + "</a></p>\n";
+			for (String userName : users) {
+				htmlUser += "<p><a href=\"homepage.jsp?name=" + userName + "\">" 
+						+ userName + "</a></p>\n";
 			}
 			return htmlUser;
 		}
@@ -74,7 +74,7 @@
 			History history = user.getHistory(); 
 			for (QuizPerformance madeQuiz : history) {
 				if (quiz.equals(madeQuiz.getQuiz())) {
-					out.println("<p>quiz: " + madeQuiz.getQuiz().getName() + " date: " +
+					out.println("<p>quiz: " + madeQuiz.getQuiz() + " date: " +
 							madeQuiz.getDate() + " percent correct: " + madeQuiz.getPercentCorrect() + "%</p>");
 				}
 			}
@@ -104,8 +104,8 @@
 	
 	<div>
 		<%
-			User creator = quiz.getCreator();
-			if(creator.equals(user)) {
+			String creator = quiz.getCreator();
+			if(creator.equals(user.getName())) {
 				out.println("<p>edit quiz for owner of quiz<//p>");
 			}
 		%>

@@ -20,9 +20,9 @@
 		private String getHtmlQuizzes(QuizCollection quizzes) {
 			if (quizzes == null) return "";
 			String htmlQuizes = "";
-			for (Quiz quiz : quizzes) {
-				htmlQuizes += "<p><a href=\"QuizSummaryServlet?name=" + quiz.getName() + "\">" 
-						+ quiz.getName() + "</a></p>\n";
+			for (String quizName : quizzes) {
+				htmlQuizes += "<p><a href=\"QuizSummaryServlet?name=" + quizName + "\">" 
+						+ quizName + "</a></p>\n";
 			}
 			return htmlQuizes;
 		}
