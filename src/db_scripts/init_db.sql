@@ -32,7 +32,7 @@ USE `QuizWebsite` ;
 CREATE TABLE IF NOT EXISTS `QuizWebsite`.`users` (
 
   `username`          CHARACTER(45)  NOT NULL,
-  `passw_hash`        CHAR(20)       NOT NULL,
+  `passw_hash`        CHAR(100)      NOT NULL,
   `profile_pic_url`   TEXT           NULL, # default
   `description`       TEXT           NULL, # to null
 

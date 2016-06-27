@@ -502,6 +502,10 @@ public class DefaultDatabaseGrabber implements
 		return stmt.executeQuery(sqlRetrieveQuestionResponse);	
 	}
 
+	/* Given table name and question id retrieves correct answers
+	 * for that question, makes use of the fact that all the question 
+	 * answer tables(except MultChoise) have same 'correct_answer' column.
+	 */
 	private Set<String> collectAnswers(String table, int id) 
 			throws SQLException{
 		Statement stmt = conHandler.getConnection().createStatement();
@@ -517,6 +521,7 @@ public class DefaultDatabaseGrabber implements
 		return answers;
 	}
 
+	// Hands back list of names of popular quizzes
 	@Override
 	public QuizCollection getPopularQuizzes() throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
@@ -541,7 +546,7 @@ public class DefaultDatabaseGrabber implements
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlRecentCreatedQuizzes = 
 				"SELECT quiz_name FROM quizzes " +
-				"SORT BY creation_date DESC " + 
+				"ORDER BY creation_date DESC " + 
 				"LIMIT " + MAX_RECENTRY_CREATED_QUIZZES + ";";
 		ResultSet rs = stmt.executeQuery(sqlRecentCreatedQuizzes);
 		QuizCollection recentQuizzes = quizFactory.getQuizCollection();

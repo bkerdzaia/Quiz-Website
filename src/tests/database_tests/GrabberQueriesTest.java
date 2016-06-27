@@ -279,7 +279,7 @@ public class GrabberQueriesTest {
 		assertNull(dbGrabber.loadQuiz("name"));
 	}
 
-	/* Helper method for determining whether two sets contain same elements */
+	// Helper method for determining whether two sets contain same elements 
 	private boolean setsEqual(Set<String> firstSet, Set<String> secondSet) {
 		if (firstSet.size() != secondSet.size())
 			return false;
@@ -387,5 +387,22 @@ public class GrabberQueriesTest {
 		dbGrabber.connect();
 		Timestamp now = new Timestamp(new Date().getTime());
 		assertEquals(0, dbGrabber.getHighestPerformers(sampleQuiz.getName(), now).size());
+	}
+	
+	@Test
+	public void testRecentlyCreatedQuizzes() throws SQLException {
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		dbGrabber.connect();
+		dbGrabber.registerUser("sam", "123");
+		dbGrabber.uploadQuiz(sampleQuiz);
+		String oldName = sampleQuiz.getName();
+		sampleQuiz.setName("newQuiz");
+		long oldDateSecs = sampleQuiz.getCreationDate().getTime();
+		sampleQuiz.setCreationDate(new Timestamp(oldDateSecs + 1000));
+		dbGrabber.uploadQuiz(sampleQuiz);
+		QuizCollection recentQuizzes = dbGrabber.getRecentlyCreatedQuizzes();
+		assertEquals(2, recentQuizzes.size());
+		assertEquals("newQuiz", recentQuizzes.get(0));
+		assertEquals(oldName, recentQuizzes.get(1));
 	}
 }
