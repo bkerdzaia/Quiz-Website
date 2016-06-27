@@ -28,8 +28,8 @@
 		}
 	%>
 
-	<p>Hello ${param.name}</p>
 	<p><b>user name: <%= user.getName() %></b></p>
+	<p><b>parameter value: <%= request.getParameter("name") %></b></p>
 
 	<div>
 		<p>list of popular quizzes</p>
@@ -70,6 +70,25 @@
 				out.println(getHtmlQuizzes(friend.getCreatedQuizzes()));
 			}
 		--%>
+	</div>
+	
+	<div>
+		<form action="create-quiz.jsp">
+		<%
+			if(request.getParameter("name").equals(user.getName())) {
+				out.println("<input type=\"submit\" value=\"create a quiz\">");
+			}
+		%>
+		</form>
+	</div>
+	
+	<div>
+		<%
+			String parameterUserName = request.getParameter("name");
+			if(!parameterUserName.equals(user.getName())) {
+				out.println("<button type=\"button\">send friend request</button>");
+			}
+		%>
 	</div>
 
 </body>
