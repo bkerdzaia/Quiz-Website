@@ -10,7 +10,7 @@
 	function passwordStrength() {
 		var weak = "";
 		if (document.getElementById("register-form-id").password.value.length < 6) {
-			weak = "* weaken password";
+			weak = "* weak password";
 		}
 		$("#register-form-id > span").text(weak);
 	};
@@ -40,11 +40,11 @@
 <body>
 
 	<div>
-		<button style="margin:0px 0px 0px 500px" onclick="loginClick()">Login</button>
-		<button style="margin:0px 0px 0px 10px" onclick="registerClick()">Register</button><br /><br /> 
+		<button style = "float: right;" onclick="loginClick()">Login</button>
+		<button style = "float: right;" onclick="registerClick()">Register</button> <br> <br>
 	</div>
 
-	<div>
+	<div align = "center">
 		<form  id="login-form-id" action="LoginServlet" method="post">
 			<input type="text" name="userName" placeholder="Username" required><br /><br /> 
 			<input type="password" name="password" placeholder="Password" required><br /><br /> 
@@ -52,7 +52,7 @@
 		</form>
 	</div>
 
-	<div>
+	<div align = "center">
 		<form id="register-form-id" action="RegisterServlet" method="post" onsubmit="validateName()">
 			<input type="text" name="userName" placeholder="Username" required><br /><br /> 
 			<input type="password" name="password" placeholder="Password" onkeyup="passwordStrength()" required> 
