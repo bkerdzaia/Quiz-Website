@@ -89,7 +89,7 @@ public class GrabberQueriesTest {
 		dbGrabber.truncateDatabase();
 		dbGrabber.close();
 	}
-
+/*
 	// Tests empty database not to contain particular entry.
 	@Test
 	public void emptyDatabase() throws SQLException, IOException {
@@ -131,7 +131,6 @@ public class GrabberQueriesTest {
 		assertFalse(dbGrabber.registerUser("Baduri", "asdf"));
 		dbGrabber.close();
 	}
-	
 	
 	// Tests authentication of user
 	@Test
@@ -188,7 +187,7 @@ public class GrabberQueriesTest {
 		assertEquals(true, sameQuizProp.isOnePage());
 		dbGrabber.close();
 	}
-	
+*/	
 	// Test other 3 types of questions.
 	@Test
 	public void testAllTypesQuestions() throws SQLException{
@@ -255,6 +254,10 @@ public class GrabberQueriesTest {
 		assertEquals(mch.getQuestionText(), sameMch.getQuestionText());
 		assertEquals(mch.getPossibleChoises(), sameMch.getPossibleChoises());
 		assertTrue(sameMch.isCorrectAnswer("b"));
+		
+		// Test quiz deletion
+		dbGrabber.deleteQuiz("name");
+		assertNull(dbGrabber.loadQuiz("name"));
 	}
 
 	/* Helper method for determining whether two sets contain same elements */

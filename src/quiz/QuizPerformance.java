@@ -1,6 +1,6 @@
 package quiz;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 /**
  * Encapsulates user's particular attemp, it's performance
@@ -9,14 +9,23 @@ import java.util.Date;
  */
 public class QuizPerformance {
 	
+	private String user;
 	private String quiz;
-	private Date date;
+	private Timestamp date;
 	private int amountTimeSecs;
 	private int percentCorrect;
 	
 	/** Empty constructor **/
 	public QuizPerformance() {}
 
+	public void setUser(String user){
+		this.user = user;
+	}
+	
+	public String getUser(){
+		return user;
+	}
+	
 	public String getQuiz() {
 		return quiz;
 	}
@@ -25,11 +34,11 @@ public class QuizPerformance {
 		this.quiz = quiz;
 	}
 
-	public Date getDate() {
+	public Timestamp getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(Timestamp date) {
 		this.date = date;
 	}
 

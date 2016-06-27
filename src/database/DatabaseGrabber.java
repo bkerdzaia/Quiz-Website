@@ -87,7 +87,32 @@ public interface DatabaseGrabber {
 	 */
 	public boolean uploadQuiz (Quiz quiz) throws SQLException; 
 
-
+	/* History, createdQuiz public */
+	
+	/**
+	 * Provided with new quiz object, that represents alteration
+	 * of previously stored quiz in database (may have completely
+	 * different questions), corresponding changes are made in the 
+	 * database copy of the quiz. If the quiz, identified with it's
+	 * name is not contained in database, 'false' is handed back 
+	 * as a sign of failure.
+	 * @param quiz - new version of the quiz
+	 * @return edit status (boolean true - if success, false otherwise)
+	 * @throws SQLException
+	 */
+	public boolean editQuiz (Quiz quiz) throws SQLException;
+	
+	/**
+	 * Method deletes quiz named 'quizName' from database storage;
+	 * provides means of deleting quiz for quizz's creator. After
+	 * successfull execution of the method, quiz is permanently 
+	 * deleted from database.
+	 * @param quizName
+	 * @return delete status (boolean true - if success, false otherwise)
+	 * @throws SQLException
+	 */
+	public boolean deleteQuiz(String quizName) throws SQLException;
+	
 	/**
 	 * Retrieves data from database associated with quiz named
 	 * 'quizName' and composes 'quiz' object which is handed back.
@@ -97,6 +122,24 @@ public interface DatabaseGrabber {
 	 */
 	public Quiz loadQuiz(String quizName) throws SQLException;
 	
+
+	/**
+	 * Method returns list of quiz names that are created
+	 * by user with provided userName. It is assumed that
+	 * userName is a valid name that is contained in database.
+	 * @param userName
+	 * @return collection of quzzes created by user with 'userName'
+	 * @throws SQLException
+	 */
+	public QuizCollection getCreatedQuizzesByUserName(String userName) 
+			throws SQLException;
+
+	/**
+	 * Given performance summary of user's attempt on particular
+	 * quiz stores that record in database. It is assumed that
+	 * 'perf' has valid quiz and user names.
+	 */
+	public void storeAttempt(QuizPerformance perf) throws SQLException;
 
 	/**
 	 * Returns 'QuizCollection' object filled with most popular 

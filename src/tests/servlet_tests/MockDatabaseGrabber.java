@@ -86,4 +86,16 @@ public class MockDatabaseGrabber implements DatabaseGrabber {
 
 	}
 
+	@Override
+	public boolean editQuiz(Quiz quiz) throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean deleteQuiz(String quizName) throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

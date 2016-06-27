@@ -4,16 +4,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import questions.*;
@@ -195,7 +193,7 @@ public class DefaultDatabaseGrabber implements
 			// Create new performance object
 			QuizPerformance curPerformance = quizFactory.getQuizPerformance();
 			// And fill with corresponding values
-			curPerformance.setDate(rs.getDate(QUIZ_TAKEN.ATTEMPT_DATE.num()));
+			curPerformance.setDate(rs.getTimestamp(QUIZ_TAKEN.ATTEMPT_DATE.num()));
 			curPerformance.setAmountTime(rs.getInt(QUIZ_TAKEN.AMOUNT_TIME.num()));
 			curPerformance.setPercentCorrect(rs.getInt(QUIZ_TAKEN.PERCENT_CORRECT.num()));
 			curPerformance.setQuiz(rs.getString(QUIZ_TAKEN.QUIZ_NAME.num()));
@@ -207,7 +205,7 @@ public class DefaultDatabaseGrabber implements
 
 
 	// Returns collection of user's recently created quizzes
-	private QuizCollection getCreatedQuizzesByUserName(String userName) 
+	public QuizCollection getCreatedQuizzesByUserName(String userName) 
 			throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlQuizNameByUserName = 
@@ -228,7 +226,7 @@ public class DefaultDatabaseGrabber implements
 	public boolean uploadQuiz(Quiz quiz) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		// Won't upload, if the name is not unique.
-		if (quizAlredyInDatabase(quiz.getName())) return false;
+		if (quizAlreadyInDatabase(quiz.getName())) return false;
 		// Upload quiz fields
 		QuizProperty prop = quiz.getProperty();
 		String creator = quiz.getCreator();
@@ -351,7 +349,7 @@ public class DefaultDatabaseGrabber implements
 
 
 	// Checks if quiz with provided name already exists in database.
-	private boolean quizAlredyInDatabase(String quizName) 
+	private boolean quizAlreadyInDatabase(String quizName) 
 			throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlQuizWithSameName = 
@@ -378,6 +376,7 @@ public class DefaultDatabaseGrabber implements
 		retrievedQuiz.setDescription(rs.getString(QUIZ.QUIZ_DESCRIPTION.num()));
 		retrievedQuiz.setCreationDate(rs.getTimestamp(QUIZ.DATE_CREATION.num()));
 		retrievedQuiz.setCreator(rs.getString(QUIZ.CREATOR_NAME.num()));
+		retrievedQuiz.setSummaryStatistics(getAverageScoreOnQuiz(quizName));
 		// Fill property bean
 		QuizProperty prop = quizFactory.getQuizProperty();
 		prop.setInstantCorrection(rs.getBoolean(QUIZ.INSTANT_CORRECTION.num()));
@@ -398,6 +397,18 @@ public class DefaultDatabaseGrabber implements
 			questions.add(p.question);
 		retrievedQuiz.setQuestions(questions);
 		return retrievedQuiz;
+	}
+
+	// Returns average score of users on the quiz
+	private double getAverageScoreOnQuiz(String quizName) throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlAverageScoreOnQuiz = 
+				"SELECT AVG(percent_correct) FROM quizzes_taken " + 
+				"WHERE quiz_name = " + "'" + quizName + "';";
+		ResultSet rs = stmt.executeQuery(sqlAverageScoreOnQuiz);
+		if (!rs.next())
+			return 0;
+		return rs.getDouble(1);
 	}
 
 
@@ -508,70 +519,56 @@ public class DefaultDatabaseGrabber implements
 
 	@Override
 	public QuizCollection getPopularQuizzes() throws SQLException {
-//		Statement stmt = conHandler.getConnection().createStatement();
-//		String sqlQuizJoinTaken = 
-//				"SELECT quiz_name, COUNT(*) AS popularity FROM quizzes " +
-//					"JOIN quiz_taken " +
-//						"ON quiz_taken.quiz_id = quizzes.quiz_id " + 
-//				"GROUP_BY quizzes.quiz_id " + 
-//				"ORDER BY popularity DESC " +
-//				"LIMIT " + MAX_POPULAR_QUIZZES + ";";
-//		ResultSet rs = stmt.executeQuery(sqlQuizJoinTaken);
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlQuizJoinTaken = 
+				"SELECT quiz_name, COUNT(*) AS popularity FROM quizzes " +
+					"JOIN quiz_taken " +
+						"ON quiz_taken.quiz_id = quizzes.quiz_id " + 
+				"GROUP_BY quizzes.quiz_id " + 
+				"ORDER BY popularity DESC " +
+				"LIMIT " + MAX_POPULAR_QUIZZES + ";";
+		ResultSet rs = stmt.executeQuery(sqlQuizJoinTaken);
 		// Create quiz collection and starting filling
 		QuizCollection popularQuizzes = quizFactory.getQuizCollection();
-//		while (rs.next())
-//			popularQuizzes.add(rs.getString(1)); // name column
-		String s = "a";
-		for(char i='b'; i<'e'; i++) {
-			s += i;
-			popularQuizzes.add(s);
-		}
+		while (rs.next())
+			popularQuizzes.add(rs.getString(1)); // name column
 		return popularQuizzes;
 	}
 
 	// Returns list of recently created quizzes
 	@Override
 	public QuizCollection getRecentlyCreatedQuizzes() throws SQLException {
-//		Statement stmt = conHandler.getConnection().createStatement();
-//		String sqlRecentCreatedQuizzes = 
-//				"SELECT quiz_name FROM quizzes " +
-//				"SORT BY creation_date DESC " + 
-//				"LIMIT " + MAX_RECENTRY_CREATED_QUIZZES + ";";
-//		ResultSet rs = stmt.executeQuery(sqlRecentCreatedQuizzes);
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlRecentCreatedQuizzes = 
+				"SELECT quiz_name FROM quizzes " +
+				"SORT BY creation_date DESC " + 
+				"LIMIT " + MAX_RECENTRY_CREATED_QUIZZES + ";";
+		ResultSet rs = stmt.executeQuery(sqlRecentCreatedQuizzes);
 		QuizCollection recentQuizzes = quizFactory.getQuizCollection();
-//		while (rs.next())
-//			recentQuizzes.add(rs.getString(1)); // quizName column
-		String s = "x";
-		for(char i='e'; i<'h'; i++) {
-			s += i;
-			recentQuizzes.add(s);
-		}
+		while (rs.next())
+			recentQuizzes.add(rs.getString(1)); // quizName column
 		return recentQuizzes;
 	}
 
 	// Returns list of recent quiz takers
 	@Override
 	public UserList getRecentTestTakers(String quizName, Date date) throws SQLException {
-//		Statement stmt = conHandler.getConnection().createStatement();
-//		String sqlUserJoinQuizzes = 
-//				"SELECT username FROM users " + 
-//					"JOIN quizzes_taken ON " + 
-//						"quiz_name = " + quizName +
-//						" AND " +
-//						"users.user_id = quizzes_taken.user_id " +
-//						" AND " +
-//						"attempt_date > " + date + " " +
-//				"ORDER BY attempt_date DESC " + 
-//				"LIMIT " + MAX_RECENT_TAKERS + ";";
-//		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlUserJoinQuizzes = 
+				"SELECT username FROM users " + 
+					"JOIN quizzes_taken ON " + 
+						"quiz_name = " + quizName +
+						" AND " +
+						"users.user_id = quizzes_taken.user_id " +
+						" AND " +
+						"attempt_date > " + date + " " +
+				"ORDER BY attempt_date DESC " + 
+				"LIMIT " + MAX_RECENT_TAKERS + ";";
+		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
 		UserList recentTakers = userFactory.getUserList();
-//		while (rs.next())
-//			recentTakers.add(rs.getString(1)); // username column
-//		stmt.close();
-		String name = "name";
-		for(int i=7; i<10; i++) {
-			recentTakers.add(name + i);
-		}
+		while (rs.next())
+			recentTakers.add(rs.getString(1)); // username column
+		stmt.close();
 		return recentTakers;
 	}
 
@@ -579,26 +576,22 @@ public class DefaultDatabaseGrabber implements
 	// Returns list of highest performer user for particular quiz, starting from given date
 	@Override
 	public UserList highestPerformers(String quizName, Date date) throws SQLException {
-//		Statement stmt = conHandler.getConnection().createStatement();
-//		String sqlUserJoinQuizzes = 
-//				"SELECT users.username FROM users " +
-//					"JOIN quizzes_taken ON " +
-//						"quiz_name = " + quizName +
-//						" AND " +
-//						"users.user_id = quizzes_taken.user_id " +
-//						" AND " +
-//						"attempt_date > " + date + " " +
-//				"ORDER BY score DESC " + 
-//				"LIMIT " + MAX_HIGHEST_PERFORMERS + ";";
-//		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlUserJoinQuizzes = 
+				"SELECT users.username FROM users " +
+					"JOIN quizzes_taken ON " +
+						"quiz_name = " + quizName +
+						" AND " +
+						"users.user_id = quizzes_taken.user_id " +
+						" AND " +
+						"attempt_date > " + date + " " +
+				"ORDER BY score DESC " + 
+				"LIMIT " + MAX_HIGHEST_PERFORMERS + ";";
+		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
 		UserList highestPerformers = userFactory.getUserList();
-//		while (rs.next())
-//			highestPerformers.add(rs.getString(1)); // username column
-//		stmt.close();
-		String name = "name";
-		for(int i=0; i<5; i++) {
-			highestPerformers.add(name + i);
-		}
+		while (rs.next())
+			highestPerformers.add(rs.getString(1)); // username column
+		stmt.close();
 		return highestPerformers;
 	}
 
@@ -606,6 +599,53 @@ public class DefaultDatabaseGrabber implements
 	@Override
 	public void close() {
 		conHandler.close();
+	}
+
+
+	// Alter quiz with same name in database, with the content of alteredQuiz
+	@Override
+	public boolean editQuiz(Quiz alteredQuiz) throws SQLException {
+		// If there is no such quiz, it can not be deleted
+		if (!deleteQuiz(alteredQuiz.getName())) 
+			return false;
+		uploadQuiz(alteredQuiz);
+		return true;
+	}
+
+
+	// Delete quiz with provided name from database
+	@Override
+	public boolean deleteQuiz(String quizName) throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		// If there's no such quiz, termninate and hand back 'false'
+		if (!quizAlreadyInDatabase(quizName))
+			return false;
+		// Otherwise delete it from table
+		String sqlQuizDelete = 
+				"DELETE FROM quizzes WHERE " +
+				"quiz_name = " + "'" + quizName + "';";
+		stmt.executeUpdate(sqlQuizDelete);
+		return true;
+	}
+
+	
+	// Stores single attempt in database
+	@Override
+	public void storeAttempt(QuizPerformance perf) throws SQLException {
+		// Extract field values
+		String quizName = perf.getQuiz();
+		String userName = perf.getUser();
+		Timestamp date = perf.getDate();
+		int timeTaken = perf.getAmountTime();
+		double percentCorrect = perf.getPercentCorrect();
+		// Pass the values to sql update query
+		Statement stmt = conHandler.getConnection().createStatement();
+		String addPerformanceRecord = 
+				"INSERT INTO quizzes_taken " + 
+				"VALUES ('" + quizName + "',NULL,'" + userName + "'," +
+				percentCorrect + ",'" + date + "'," + timeTaken + ";";
+		stmt.executeUpdate(addPerformanceRecord);
+		stmt.close();
 	}
 
 }

@@ -6,6 +6,8 @@ import factory.DatabaseFactory;
 import factory.DefaultDatabaseFactory;
 import factory.UserFactory;
 
+import static org.junit.Assert.*;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -34,6 +36,9 @@ public class DatabaseGrabberTestSimple {
 	public void test() throws SQLException,
 			FileNotFoundException, IOException {
 		dbGrabber.connect();
+		dbGrabber.truncateDatabase();
+		assertTrue (dbGrabber.registerUser("ab", "ab"));
+		assertNotNull(dbGrabber.loadUser("ab"));
 		dbGrabber.truncateDatabase();
 		dbGrabber.close();
 	}
