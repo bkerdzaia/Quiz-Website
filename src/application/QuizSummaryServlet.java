@@ -2,6 +2,7 @@ package application;
 
 import java.io.*;
 import java.sql.SQLException;
+import java.util.Date;
 
 import javax.servlet.*;
 import javax.servlet.annotation.*;
@@ -9,6 +10,7 @@ import javax.servlet.http.*;
 
 import database.DatabaseGrabber;
 import database.DatabaseListener;
+import factory.DefaultDatabaseFactory;
 import quiz.*;
 
 /**
@@ -24,12 +26,17 @@ public class QuizSummaryServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DatabaseListener.ATTRIBUTE_NAME);
+		if (db == null) {
+			db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
+			request.getServletContext().setAttribute(DatabaseListener.ATTRIBUTE_NAME, db);
+		}
 		HttpSession session = request.getSession();
 		try {
 			db.connect();
 			String quizName = request.getParameter("name");
 			Quiz quiz = db.loadQuiz(quizName);
 			session.setAttribute("quizName", quiz);
+			System.out.println("quiz: " + quiz);
 			UserList highestPerformers = db.highestPerformers(quizName, null);
 			UserList topPerformersLastDay = db.highestPerformers(quizName, null);
 			UserList recentPerformers = db.getRecentTestTakers(quizName, null);
@@ -39,7 +46,7 @@ public class QuizSummaryServlet extends HttpServlet {
 			db.close();
 			RequestDispatcher dispatcher = request.getRequestDispatcher("quiz-summary-page.jsp?name=" + quizName);
 			dispatcher.forward(request, response);
-		} catch (SQLException e) {}
+		} catch (SQLException e) {e.printStackTrace();}
 	}
 
 	/**
