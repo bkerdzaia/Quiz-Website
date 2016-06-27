@@ -41,7 +41,7 @@ public class LoginServlet extends HttpServlet {
 			String encryptPassword = encryption.encrypt(request.getParameter("password"));
 			User user = db.authenticateUser(name, encryptPassword);
 			String address = "login.html";			
-			if(request.getParameter("register") != null){
+			if(request.getParameter("register") != null && db.registerUser(name, encryptPassword)){
 				user = DefaultUserFactory.getFactoryInstance().getUser();
 				user.setName(name);
 				user.setPasswordHash(encryptPassword);
