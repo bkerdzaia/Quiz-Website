@@ -228,7 +228,7 @@ public class DefaultDatabaseGrabber implements
 	public boolean uploadQuiz(Quiz quiz) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		// Won't upload, if the name is not unique.
-		if (quizAlredyInDatabase(quiz.getName())) return false;
+		if (quizAlreadyInDatabase(quiz.getName())) return false;
 		// Upload quiz fields
 		QuizProperty prop = quiz.getProperty();
 		String creator = quiz.getCreator();
@@ -351,7 +351,7 @@ public class DefaultDatabaseGrabber implements
 
 
 	// Checks if quiz with provided name already exists in database.
-	private boolean quizAlredyInDatabase(String quizName) 
+	private boolean quizAlreadyInDatabase(String quizName) 
 			throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlQuizWithSameName = 
@@ -588,6 +588,33 @@ public class DefaultDatabaseGrabber implements
 	@Override
 	public void close() {
 		conHandler.close();
+	}
+
+
+	// Alter quiz with same name in database, with the content of alteredQuiz
+	@Override
+	public boolean editQuiz(Quiz alteredQuiz) throws SQLException {
+		// If there is no such quiz, it can not be deleted
+		if (!deleteQuiz(alteredQuiz.getName())) 
+			return false;
+		uploadQuiz(alteredQuiz);
+		return true;
+	}
+
+
+	// Delete quiz with provided name from database
+	@Override
+	public boolean deleteQuiz(String quizName) throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		// If there's no such quiz, termninate and hand back 'false'
+		if (!quizAlreadyInDatabase(quizName))
+			return false;
+		// Otherwise delete it from table
+		String sqlQuizDelete = 
+				"DELETE FROM quizzes WHERE " +
+				"quiz_name = " + "'" + quizName + "';";
+		stmt.executeUpdate(sqlQuizDelete);
+		return true;
 	}
 
 }

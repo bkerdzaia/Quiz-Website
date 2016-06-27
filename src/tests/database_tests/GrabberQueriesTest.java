@@ -132,7 +132,6 @@ public class GrabberQueriesTest {
 		dbGrabber.close();
 	}
 	
-	
 	// Tests authentication of user
 	@Test
 	public void authenticationTest() throws SQLException{

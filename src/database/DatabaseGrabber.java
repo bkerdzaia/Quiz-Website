@@ -87,7 +87,32 @@ public interface DatabaseGrabber {
 	 */
 	public boolean uploadQuiz (Quiz quiz) throws SQLException; 
 
-
+	/* History, createdQuiz public */
+	
+	/**
+	 * Provided with new quiz object, that represents alteration
+	 * of previously stored quiz in database (may have completely
+	 * different questions), corresponding changes are made in the 
+	 * database copy of the quiz. If the quiz, identified with it's
+	 * name is not contained in database, 'false' is handed back 
+	 * as a sign of failure.
+	 * @param quiz - new version of the quiz
+	 * @return edit status (boolean true - if success, false otherwise)
+	 * @throws SQLException
+	 */
+	public boolean editQuiz (Quiz quiz) throws SQLException;
+	
+	/**
+	 * Method deletes quiz named 'quizName' from database storage;
+	 * provides means of deleting quiz for quizz's creator. After
+	 * successfull execution of the method, quiz is permanently 
+	 * deleted from database.
+	 * @param quizName
+	 * @return delete status (boolean true - if success, false otherwise)
+	 * @throws SQLException
+	 */
+	public boolean deleteQuiz(String quizName) throws SQLException;
+	
 	/**
 	 * Retrieves data from database associated with quiz named
 	 * 'quizName' and composes 'quiz' object which is handed back.

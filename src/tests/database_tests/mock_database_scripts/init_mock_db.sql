@@ -241,6 +241,7 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`question_response` (
   CONSTRAINT `fk_question_response_to_quiz`
     FOREIGN KEY (`quiz_name`)
     REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`))
+    ON DELETE CASCADE
 
 ENGINE = InnoDB
 COMMENT = 'Stores problems of type "Queston-response". Each entry
@@ -289,6 +290,7 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`fill_in_blank` (
   CONSTRAINT `fk_fill_in_blank_problem_to_quiz`
     FOREIGN KEY (`quiz_name`)
     REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`))
+    ON DELETE CASCADE
 
 ENGINE = InnoDB
 COMMENT = 'Stores problems of type "Fill in the blank". Each entry
@@ -333,6 +335,7 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`multiple_choise` (
   CONSTRAINT `fk_multiple_choise_problem_to_quiz`
     FOREIGN KEY (`quiz_name`)
     REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`))
+    ON DELETE CASCADE
 
 ENGINE = InnoDB
 COMMENT = 'Stores problems of type "Multiple choise". Each entry
@@ -379,6 +382,7 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`picture_response` (
   CONSTRAINT `picture_response_to_quiz`
     FOREIGN KEY (`quiz_name`)
     REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`))
+    ON DELETE CASCADE
 
 ENGINE = InnoDB
 COMMENT = 'Stores problems of type "Picture-response".';
