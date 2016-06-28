@@ -73,7 +73,7 @@
 	</div>
 	
 	<div>
-		<form action="create-quiz.jsp">
+		<form action="create-quiz.html">
 		<%
 			if(request.getParameter("name").equals(user.getName())) {
 				out.println("<input type=\"submit\" value=\"create a quiz\">");

@@ -519,56 +519,71 @@ public class DefaultDatabaseGrabber implements
 
 	@Override
 	public QuizCollection getPopularQuizzes() throws SQLException {
-		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlQuizJoinTaken = 
-				"SELECT quiz_name, COUNT(*) AS popularity FROM quizzes " +
-					"JOIN quiz_taken " +
-						"ON quiz_taken.quiz_id = quizzes.quiz_id " + 
-				"GROUP_BY quizzes.quiz_id " + 
-				"ORDER BY popularity DESC " +
-				"LIMIT " + MAX_POPULAR_QUIZZES + ";";
-		ResultSet rs = stmt.executeQuery(sqlQuizJoinTaken);
+//		Statement stmt = conHandler.getConnection().createStatement();
+//		String sqlQuizJoinTaken = 
+//				"SELECT quiz_name, COUNT(*) AS popularity FROM quizzes " +
+//					"JOIN quiz_taken " +
+//						"ON quiz_taken.quiz_id = quizzes.quiz_id " + 
+//				"GROUP_BY quizzes.quiz_id " + 
+//				"ORDER BY popularity DESC " +
+//				"LIMIT " + MAX_POPULAR_QUIZZES + ";";
+//		ResultSet rs = stmt.executeQuery(sqlQuizJoinTaken);
 		// Create quiz collection and starting filling
 		QuizCollection popularQuizzes = quizFactory.getQuizCollection();
-		while (rs.next())
-			popularQuizzes.add(rs.getString(1)); // name column
+//		while (rs.next())
+//			popularQuizzes.add(rs.getString(1)); // name column
+		String s = "a";
+		for(char i='b'; i<'e'; i++) {
+			s += i;
+			popularQuizzes.add(s);
+		}
 		return popularQuizzes;
 	}
 
 	// Returns list of recently created quizzes
 	@Override
 	public QuizCollection getRecentlyCreatedQuizzes() throws SQLException {
-		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlRecentCreatedQuizzes = 
-				"SELECT quiz_name FROM quizzes " +
-				"SORT BY creation_date DESC " + 
-				"LIMIT " + MAX_RECENTRY_CREATED_QUIZZES + ";";
-		ResultSet rs = stmt.executeQuery(sqlRecentCreatedQuizzes);
+//		Statement stmt = conHandler.getConnection().createStatement();
+//		String sqlRecentCreatedQuizzes = 
+//				"SELECT quiz_name FROM quizzes " +
+//				"SORT BY creation_date DESC " + 
+//				"LIMIT " + MAX_RECENTRY_CREATED_QUIZZES + ";";
+//		ResultSet rs = stmt.executeQuery(sqlRecentCreatedQuizzes);
 		QuizCollection recentQuizzes = quizFactory.getQuizCollection();
-		while (rs.next())
-			recentQuizzes.add(rs.getString(1)); // quizName column
+//		while (rs.next())
+//			recentQuizzes.add(rs.getString(1)); // quizName column
+
+		String s = "x";
+		for(char i='e'; i<'h'; i++) {
+			s += i;
+			recentQuizzes.add(s);
+		}
 		return recentQuizzes;
 	}
 
 	// Returns list of recent quiz takers
 	@Override
 	public UserList getRecentTestTakers(String quizName, Date date) throws SQLException {
-		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlUserJoinQuizzes = 
-				"SELECT username FROM users " + 
-					"JOIN quizzes_taken ON " + 
-						"quiz_name = " + quizName +
-						" AND " +
-						"users.user_id = quizzes_taken.user_id " +
-						" AND " +
-						"attempt_date > " + date + " " +
-				"ORDER BY attempt_date DESC " + 
-				"LIMIT " + MAX_RECENT_TAKERS + ";";
-		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
+//		Statement stmt = conHandler.getConnection().createStatement();
+//		String sqlUserJoinQuizzes = 
+//				"SELECT username FROM users " + 
+//					"JOIN quizzes_taken ON " + 
+//						"quiz_name = " + quizName +
+//						" AND " +
+//						"users.user_id = quizzes_taken.user_id " +
+//						" AND " +
+//						"attempt_date > " + date + " " +
+//				"ORDER BY attempt_date DESC " + 
+//				"LIMIT " + MAX_RECENT_TAKERS + ";";
+//		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
 		UserList recentTakers = userFactory.getUserList();
-		while (rs.next())
-			recentTakers.add(rs.getString(1)); // username column
-		stmt.close();
+//		while (rs.next())
+//			recentTakers.add(rs.getString(1)); // username column
+//		stmt.close();
+		String name = "name";
+		for(int i=7; i<10; i++) {
+			recentTakers.add(name + i);
+		}
 		return recentTakers;
 	}
 
@@ -576,22 +591,26 @@ public class DefaultDatabaseGrabber implements
 	// Returns list of highest performer user for particular quiz, starting from given date
 	@Override
 	public UserList highestPerformers(String quizName, Date date) throws SQLException {
-		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlUserJoinQuizzes = 
-				"SELECT users.username FROM users " +
-					"JOIN quizzes_taken ON " +
-						"quiz_name = " + quizName +
-						" AND " +
-						"users.user_id = quizzes_taken.user_id " +
-						" AND " +
-						"attempt_date > " + date + " " +
-				"ORDER BY score DESC " + 
-				"LIMIT " + MAX_HIGHEST_PERFORMERS + ";";
-		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
+//		Statement stmt = conHandler.getConnection().createStatement();
+//		String sqlUserJoinQuizzes = 
+//				"SELECT users.username FROM users " +
+//					"JOIN quizzes_taken ON " +
+//						"quiz_name = " + quizName +
+//						" AND " +
+//						"users.user_id = quizzes_taken.user_id " +
+//						" AND " +
+//						"attempt_date > " + date + " " +
+//				"ORDER BY score DESC " + 
+//				"LIMIT " + MAX_HIGHEST_PERFORMERS + ";";
+//		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
 		UserList highestPerformers = userFactory.getUserList();
-		while (rs.next())
-			highestPerformers.add(rs.getString(1)); // username column
-		stmt.close();
+//		while (rs.next())
+//			highestPerformers.add(rs.getString(1)); // username column
+//		stmt.close();
+		String name = "name";
+		for(int i=0; i<5; i++) {
+			highestPerformers.add(name + i);
+		}
 		return highestPerformers;
 	}
 

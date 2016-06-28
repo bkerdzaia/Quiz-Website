@@ -39,7 +39,7 @@ public class RegisterServlet extends HttpServlet {
 		String address = "login.html";
 		try {
 			db.connect();
-			User user = null;
+			User user = db.authenticateUser(name, encryptPassword);
 			if (user == null) {
 				user = DefaultUserFactory.getFactoryInstance().getUser();
 				user.setName(name);
@@ -56,7 +56,6 @@ public class RegisterServlet extends HttpServlet {
 				//db.registerUser(name, encryptPassword);
 				address = "homepage.jsp?name=" + name;
 			}
-			
 			db.close();
 			RequestDispatcher dispatcher = request.getRequestDispatcher(address);
 			dispatcher.forward(request, response);
