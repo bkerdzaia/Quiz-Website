@@ -182,7 +182,6 @@ public class DefaultDatabaseGrabber implements
 
 
 	private UserMessageList getMessages(String userName) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

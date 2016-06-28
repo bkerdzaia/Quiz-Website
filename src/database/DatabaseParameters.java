@@ -27,7 +27,7 @@ public interface DatabaseParameters {
 	/* Constraints on stored data */
 	public static final int QUIZ_NAME_MAX_LEN = 45;
 	public static final int USER_NAME_MAX_LEN = 45;
-	public static final int PASSWORD_HASH_MAX_LEN = 100;
+	public static final int PASSWORD_HASH_MAX_LEN = 160;
 	
 	
 	// 'User' columns enumeration

@@ -47,10 +47,10 @@ public class QuizSummaryServlet extends HttpServlet {
 			UserList highestPerformers = db.getHighestPerformers(quizName, null);
 			Timestamp thisTimeYesterday = new Timestamp(System.currentTimeMillis()-24*60*60*1000);
 			UserList topPerformersLastDay = db.getHighestPerformers(quizName, thisTimeYesterday);
-			UserList recentPerformers = db.getRecentTestTakers(quizName, null);
+			//UserList recentPerformers = db.getRecentTestTakers(quizName, null);
 			session.setAttribute("highestPerformers", highestPerformers);
 			session.setAttribute("topPerformers", topPerformersLastDay);
-			session.setAttribute("recentPerformers", recentPerformers);
+			//session.setAttribute("recentPerformers", recentPerformers);
 			db.close();
 			RequestDispatcher dispatcher = request.getRequestDispatcher("quiz-summary-page.jsp?name=" + quizName);
 			dispatcher.forward(request, response);
