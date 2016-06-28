@@ -28,6 +28,7 @@ import quiz.QuizProperty;
 import quiz.QuizQuestions;
 import quiz.User;
 import quiz.UserList;
+import quiz.UserMessageList;
 
 /**
  * @author dav23r
@@ -177,6 +178,12 @@ public class DefaultDatabaseGrabber implements
 		retrievedUser.setFriends(getFriends(userName));
 		retrievedUser.setMessages(getMessages(userName));
 		return retrievedUser;
+	}
+
+
+	private UserMessageList getMessages(String userName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

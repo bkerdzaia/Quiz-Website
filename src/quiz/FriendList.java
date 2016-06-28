@@ -1,27 +1,12 @@
 package quiz;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
-public class FriendList implements Iterable<User> {
-	
-	private ArrayList<User> friends;
-	
-	public FriendList() {
-		friends = new ArrayList<User>();
-	}
-	
-	public void addFriend(User friend) {
-		friends.add(friend);
-	}
-	
-	public void removeFreind(User friend) {
-		friends.remove(friend);
-	}
+@SuppressWarnings("serial")
 
-	@Override
-	public Iterator<User> iterator() {
-		return friends.iterator();
-	}
-
-}
+/**
+ * @author dav23r
+ * Encapsulates collection of friends (user objects) as
+ * an iterable arraylist.
+ */
+public class FriendList extends ArrayList<User> {}

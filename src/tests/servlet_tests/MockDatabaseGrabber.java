@@ -4,10 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Date;
 
 import database.DatabaseGrabber;
-import factory.*;
 
 public class MockDatabaseGrabber implements DatabaseGrabber {
 
@@ -65,17 +63,6 @@ public class MockDatabaseGrabber implements DatabaseGrabber {
 		return null;
 	}
 
-	@Override
-	public UserList getRecentTestTakers(String quizName, Date date) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public UserList highestPerformers(String quizName, Date date) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public void close() {
@@ -96,24 +83,11 @@ public class MockDatabaseGrabber implements DatabaseGrabber {
 	}
 
 	@Override
-	public QuizCollection getCreatedQuizzesByUserName(String userName) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void storeAttempt(QuizPerformance perf) throws SQLException {
 		// TODO Auto-generated method stub
 		
 	}
 
-<<<<<<< HEAD
-=======
-	@Override
-	public History getRecentTakersStats(Timestamp date) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public UserList getHighestPerformers(String quizName, Timestamp date) throws SQLException {
@@ -121,5 +95,29 @@ public class MockDatabaseGrabber implements DatabaseGrabber {
 		return null;
 	}
 
->>>>>>> e3d39706cabbf4620b586a2fcc0adc5dcbc64417
+	@Override
+	public boolean addFriendRequest(String from, String to) throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean acceptFriendRequest(String firstUser, String secondUser) throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public History getRecentTakersStats(Timestamp date) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void sendMessage(String from, String to, String message, Timestamp date) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 }
