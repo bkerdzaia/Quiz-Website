@@ -651,4 +651,18 @@ public class DefaultDatabaseGrabber implements
 		stmt.close();
 	}
 
+
+	@Override
+	public UserList getRecentTestTakers(String quizName, Date date) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public UserList highestPerformers(String quizName, Date date) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

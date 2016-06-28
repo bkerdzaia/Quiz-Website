@@ -12,8 +12,9 @@ public class FillBlankView implements QuestionView {
 	@Override
 	public String displayQuestion(Question question) {
 		FillBlank curQuestion = (FillBlank) question;
-		// TODO it's stub , user curQuestion to extract info
-		return "<br> FillInBlankQuestion <br>";
+		String html = "<br><h3>"+ curQuestion.getQuestionText() +"</h3>";
+		html+="<input type=\"text\" name=\"possibleAnswer\" placeholder=\"Answer\"><br>";
+		return html;
 	}
 
 }

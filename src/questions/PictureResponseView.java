@@ -10,8 +10,10 @@ public class PictureResponseView implements QuestionView {
 	@Override
 	public String displayQuestion(Question question) {
 		PictureResponse curQuestion = (PictureResponse) question;
-		// TODO it's sub, use curQuestion to extract info
-		return "<br> PictureResponse <br>";
+		String html = "<br><h3>"+ curQuestion.getQuestionText() +"</h3>";
+		html+= "<img src=\""+ curQuestion.getPictureUrl() +"\" alt=\"Question Image\"><br>";
+		html+="<input type=\"text\" name=\"possibleAnswer\" placeholder=\"Answer\"><br>";
+		return html;
 	}
 
 }

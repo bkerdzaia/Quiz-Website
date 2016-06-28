@@ -7,8 +7,8 @@ import factory.QuestionFactory;
 
 public class MultipleChoise extends Question {
 
-	ArrayList<String> possibleChoises = null;
-	int correctAnswerIndex;
+	private ArrayList<String> possibleChoises = null;
+	private int correctAnswerIndex;
 	
 	/**
 	 * Convenience constructor, provides default 

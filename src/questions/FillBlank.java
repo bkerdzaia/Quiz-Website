@@ -14,9 +14,9 @@ import java.util.Set;
 public class FillBlank extends Question {
 
 	// Stores possible correct answers 
-	Set<String> correctAnswers = null;
+	private Set<String> correctAnswers = null;
 	// Stores index where text field should 'start'
-	int fieldPositionIndex;
+	private int fieldPositionIndex;
 	
 	/**
 	 * Convenience constructor. Provides default 

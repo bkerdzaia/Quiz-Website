@@ -25,7 +25,6 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println(new Timestamp(System.currentTimeMillis()-24*60*60*1000));
 		DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DatabaseListener.ATTRIBUTE_NAME);
 		if (db == null) {
 			db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
