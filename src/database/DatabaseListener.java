@@ -5,7 +5,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import factory.DatabaseFactory;
 
 /**
  * Application Lifecycle Listener implementation class DatabaseListener

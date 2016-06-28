@@ -38,4 +38,10 @@ public interface UserFactory {
 	 * @return UserList
 	 */
 	public UserList getUserList();
+	
+	/**
+	 * Constructs 'Message' object
+	 * @return message
+	 */
+	public Message getMessage();
 }

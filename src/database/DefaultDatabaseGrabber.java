@@ -181,7 +181,27 @@ public class DefaultDatabaseGrabber implements
 	}
 
 
-	private UserMessageList getMessages(String userName) {
+	// Returns message sent to user with provided user name.
+	private UserMessageList getMessages(String userName) throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlMessagesToUser = 
+				"SELECT text FROM friends " +
+					"JOIN messages ON " + 
+						"friends.friendship_id = messages.friendship_id " +
+					" AND (" +
+							"first_user_name = '" + userName + "'" +
+								" AND " +
+							"sender = 1" + 
+						" OR " +
+							"second_user_name = '" + userName + "'" +
+								" AND " +
+							"sender = 0);";
+		ResultSet rs = stmt.executeQuery(sqlMessagesToUser);
+		UserMessageList messages = userFactory.getMessageList();
+		while (rs.next()){
+			Message curMessage = 
+		}
+		stmt.close();
 		return null;
 	}
 

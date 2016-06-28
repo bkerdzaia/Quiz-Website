@@ -109,9 +109,11 @@ COMMENT = 'Implements many-to-many relationship between users and
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`friends` (
 
-  `first_user_name`      CHARACTER(45)     NOT NULL,  # initiator of friendship
-  `second_user_name`     CHARACTER(45)     NOT NULL,  # the one to accept
+  `first_user_name`      CHARACTER(45)     NOT NULL,  # lexicographically <
+  `second_user_name`     CHARACTER(45)     NOT NULL,  # lexicographically >
   `friendship_id`        INT               NOT NULL, 
+
+  CHECK (first_user_name < second_user_name),
 
   PRIMARY KEY (`friendship_id`),
 
@@ -143,9 +145,9 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`messages` (
   `message_id`               INT               NOT NULL,
   `friendship_id`            INT               NOT NULL,
   `text`                     TEXT              NOT NULL,
-  `sent_date`                DATE              NOT NULL,
+  `sent_date`                TIMESTAMP         NOT NULL,
   `sender`                   BIT               NOT NULL,  # indicates which part sent particular message.
-
+                                                          # "false" - first_user, "true" - second
   PRIMARY KEY (`message_id`),
 
   /* Indexing foreign keys */
