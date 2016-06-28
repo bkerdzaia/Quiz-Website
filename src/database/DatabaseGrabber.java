@@ -3,7 +3,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Date;
 
 import quiz.*;
 
@@ -122,19 +121,6 @@ public interface DatabaseGrabber {
 	 */
 	public Quiz loadQuiz(String quizName) throws SQLException;
 	
-
-	/**
-	 * Method returns list of quiz names that are created
-	 * by user with provided userName. It is assumed that
-	 * userName is a valid name that is contained in database.
-	 * Quizzes are in decreasing order of date (recent - first)
-	 * @param userName
-	 * @return collection of quzzes created by user with 'userName'
-	 * @throws SQLException
-	 */
-	public QuizCollection getCreatedQuizzesByUserName(String userName) 
-			throws SQLException;
-
 	/**
 	 * Given performance summary of user's attempt on particular
 	 * quiz stores that record in database. It is assumed that
@@ -189,13 +175,44 @@ public interface DatabaseGrabber {
 			throws SQLException;
 	
 	/**
+	 * Method adds new friend request record to database. The first argument
+	 * is friendship initiator's user name, the second - the one the first 
+	 * wants to be friends with. As a precondition, both string should represent
+	 * valid user names contained in system. Method ensures that users are 
+	 * not friends already, in which case it returns 'false'.
+	 * @param from - user who wants to be friends with 'to'
+	 * @param to - to whom friendship request in sent
+	 * @return - add status (true - success, otherwise - false)
+	 * @throws SQLException
+	 */
+	public boolean addFriendRequest(String from, String to) throws SQLException;
+	
+	/**
+	 * Adds new friendship record to the database. A check is done, 
+	 * that the provided users are not friends already, in which
+	 * case 'false' is handed back as a sign of failure.
+	 * @param first user's name
+	 * @param second user's name
+	 * @return completion status ('true' if success, 'false' otherwise)
+	 * @throws SQLException
+	 */
+	public boolean acceptFriendRequest(String firstUser, String secondUser) 
+			throws SQLException;
+	
+	/**
+	 * Provides means of sending message from one user of the system to
+	 * another. The message is stored in database, and will be viewed 
+	 * by recepient once he/she logs in.
+	 * @param from - sender's name
+	 * @param to - recepient's name
+	 * @throws SQLException
+	 */
+	public void sendMessage(String from, String to, String message, Timestamp date) 
+			throws SQLException;
+
+	
+	/**
 	 * Frees up resources associated with current connection.
 	 */
 	public void close();
-
-
-	UserList getRecentTestTakers(String quizName, Date date) throws SQLException;
-
-
-	UserList highestPerformers(String quizName, Date date) throws SQLException;
 }
