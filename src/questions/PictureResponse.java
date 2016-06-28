@@ -11,10 +11,10 @@ import factory.QuestionFactory;
 public class PictureResponse extends Question {
 	
 	// Stores correct answers for the question
-	Set<String> correctAnswers;
+	private Set<String> correctAnswers;
 	
 	// Stores url of picture
-	String pictureUrl;
+	private String pictureUrl;
 
 	
 	/**

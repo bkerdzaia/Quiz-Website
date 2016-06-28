@@ -2,6 +2,7 @@ package database;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import quiz.*;
@@ -87,7 +88,6 @@ public interface DatabaseGrabber {
 	 */
 	public boolean uploadQuiz (Quiz quiz) throws SQLException; 
 
-	/* History, createdQuiz public */
 	
 	/**
 	 * Provided with new quiz object, that represents alteration
@@ -127,6 +127,7 @@ public interface DatabaseGrabber {
 	 * Method returns list of quiz names that are created
 	 * by user with provided userName. It is assumed that
 	 * userName is a valid name that is contained in database.
+	 * Quizzes are in decreasing order of date (recent - first)
 	 * @param userName
 	 * @return collection of quzzes created by user with 'userName'
 	 * @throws SQLException
@@ -163,15 +164,15 @@ public interface DatabaseGrabber {
 			throws SQLException;
 	
 	/**
-	 * For particular quizName , retrieves most recent quiz taker
-	 * users. Threshold for amount of user is specified in 
+	 * Method retrieves stats of most recent quiz takers.
+	 * Threshold for amount of user is specified in 
 	 * 'UIParameters' interface. Users are in order of decreasing
 	 * date of taking (most recent taker first)
 	 * @param quizName
 	 * @return UserList of recent takers of the quiz.
 	 * @throws SQLException
 	 */
-	public UserList getRecentTestTakers(String quizName, Date date) 
+	public History getRecentTakersStats(Timestamp date) 
 			throws SQLException; 
 	
 	/**
@@ -184,11 +185,17 @@ public interface DatabaseGrabber {
 	 * @return UserList of best performers.
 	 * @throws SQLException
 	 */
-	public UserList highestPerformers(String quizName, Date date) 
+	public UserList getHighestPerformers(String quizName, Timestamp date) 
 			throws SQLException;
 	
 	/**
 	 * Frees up resources associated with current connection.
 	 */
 	public void close();
+
+
+	UserList getRecentTestTakers(String quizName, Date date) throws SQLException;
+
+
+	UserList highestPerformers(String quizName, Date date) throws SQLException;
 }

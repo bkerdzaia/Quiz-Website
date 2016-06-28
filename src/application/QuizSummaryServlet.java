@@ -2,6 +2,8 @@ package application;
 
 import java.io.*;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
@@ -42,8 +44,9 @@ public class QuizSummaryServlet extends HttpServlet {
 				quiz.setSummaryStatistics(0);
 			}
 			session.setAttribute("quizName", quiz);
-			UserList highestPerformers = db.highestPerformers(quizName, null);
-			UserList topPerformersLastDay = db.highestPerformers(quizName, null);
+			UserList highestPerformers = db.getHighestPerformers(quizName, null);
+			Timestamp thisTimeYesterday = new Timestamp(System.currentTimeMillis()-24*60*60*1000);
+			UserList topPerformersLastDay = db.getHighestPerformers(quizName, thisTimeYesterday);
 			UserList recentPerformers = db.getRecentTestTakers(quizName, null);
 			session.setAttribute("highestPerformers", highestPerformers);
 			session.setAttribute("topPerformers", topPerformersLastDay);
@@ -58,7 +61,6 @@ public class QuizSummaryServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

@@ -41,6 +41,10 @@ public class DatabaseGrabberTestSimple {
 		assertNotNull(dbGrabber.loadUser("ab"));
 		dbGrabber.truncateDatabase();
 		dbGrabber.close();
+		for (int i = 0; i < 10; i++ ){
+			dbGrabber.connect();
+			dbGrabber.close();
+		}
 	}
 
 }

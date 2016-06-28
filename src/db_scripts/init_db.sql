@@ -32,7 +32,7 @@ USE `QuizWebsite` ;
 CREATE TABLE IF NOT EXISTS `QuizWebsite`.`users` (
 
   `username`          CHARACTER(45)  NOT NULL,
-  `passw_hash`        CHAR(20)       NOT NULL,
+  `passw_hash`        CHAR(100)      NOT NULL,
   `profile_pic_url`   TEXT           NULL, # default
   `description`       TEXT           NULL, # to null
 
@@ -98,10 +98,10 @@ COMMENT = 'Stores quiz properties; actual content will be composed by joining ot
 CREATE TABLE IF NOT EXISTS `QuizWebsite`.`quizzes_taken` (
 
   `quiz_name`        CHARACTER(45)  NOT NULL,  # FK
-  `attempt_id`       INT            NOT NULL,
+  `attempt_id`       INT            NOT NULL AUTO_INCREMENT,
   `username`         CHARACTER(45)  NOT NULL,  # FK
-  `percent_correct`  INT            NOT NULL,
-  `attempt_date`     DATE           NOT NULL,
+  `percent_correct`  FLOAT          NOT NULL,
+  `attempt_date`     TIMESTAMP      NOT NULL,
   `time_amount_secs` INT            NOT NULL,
   
   PRIMARY KEY (`attempt_id`),
@@ -246,7 +246,7 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`question_response` (
 ENGINE = InnoDB
 COMMENT = 'Stores problems of type "Queston-response". Each entry
            is associated with particular quiz via `quiz_name` attribute.
-           Relationship between quizzes and question_response is `one-to-many`';
+           Relationship between quizzes and question_response  is `one-to-many`';
 
 
 -- -----------------------------------------------------
@@ -262,7 +262,8 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`question_response_correct_answers` (
 
   CONSTRAINT `fk_correct_answers_to_question_response`
     FOREIGN KEY (`problem_id`)
-    REFERENCES `QuizWebsite`.`question_response` (`problem_id`))
+    REFERENCES `QuizWebsite`.`question_response` (`problem_id`)
+    ON DELETE CASCADE)
 
 ENGINE = InnoDB
 COMMENT = 'Stores correct answers for "Question-response" problems.
@@ -310,7 +311,8 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`fill_in_blank_correct_answers` (
 
   CONSTRAINT `fk_correct_answer_to_fill_in_blank`
     FOREIGN KEY (`problem_id`)
-    REFERENCES `QuizWebsite`.`fill_in_blank` (`problem_id`))
+    REFERENCES `QuizWebsite`.`fill_in_blank` (`problem_id`)
+    ON DELETE CASCADE)
 
 ENGINE = InnoDB
 COMMENT = 'Stores answers for particular "Fill in the blank" question that are considered correct.
@@ -357,7 +359,8 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`multiple_choise_answers` (
 
   CONSTRAINT `fk_answer_to_multiple_choise_problem`
     FOREIGN KEY (`problem_id`)
-    REFERENCES `QuizWebsite`.`multiple_choise` (`problem_id`))
+    REFERENCES `QuizWebsite`.`multiple_choise` (`problem_id`)
+    ON DELETE CASCADE)
 
 ENGINE = InnoDB
 COMMENT = 'Stores answers for particula "Multiple choise" problem.';
@@ -401,7 +404,8 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`picture_response_correct_answers` (
 
   CONSTRAINT `fk_correct_answer_to_picture_response`
     FOREIGN KEY (`problem_id`)
-    REFERENCES `QuizWebsite`.`picture_response` (`problem_id`))
+    REFERENCES `QuizWebsite`.`picture_response` (`problem_id`)
+    ON DELETE CASCADE)
 
 ENGINE = InnoDB
 COMMENT = 'Stores correct responses for Picture-response problems';

@@ -12,7 +12,7 @@ import factory.QuestionFactory;
 public class QuestionResponce extends Question {
 
 	// Stores correct answers for question
-	Set<String> correctAnswers = null;
+	private Set<String> correctAnswers = null;
 
 
 	/**

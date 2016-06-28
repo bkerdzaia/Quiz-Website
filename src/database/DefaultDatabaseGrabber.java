@@ -502,6 +502,10 @@ public class DefaultDatabaseGrabber implements
 		return stmt.executeQuery(sqlRetrieveQuestionResponse);	
 	}
 
+	/* Given table name and question id retrieves correct answers
+	 * for that question, makes use of the fact that all the question 
+	 * answer tables(except MultChoise) have same 'correct_answer' column.
+	 */
 	private Set<String> collectAnswers(String table, int id) 
 			throws SQLException{
 		Statement stmt = conHandler.getConnection().createStatement();
@@ -517,8 +521,10 @@ public class DefaultDatabaseGrabber implements
 		return answers;
 	}
 
+	// Hands back list of names of popular quizzes
 	@Override
 	public QuizCollection getPopularQuizzes() throws SQLException {
+<<<<<<< HEAD
 //		Statement stmt = conHandler.getConnection().createStatement();
 //		String sqlQuizJoinTaken = 
 //				"SELECT quiz_name, COUNT(*) AS popularity FROM quizzes " +
@@ -528,6 +534,17 @@ public class DefaultDatabaseGrabber implements
 //				"ORDER BY popularity DESC " +
 //				"LIMIT " + MAX_POPULAR_QUIZZES + ";";
 //		ResultSet rs = stmt.executeQuery(sqlQuizJoinTaken);
+=======
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlQuizJoinTaken = 
+				"SELECT quizzes.quiz_name, COUNT(*) AS popularity FROM quizzes " +
+					"JOIN quizzes_taken " +
+						"ON quizzes_taken.quiz_name = quizzes.quiz_name " + 
+				"GROUP BY quizzes.quiz_name " + 
+				"ORDER BY popularity DESC " +
+				"LIMIT " + MAX_POPULAR_QUIZZES + ";";
+		ResultSet rs = stmt.executeQuery(sqlQuizJoinTaken);
+>>>>>>> e3d39706cabbf4620b586a2fcc0adc5dcbc64417
 		// Create quiz collection and starting filling
 		QuizCollection popularQuizzes = quizFactory.getQuizCollection();
 //		while (rs.next())
@@ -543,12 +560,21 @@ public class DefaultDatabaseGrabber implements
 	// Returns list of recently created quizzes
 	@Override
 	public QuizCollection getRecentlyCreatedQuizzes() throws SQLException {
+<<<<<<< HEAD
 //		Statement stmt = conHandler.getConnection().createStatement();
 //		String sqlRecentCreatedQuizzes = 
 //				"SELECT quiz_name FROM quizzes " +
 //				"SORT BY creation_date DESC " + 
 //				"LIMIT " + MAX_RECENTRY_CREATED_QUIZZES + ";";
 //		ResultSet rs = stmt.executeQuery(sqlRecentCreatedQuizzes);
+=======
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlRecentCreatedQuizzes = 
+				"SELECT quiz_name FROM quizzes " +
+				"ORDER BY creation_date DESC " + 
+				"LIMIT " + MAX_RECENTRY_CREATED_QUIZZES + ";";
+		ResultSet rs = stmt.executeQuery(sqlRecentCreatedQuizzes);
+>>>>>>> e3d39706cabbf4620b586a2fcc0adc5dcbc64417
 		QuizCollection recentQuizzes = quizFactory.getQuizCollection();
 //		while (rs.next())
 //			recentQuizzes.add(rs.getString(1)); // quizName column
@@ -563,6 +589,7 @@ public class DefaultDatabaseGrabber implements
 
 	// Returns list of recent quiz takers
 	@Override
+<<<<<<< HEAD
 	public UserList getRecentTestTakers(String quizName, Date date) throws SQLException {
 //		Statement stmt = conHandler.getConnection().createStatement();
 //		String sqlUserJoinQuizzes = 
@@ -585,11 +612,34 @@ public class DefaultDatabaseGrabber implements
 			recentTakers.add(name + i);
 		}
 		return recentTakers;
+=======
+	public History getRecentTakersStats(Timestamp date) throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlRecentStats = 
+				"SELECT * FROM quizzes_taken " + 
+				"WHERE attempt_date > '" + date + "' " +
+				"ORDER BY attempt_date DESC " + 
+				"LIMIT " + MAX_RECENT_TAKERS_STATS + ";";
+		ResultSet rs = stmt.executeQuery(sqlRecentStats);
+		History recentStats = userFactory.getHistory();
+		while (rs.next()){
+			QuizPerformance curPerf = quizFactory.getQuizPerformance();
+			curPerf.setDate(rs.getTimestamp(QUIZ_TAKEN.ATTEMPT_DATE.num()));
+			curPerf.setAmountTime(rs.getInt(QUIZ_TAKEN.AMOUNT_TIME.num()));
+			curPerf.setPercentCorrect(rs.getDouble(QUIZ_TAKEN.PERCENT_CORRECT.num()));
+			curPerf.setUser(rs.getString(QUIZ_TAKEN.USER_NAME.num()));
+			curPerf.setQuiz(rs.getString(QUIZ_TAKEN.QUIZ_NAME.num()));
+			recentStats.add(curPerf);
+		}
+		stmt.close();
+		return recentStats;
+>>>>>>> e3d39706cabbf4620b586a2fcc0adc5dcbc64417
 	}
 
 
 	// Returns list of highest performer user for particular quiz, starting from given date
 	@Override
+<<<<<<< HEAD
 	public UserList highestPerformers(String quizName, Date date) throws SQLException {
 //		Statement stmt = conHandler.getConnection().createStatement();
 //		String sqlUserJoinQuizzes = 
@@ -603,6 +653,17 @@ public class DefaultDatabaseGrabber implements
 //				"ORDER BY score DESC " + 
 //				"LIMIT " + MAX_HIGHEST_PERFORMERS + ";";
 //		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
+=======
+	public UserList getHighestPerformers(String quizName, Timestamp date) throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlUserJoinQuizzes = 
+				"SELECT username FROM quizzes_taken " +
+				"WHERE quiz_name = '" + quizName + "' " + 
+					"AND attempt_date > '" + date + "' " +
+				"ORDER BY percent_correct DESC " + 
+				"LIMIT " + MAX_HIGHEST_PERFORMERS + ";";
+		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
+>>>>>>> e3d39706cabbf4620b586a2fcc0adc5dcbc64417
 		UserList highestPerformers = userFactory.getUserList();
 //		while (rs.next())
 //			highestPerformers.add(rs.getString(1)); // username column
@@ -662,9 +723,23 @@ public class DefaultDatabaseGrabber implements
 		String addPerformanceRecord = 
 				"INSERT INTO quizzes_taken " + 
 				"VALUES ('" + quizName + "',NULL,'" + userName + "'," +
-				percentCorrect + ",'" + date + "'," + timeTaken + ";";
+				percentCorrect + ",'" + date + "'," + timeTaken + ");";
 		stmt.executeUpdate(addPerformanceRecord);
 		stmt.close();
+	}
+
+
+	@Override
+	public UserList getRecentTestTakers(String quizName, Date date) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public UserList highestPerformers(String quizName, Date date) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

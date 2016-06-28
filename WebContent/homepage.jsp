@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Hello to quiz web site</title>
+<title>Hello to Funz</title>
 </head>
 <body>
 
@@ -28,6 +28,8 @@
 		}
 	%>
 
+	<p><b>Hello ${param.name}</b></p>
+	
 	<p><b>user name: <%= user.getName() %></b></p>
 	<p><b>parameter value: <%= request.getParameter("name") %></b></p>
 

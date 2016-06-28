@@ -36,28 +36,46 @@
 	loginClick();
 </script>
 
+<style>
+	input{
+		width: 30%;
+		padding: 10px;
+    	border: 3px;
+    	display: block;
+    	margin : 0 auto;
+	}
+	
+	input[type = submit]{
+    	margin: 4px 2px;
+    	margin-left: auto;
+    	margin-right: auto;
+    	background-color: lightblue;
+    	color: white;
+	}
+	
+	h1, h2{
+		text-align: center;
+		color: lightblue;
+	}
+	
+	h1{
+	font-size: 400%;
+	}
+	
+</style>
+
 </head>
 <body>
-
+<h1>Welcome to Funz!</h1>
+<h2>place where fun quizzes are made</h2>
+<br> <br> <br>
 	<div>
-		<button style = "float: right;" onclick="loginClick()">Login</button>
-		<button style = "float: right;" onclick="registerClick()">Register</button> <br> <br>
-	</div>
-
-	<div align = "center">
 		<form  id="login-form-id" action="LoginServlet" method="post">
 			<input type="text" name="userName" placeholder="Username" required><br /><br /> 
 			<input type="password" name="password" placeholder="Password" required><br /><br /> 
-			<input type="submit" value="Log In"><br /><br /> 
-		</form>
-	</div>
-
-	<div align = "center">
-		<form id="register-form-id" action="RegisterServlet" method="post" onsubmit="validateName()">
-			<input type="text" name="userName" placeholder="Username" required><br /><br /> 
-			<input type="password" name="password" placeholder="Password" onkeyup="passwordStrength()" required> 
-			<span style="color:red"></span><br /><br /> 
-			<input type="submit" value="Register"><br /><br /> 
+			<input name="login" type="submit" value="Log In">
+			<input name="register" type="submit" value="Register">
+			<br><br>
 		</form>
 	</div>
 

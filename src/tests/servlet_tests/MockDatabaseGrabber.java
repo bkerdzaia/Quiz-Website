@@ -3,6 +3,7 @@ import quiz.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import database.DatabaseGrabber;
@@ -106,4 +107,19 @@ public class MockDatabaseGrabber implements DatabaseGrabber {
 		
 	}
 
+<<<<<<< HEAD
+=======
+	@Override
+	public History getRecentTakersStats(Timestamp date) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UserList getHighestPerformers(String quizName, Timestamp date) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+>>>>>>> e3d39706cabbf4620b586a2fcc0adc5dcbc64417
 }
