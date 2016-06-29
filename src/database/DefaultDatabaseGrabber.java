@@ -240,8 +240,7 @@ public class DefaultDatabaseGrabber implements
 	private History fillHistoryByUserName(String userName) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		History userHistory = userFactory.getHistory();
-		String sqlTakenQuizzes = 
-				"SELECT * FROM quizzes_taken " +
+		String sqlTakenQuizzes = "SELECT * FROM quizzes_taken " +
 				"WHERE username = " + "'" + userName + "' " +
 				"ORDER BY attempt_date DESC " +
 				"LIMIT " + MAX_HISTORY_ENTRIES + ";";
@@ -709,11 +708,18 @@ public class DefaultDatabaseGrabber implements
 		stmt.close();
 	}
 
-
+	
+	// Adds friend request record to database
 	@Override
 	public boolean addFriendRequest(String from, String to) throws SQLException {
-		if (containsFriendsRecord(from, to)) // return failure bit and halt 
+		if (getFriendshipId(from, to) != -1) // stop man, they are friends already
 			return false;
+		// 'to' already requested friendship with 'from'
+		if (friendshipRequested(to, from)){ 
+			acceptFriendRequest(from, to);
+		    return true;
+		}
+		// Add request to 'friend_requests' table
 		Statement stmt = conHandler.getConnection().createStatement();
 		String addFriendRequestMessage = 
 				"INSERT INTO friend_requests VALUES('" + 
@@ -723,17 +729,14 @@ public class DefaultDatabaseGrabber implements
 	}
 
 
-	/* Checks if database contains friendship record of provided names. 
-	 * Precondition: first arg. is lexicographically smaller than second. */
-	private boolean containsFriendsRecord(String firstName, String secondName)
-			throws SQLException {
+	private boolean friendshipRequested(String from, String to) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
-		String getFriendshipRecord = 
-				"SELECT * FROM friends " + 
-				"WHERE first_user_name = '" + firstName + 
-					"' AND " +
-						"second_user_name = '" + secondName + "';";
-		ResultSet rs = stmt.executeQuery(getFriendshipRecord);
+		String sqlIsFriendshipRequested = 
+				"SELECT * FROM friend_requests " +
+				"WHERE initiator = '" + from + "' "  +
+					"AND " +
+				"acceptor = '" + to + "';";
+		ResultSet rs = stmt.executeQuery(sqlIsFriendshipRequested);
 		stmt.close();
 		return rs.next();
 	}
@@ -742,6 +745,10 @@ public class DefaultDatabaseGrabber implements
 	@Override
 	public boolean acceptFriendRequest(String acceptor, String from) 
 			throws SQLException {
+		if (getFriendshipId(acceptor, from) != -1) // they are friends already
+			return false;
+		if (!friendshipRequested(from, acceptor)) // man what are you accepting?
+			return false;
 		deleteFriendRequest(from, acceptor);
 		// Make first argument the lexicographically smaller one
 		if (acceptor.compareTo(from) > 0){
@@ -749,13 +756,19 @@ public class DefaultDatabaseGrabber implements
 			acceptor = from;
 			from = temp;
 		}
+		// Add friendship record to database
 		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlAcceptRequest =
-				"UPDATE friends SET status = 1 " + 
-				"WHERE first_user_name = '" + acceptor + 
-					"' AND " + 
-					  "second_user_name = '" + from + "';";
+		// Make first argument lexicographically smaller one
+		if (acceptor.compareTo(from) > 0){
+			String temp = acceptor;
+			acceptor = from;
+			from = temp;
+		}
+		String sqlAcceptRequest = 
+				"INSERT INTO friends VALUES('" + acceptor +
+				"'," + from + "', NULL;";
 		stmt.executeUpdate(sqlAcceptRequest);
+		stmt.close();
 		return true;
 	}
 
@@ -804,21 +817,24 @@ public class DefaultDatabaseGrabber implements
 
 	// Sends message from -> to (users are already friends)
 	@Override
-	public void sendMessage(String from, String to, String message, Timestamp date) 
+	public boolean sendMessage(String from, String to, String message, Timestamp date) 
 			throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
+		// unique id of frienship in database
 		int friendshipId = getFriendshipId(from, to);
+		// in friends table first username is the lexicographically smaller one
+		int directionBit = (from.compareTo(to) > 0) ? 1 : 0;
 		String sqlSendMessage =
 				"INSERT INTO messages VALUES(NULL," + friendshipId + ",'" + message +
-				"','" + date + "'," + 1 + ";"; 
+				"','" + date + "'," + directionBit + ";"; 
 		stmt.executeUpdate(sqlSendMessage);
 		stmt.close();
+		return true;
 	}
 
 
-	/* Returns friendship id for two provided user name.
-	 * As a precondition, user should be registered as friends.
-	 */
+	/* Returns friendship id for two provided user name, or -1
+	 * if provided users are not friends */
 	private int getFriendshipId(String firstUser, String secondUser) 
 			throws SQLException {
 		// Make first argument lexicographically smaller one
@@ -834,7 +850,8 @@ public class DefaultDatabaseGrabber implements
 				"WHERE first_user_name ='" + firstUser +
 					"'AND second_user_name = '" + secondUser + "';";
 		ResultSet rs = stmt.executeQuery(retrieveFriendshipId);
-		rs.next();
+		if (!rs.next())
+			return -1;
 		return rs.getInt(1); // friendship_id column
 	}
 

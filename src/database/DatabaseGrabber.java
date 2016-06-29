@@ -179,7 +179,9 @@ public interface DatabaseGrabber {
 	 * is friendship initiator's user name, the second - the one the first 
 	 * wants to be friends with. As a precondition, both string should represent
 	 * valid user names contained in system. Method ensures that users are 
-	 * not friends already, in which case it returns 'false'.
+	 * not friends already, in which case it returns 'false'. 
+	 * !! Note: if 'to' already requested friendship with 'from', new friendship
+	 * entry is automatically added to database.
 	 * @param from - user who wants to be friends with 'to'
 	 * @param to - to whom friendship request in sent
 	 * @return - add status (true - success, otherwise - false)
@@ -189,8 +191,9 @@ public interface DatabaseGrabber {
 	
 	/**
 	 * Adds new friendship record to the database. A check is done, 
-	 * that the provided users are not friends already, in which
-	 * case 'false' is handed back as a sign of failure.
+	 * that the provided users are not friends already and that friendship
+	 * is really requested, if these requirements are not fulfilled 'false' 
+	 * is handed back as a sign of failure.
 	 * @param first user's name
 	 * @param second user's name
 	 * @return completion status ('true' if success, 'false' otherwise)
@@ -202,12 +205,14 @@ public interface DatabaseGrabber {
 	/**
 	 * Provides means of sending message from one user of the system to
 	 * another. The message is stored in database, and will be viewed 
-	 * by recepient once he/she logs in.
+	 * by recepient once he/she logs in. A check is done for user to 
+	 * be friends.
 	 * @param from - sender's name
 	 * @param to - recepient's name
+	 * @return - completion status ('true' if success, 'false' otherwise)
 	 * @throws SQLException
 	 */
-	public void sendMessage(String from, String to, String message, Timestamp date) 
+	public boolean sendMessage(String from, String to, String message, Timestamp date) 
 			throws SQLException;
 
 	
