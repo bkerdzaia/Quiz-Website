@@ -28,7 +28,7 @@ public class CreateQuizServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		System.err.println("create quiz servlet");
 		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute("userName");
+		String user = (String) session.getAttribute("userName");
 		System.out.println("creator user is: " + user);
 		
 		String quizName = request.getParameter("quizNameText");
@@ -40,18 +40,19 @@ public class CreateQuizServlet extends HttpServlet {
 		}
 		
 		Map<String, String[]> map = request.getParameterMap();
-		Stream<String> paramKeySet = map.keySet().stream();
-		Stream<String> blankQuestions = paramKeySet.filter(key -> key.startsWith("fillInTheBlankQuestion"));
+		Set<String> paramKeySet = map.keySet();
+		Stream<String> blankQuestions = paramKeySet.stream().filter(key -> key.startsWith("fillInTheBlankQuestion"));
+		Stream<String> multipleChoiceQuestions = paramKeySet.stream().filter(key -> key.startsWith("multipleChoiceQuestion"));
+		Stream<String> questionResponseQuestions = paramKeySet.stream().filter(key -> key.startsWith("questionResponseQuestion"));
+		Stream<String> pictureResponseQuestions = paramKeySet.stream().filter(key -> key.startsWith("pictureResponseQuestion"));
 		
-//		blankQuestions.forEach(elem -> System.out.println("blank elem: " + elem));
 		QuizQuestions questions = DefaultQuizFactory.getFactoryInstance().getQuizQuestions();
-//		blankQuestions = paramKeySet.filter(key -> key.startsWith("fillInTheBlankQuestion"));
-		blankQuestions.forEach(elem -> questions.add(createFillBlank(map.get(elem))));
-//		
-//		Stream<String> multipleChoiceQuestions = paramKeySet.filter(key -> key.startsWith("multipleChoiceQuestion"));
-//		Stream<String> questionResponseQuestions = paramKeySet.filter(key -> key.startsWith("questionResponseQuestion"));
-//		Stream<String> pictureResponseQuestions = paramKeySet.filter(key -> key.startsWith("pictureResponseQuestion"));
-//		
+		blankQuestions.forEach(elem -> { 
+			questions.add(createFillBlank(map.get(elem)));
+			System.out.println("blank elem: " + elem);
+		});
+		
+		
 		System.out.println("quizName: " + quizName);
 		System.out.println("description: " + description);
 		if (quizProperty != null) {
@@ -62,7 +63,7 @@ public class CreateQuizServlet extends HttpServlet {
 			System.out.println("quiz property null");
 		}
 		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("create-quiz.html");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("homepage.jsp?name="+user);
 		dispatcher.forward(request, response);
 	}
 	

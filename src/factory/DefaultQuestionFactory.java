@@ -6,6 +6,7 @@ import questions.MultipleChoise;
 import questions.MultipleChoiseView;
 import questions.PictureResponse;
 import questions.PictureResponseView;
+import questions.QuestionAdd;
 import questions.QuestionResponce;
 import questions.QuestionResponceView;
 
@@ -70,6 +71,11 @@ public class DefaultQuestionFactory implements QuestionFactory {
 	@Override
 	public PictureResponseView getPictureResponseView() {
 		return new PictureResponseView();
+	}
+
+	@Override
+	public QuestionAdd getQuestionAdd() {
+		return new QuestionAdd();
 	}
 
 }
