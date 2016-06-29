@@ -58,7 +58,6 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`quizzes` (
   PRIMARY KEY (`quiz_name`),
 
   /* Indexing foreign keys */
-  /*INDEX `quiz_to_category_idx` (`category_id` ASC), */
   INDEX `quiz_to_creator_idx` (`quiz_creator` ASC),
 
   /* Adding foreign key constrain to `quiz_creator`. */
@@ -138,11 +137,26 @@ COMMENT = 'Links users to each other implementing \'friends\' feature.
 
 
 -- -----------------------------------------------------
+-- Table `MockQuizWebsite`.`friend_requests`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`friend_requests` (
+
+  `initiator`      CHARACTER(45)     NOT NULL,  # one who sends request
+  `acceptor`       CHARACTER(45)     NOT NULL,  # one to whom request is sent
+
+  PRIMARY KEY (`initiator`, `acceptor`))
+
+ENGINE = InnoDB
+COMMENT = 'Stores friend requests in database. The combination of initiator
+           and acceptor is unique in the table.';
+
+
+-- -----------------------------------------------------
 -- Table `MockQuizWebsite`.`messages`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`messages` (
 
-  `message_id`               INT               NOT NULL,
+  `message_id`               INT               NOT NULL AUTO_INCREMENT,
   `friendship_id`            INT               NOT NULL,
   `text`                     TEXT              NOT NULL,
   `sent_date`                TIMESTAMP         NOT NULL,

@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,12 +21,15 @@ import factory.QuestionFactory;
 import factory.QuizFactory;
 import factory.UserFactory;
 import quiz.FriendList;
+import quiz.FriendRequest;
 import quiz.History;
+import quiz.Message;
 import quiz.Quiz;
 import quiz.QuizCollection;
 import quiz.QuizPerformance;
 import quiz.QuizProperty;
 import quiz.QuizQuestions;
+import quiz.TextMessage;
 import quiz.User;
 import quiz.UserList;
 import quiz.UserMessageList;
@@ -183,6 +187,30 @@ public class DefaultDatabaseGrabber implements
 
 	// Returns message sent to user with provided user name.
 	private UserMessageList getMessages(String userName) throws SQLException {
+		UserMessageList messages = userFactory.getMessageList();
+		messages.addAll(getTextMessagesAndChallenges(userName));
+		messages.addAll(getFriendRequests(userName));
+		return messages;
+	}
+	
+	private UserMessageList getFriendRequests(String userName) 
+			throws SQLException{
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlFriendRequests = 
+				"SELECT initiator FROM friend_requests " +
+				"WHERE acceptor = '" + userName + "';";
+		ResultSet rs = stmt.executeQuery(sqlFriendRequests);
+		UserMessageList friendRequests = userFactory.getMessageList();
+		while (rs.next()){
+			FriendRequest curRequest = userFactory.getFriendRequest();
+			curRequest.setSender(rs.getString(1)); // initiator column
+		}
+		return friendRequests;
+	}
+
+
+	private UserMessageList getTextMessagesAndChallenges(String userName) 
+			throws SQLException{
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlMessagesToUser = 
 				"SELECT text FROM friends " +
@@ -197,12 +225,13 @@ public class DefaultDatabaseGrabber implements
 								" AND " +
 							"sender = 0);";
 		ResultSet rs = stmt.executeQuery(sqlMessagesToUser);
-		UserMessageList messages = userFactory.getMessageList();
+		UserMessageList textMessages = userFactory.getMessageList();
 		while (rs.next()){
-			Message curMessage = 
-		}
-		stmt.close();
-		return null;
+			TextMessage curMessage = userFactory.getTextMessage();
+			curMessage.setMessage(rs.getString(1)); // text column	
+			textMessages.add(curMessage);
+		} 
+		return textMessages;
 	}
 
 
@@ -686,11 +715,15 @@ public class DefaultDatabaseGrabber implements
 		if (containsFriendsRecord(from, to)) // return failure bit and halt 
 			return false;
 		Statement stmt = conHandler.getConnection().createStatement();
+		String addFriendRequestMessage = 
+				"INSERT INTO friend_requests VALUES('" + 
+					from + "','" + to + "';";
+		stmt.executeUpdate(addFriendRequestMessage);
 		return true;
 	}
 
 
-	/* Checks if database contains friendshi record of provided names. 
+	/* Checks if database contains friendship record of provided names. 
 	 * Precondition: first arg. is lexicographically smaller than second. */
 	private boolean containsFriendsRecord(String firstName, String secondName)
 			throws SQLException {
@@ -709,15 +742,13 @@ public class DefaultDatabaseGrabber implements
 	@Override
 	public boolean acceptFriendRequest(String acceptor, String from) 
 			throws SQLException {
-		int directionBit = 0;
+		deleteFriendRequest(from, acceptor);
 		// Make first argument the lexicographically smaller one
 		if (acceptor.compareTo(from) > 0){
 			String temp = acceptor;
 			acceptor = from;
 			from = temp;
-			directionBit = 1 - directionBit; // Reverse direction
 		}
-		if (!containsFriendsRecord(acceptor, from)) return false;
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlAcceptRequest =
 				"UPDATE friends SET status = 1 " + 
@@ -726,6 +757,20 @@ public class DefaultDatabaseGrabber implements
 					  "second_user_name = '" + from + "';";
 		stmt.executeUpdate(sqlAcceptRequest);
 		return true;
+	}
+
+
+	// Deletes friend request coming from 'from' to 'acceptor'.
+	private void deleteFriendRequest(String from, String acceptor) 
+			throws SQLException{
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlDeleteFriendRequest =
+				"DELETE FROM friend_requests " + 
+				"WHERE initiator = '" + from  + "' " +
+					"AND " +
+				"acceptor = '" + acceptor + "';";
+		stmt.executeQuery(sqlDeleteFriendRequest);
+		stmt.close();
 	}
 
 
@@ -757,6 +802,7 @@ public class DefaultDatabaseGrabber implements
 	}
 
 
+	// Sends message from -> to (users are already friends)
 	@Override
 	public void sendMessage(String from, String to, String message, Timestamp date) 
 			throws SQLException {
@@ -770,13 +816,18 @@ public class DefaultDatabaseGrabber implements
 	}
 
 
+	/* Returns friendship id for two provided user name.
+	 * As a precondition, user should be registered as friends.
+	 */
 	private int getFriendshipId(String firstUser, String secondUser) 
 			throws SQLException {
+		// Make first argument lexicographically smaller one
 		if (firstUser.compareTo(secondUser) > 0){
 			String temp = firstUser;
 			firstUser = secondUser;
 			secondUser = temp;
 		}
+		// Retrieve id from 'friends' tables
 		Statement stmt = conHandler.getConnection().createStatement();
 		String retrieveFriendshipId = 
 				"SELECT friendship_id FROM friends " +

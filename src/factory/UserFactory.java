@@ -40,8 +40,20 @@ public interface UserFactory {
 	public UserList getUserList();
 	
 	/**
-	 * Constructs 'Message' object
-	 * @return message
+	 * Constructs 'TextMessage' object
+	 * @return text message
 	 */
-	public Message getMessage();
+	public TextMessage getTextMessage();
+	
+	/**
+	 * Constructs 'FriendRequest' object
+	 * @return friend request
+	 */
+	public FriendRequest getFriendRequest();
+	
+	/**
+	 * Constructs 'Challenge' object
+	 * @return challenge
+	 */
+	public Challenge getChallenge();
 }

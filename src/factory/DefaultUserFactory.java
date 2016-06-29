@@ -1,7 +1,10 @@
 package factory;
 
+import quiz.Challenge;
 import quiz.FriendList;
+import quiz.FriendRequest;
 import quiz.History;
+import quiz.TextMessage;
 import quiz.User;
 import quiz.UserList;
 import quiz.UserMessageList;
@@ -56,5 +59,19 @@ public class DefaultUserFactory implements UserFactory{
 		return new UserList();
 	}
 
-	
+	@Override
+	public TextMessage getTextMessage() {
+		return new TextMessage();
+	}
+
+	@Override
+	public FriendRequest getFriendRequest() {
+		return new FriendRequest();
+	}
+
+	@Override
+	public Challenge getChallenge() {
+		return new Challenge();
+	}
+
 }
