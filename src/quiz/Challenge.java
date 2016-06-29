@@ -22,26 +22,4 @@ public class Challenge implements Message {
 				quizUrl;
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof Challenge))
-			return false;
-		Challenge other = (Challenge) obj;
-		return false;
-	}
-
-	@Override
-	public boolean isRead() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public void setRead() {
-		// TODO Auto-generated method stub
-	}
-	
 }

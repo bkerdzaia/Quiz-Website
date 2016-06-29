@@ -212,7 +212,7 @@ public class DefaultDatabaseGrabber implements
 			throws SQLException{
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlMessagesToUser = 
-				"SELECT text FROM friends " +
+				"SELECT text, sent_date FROM friends " +
 					"JOIN messages ON " + 
 						"friends.friendship_id = messages.friendship_id " +
 					" AND (" +
@@ -222,7 +222,8 @@ public class DefaultDatabaseGrabber implements
 						" OR " +
 							"second_user_name = '" + userName + "'" +
 								" AND " +
-							"sender = 0);";
+							"sender = 0) " +
+				"ORDER BY sent_date DESC;" ;
 		ResultSet rs = stmt.executeQuery(sqlMessagesToUser);
 		UserMessageList textMessages = userFactory.getMessageList();
 		while (rs.next()){
@@ -333,7 +334,7 @@ public class DefaultDatabaseGrabber implements
 		stmt.close();
 	}
 
-
+	// Returns last auto-increment id of mysql database
 	private int getLastAutoIncrement(Statement stmt) throws SQLException {
 		ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID();");
 		rs.next();
@@ -730,6 +731,7 @@ public class DefaultDatabaseGrabber implements
 	}
 
 
+	// Check if 'from' already requested friendship with 'to'
 	private boolean friendshipRequested(String from, String to) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlIsFriendshipRequested = 
@@ -788,7 +790,7 @@ public class DefaultDatabaseGrabber implements
 		stmt.close();
 	}
 
-
+	// Retrieves friends of user with provided name
 	private FriendList getFriends(String userName) throws SQLException {
 		FriendList friends = userFactory.getFriendList();
 		friends.addAll(getFriendsFromColumn(userName, false));
@@ -796,7 +798,7 @@ public class DefaultDatabaseGrabber implements
 		return friends;
 	}
 
-
+	// Helper method for getting friends, is called twice one with 'swapColumns'
 	private FriendList getFriendsFromColumn(String userName, boolean swapColumns) 
 			throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
