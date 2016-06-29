@@ -1,8 +1,6 @@
 package application;
 
 import java.io.*;
-import java.sql.SQLException;
-import java.sql.Timestamp;
 
 import javax.servlet.*;
 import javax.servlet.annotation.*;
@@ -10,7 +8,6 @@ import javax.servlet.http.*;
 
 import database.*;
 import factory.*;
-import quiz.*;
 
 /**
  * Servlet implementation class LoginServlet
@@ -18,6 +15,8 @@ import quiz.*;
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	public static String DATABASE_ATTRIBUTE = "database";
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
@@ -25,47 +24,37 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		DatabaseGrabber db = (DatabaseGrabber) 
-				request.getServletContext().getAttribute(DatabaseListener.ATTRIBUTE_NAME);
-		// If database is not initialized do so and store refference in context object
-		if (db == null) {
-			db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
-			request.getServletContext().setAttribute(DatabaseListener.ATTRIBUTE_NAME, db);
-		}
-	
-		// read all information and pass home page as session
-		HttpSession session = request.getSession();
+		String address = "login.html";			
 		try {
+			DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
+			if (db == null) {
+				db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
+				request.getServletContext().setAttribute(DATABASE_ATTRIBUTE, db);
+			}
+		
+			// read all information and pass home page as session
+			HttpSession session = request.getSession();
 			db.connect();
 			String name = request.getParameter("userName");
 			Encryption encryption = new Encryption();
 			String encryptPassword = encryption.encrypt(request.getParameter("password"));
-			User user = db.authenticateUser(name, encryptPassword);
-			String address = "login.html";			
-			if(request.getParameter("register") != null && db.registerUser(name, encryptPassword)){
-				user = DefaultUserFactory.getFactoryInstance().getUser();
-				user.setName(name);
-				user.setPasswordHash(encryptPassword);
-				user.setHistory(DefaultUserFactory.getFactoryInstance().getHistory());
-				user.setMessages(DefaultUserFactory.getFactoryInstance().getMessageList());
-				user.setCreatedQuizzes(DefaultQuizFactory.getFactoryInstance().getQuizCollection());
-				user.setFriends(DefaultUserFactory.getFactoryInstance().getFriendList());
+			boolean userEntered = db.authenticateUser(name, encryptPassword);
+			if(request.getParameter("register") != null) {// && db.registerUser(name, encryptPassword)){
+				session.setAttribute("userName", name);
+				address = "homepage.jsp?name=" + name;
 			}
-			if(user!=null){
-				session.setAttribute("userName", user);
-				QuizCollection popularQuizzes = db.getPopularQuizzes();
-				session.setAttribute("popularQuizzes", popularQuizzes);
-				QuizCollection recentlyCreatedQuiz = db.getRecentlyCreatedQuizzes();
-				session.setAttribute("recentQuizzes", recentlyCreatedQuiz);
+			if(userEntered){
+				session.setAttribute("userName", name);
 				address = "homepage.jsp?name=" + name;
 				System.out.println("Successfull Login");
 			}
 			db.close();
-			RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-			dispatcher.forward(request, response);
-		} catch (SQLException e) {
-			System.out.println("exception: " + e);
+		} catch (Exception e) {
+			e.printStackTrace();
+			address = "error-page.jsp";
 		}
+		RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+		dispatcher.forward(request, response);
 	}
 
 
