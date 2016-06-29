@@ -8,7 +8,6 @@ import javax.servlet.http.*;
 
 import database.*;
 import factory.*;
-import quiz.*;
 
 /**
  * Servlet implementation class LoginServlet
@@ -39,12 +38,12 @@ public class LoginServlet extends HttpServlet {
 			String name = request.getParameter("userName");
 			Encryption encryption = new Encryption();
 			String encryptPassword = encryption.encrypt(request.getParameter("password"));
-			User user = db.authenticateUser(name, encryptPassword);
+			boolean userEntered = db.authenticateUser(name, encryptPassword);
 			if(request.getParameter("register") != null) {// && db.registerUser(name, encryptPassword)){
 				session.setAttribute("userName", name);
 				address = "homepage.jsp?name=" + name;
 			}
-			if(user!=null){
+			if(userEntered){
 				session.setAttribute("userName", name);
 				address = "homepage.jsp?name=" + name;
 				System.out.println("Successfull Login");

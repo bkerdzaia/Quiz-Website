@@ -10,7 +10,6 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,14 +19,18 @@ import factory.DatabaseFactory;
 import factory.QuestionFactory;
 import factory.QuizFactory;
 import factory.UserFactory;
+import quiz.FriendList;
+import quiz.FriendRequest;
 import quiz.History;
 import quiz.Quiz;
 import quiz.QuizCollection;
 import quiz.QuizPerformance;
 import quiz.QuizProperty;
 import quiz.QuizQuestions;
+import quiz.TextMessage;
 import quiz.User;
 import quiz.UserList;
+import quiz.UserMessageList;
 
 /**
  * @author dav23r
@@ -113,7 +116,7 @@ public class DefaultDatabaseGrabber implements
 
 	// Authenticate user based on login and hash of password
 	@Override
-	public User authenticateUser(String userName, String passwHash) 
+	public boolean authenticateUser(String userName, String passwHash) 
 			throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String queryUser = 
@@ -123,16 +126,16 @@ public class DefaultDatabaseGrabber implements
 		// User with provided userName doesn't exist in database
 		if (!rs.next()){
 			stmt.close();
-			return null;
+			return false;
 		}
 		// Otherwise check if stored hash and provided one are equal
 		if (!rs.getString(USER.PASSW_HASH.num()).equals(passwHash)){
 			stmt.close();
-			return null;
+			return false;
 		}
 		// If valid credentials are provided, return corresponding user.
 		stmt.close();
-		return loadUser(userName);	
+		return true;
 	}
 
 
@@ -163,6 +166,7 @@ public class DefaultDatabaseGrabber implements
 //			return null;
 		User retrievedUser = userFactory.getUser();
 		// Fill user bean
+<<<<<<< HEAD
 //		retrievedUser.setName(rs.getString(USER.USERNAME.num()));
 //		retrievedUser.setPictureUrl(rs.getString(USER.PROFILE_PICTURE_URL.num()));
 //		retrievedUser.setAboutMe(rs.getString(USER.ABOUT_ME.num()));
@@ -179,17 +183,82 @@ public class DefaultDatabaseGrabber implements
 		retrievedUser.setMessages(factory.DefaultUserFactory.getFactoryInstance().getMessageList());
 		retrievedUser.setCreatedQuizzes(factory.DefaultQuizFactory.getFactoryInstance().getQuizCollection());
 		retrievedUser.setFriends(factory.DefaultUserFactory.getFactoryInstance().getFriendList());
+=======
+		retrievedUser.setName(rs.getString(USER.USERNAME.num()));
+		retrievedUser.setPictureUrl(rs.getString(USER.PROFILE_PICTURE_URL.num()));
+		retrievedUser.setAboutMe(rs.getString(USER.ABOUT_ME.num()));
+		retrievedUser.setPasswordHash(rs.getString(USER.PASSW_HASH.num()));
+		// Fill more complex fields, first list of created quizzes
+		retrievedUser.setCreatedQuizzes(
+				getCreatedQuizzesByUserName(rs.getString(USER.USERNAME.num())));
+		// Now, history of performance
+		History userHistory = fillHistoryByUserName(rs.getString(USER.USERNAME.num()));
+		retrievedUser.setHistory(userHistory);
+		// Set friends and messages
+		retrievedUser.setFriends(getFriends(userName));
+		retrievedUser.setMessages(getMessages(userName));
+		stmt.close();
+>>>>>>> ee2067858048916d65c905f8cb837816ef83809b
 		return retrievedUser;
 	}
 
 
-	/* Given user id, constructs record of user's performance,
+	// Returns message sent to user with provided user name.
+	private UserMessageList getMessages(String userName) throws SQLException {
+		UserMessageList messages = userFactory.getMessageList();
+		messages.addAll(getTextMessagesAndChallenges(userName));
+		messages.addAll(getFriendRequests(userName));
+		return messages;
+	}
+	
+	private UserMessageList getFriendRequests(String userName) 
+			throws SQLException{
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlFriendRequests = 
+				"SELECT initiator FROM friend_requests " +
+				"WHERE acceptor = '" + userName + "';";
+		ResultSet rs = stmt.executeQuery(sqlFriendRequests);
+		UserMessageList friendRequests = userFactory.getMessageList();
+		while (rs.next()){
+			FriendRequest curRequest = userFactory.getFriendRequest();
+			curRequest.setSender(rs.getString(1)); // initiator column
+		}
+		return friendRequests;
+	}
+
+
+	private UserMessageList getTextMessagesAndChallenges(String userName) 
+			throws SQLException{
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlMessagesToUser = 
+				"SELECT text FROM friends " +
+					"JOIN messages ON " + 
+						"friends.friendship_id = messages.friendship_id " +
+					" AND (" +
+							"first_user_name = '" + userName + "'" +
+								" AND " +
+							"sender = 1" + 
+						" OR " +
+							"second_user_name = '" + userName + "'" +
+								" AND " +
+							"sender = 0);";
+		ResultSet rs = stmt.executeQuery(sqlMessagesToUser);
+		UserMessageList textMessages = userFactory.getMessageList();
+		while (rs.next()){
+			TextMessage curMessage = userFactory.getTextMessage();
+			curMessage.setMessage(rs.getString(1)); // text column	
+			textMessages.add(curMessage);
+		} 
+		return textMessages;
+	}
+
+
+	/* Given user name, constructs record of user's performance,
 	 * and hands back corresponding 'history' object. */
 	private History fillHistoryByUserName(String userName) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		History userHistory = userFactory.getHistory();
-		String sqlTakenQuizzes = 
-				"SELECT * FROM quizzes_taken " +
+		String sqlTakenQuizzes = "SELECT * FROM quizzes_taken " +
 				"WHERE username = " + "'" + userName + "' " +
 				"ORDER BY attempt_date DESC " +
 				"LIMIT " + MAX_HISTORY_ENTRIES + ";";
@@ -530,6 +599,7 @@ public class DefaultDatabaseGrabber implements
 	// Hands back list of names of popular quizzes
 	@Override
 	public QuizCollection getPopularQuizzes() throws SQLException {
+<<<<<<< HEAD
 //		Statement stmt = conHandler.getConnection().createStatement();
 //		String sqlQuizJoinTaken = 
 //				"SELECT quizzes.quiz_name, COUNT(*) AS popularity FROM quizzes " +
@@ -539,41 +609,51 @@ public class DefaultDatabaseGrabber implements
 //				"ORDER BY popularity DESC " +
 //				"LIMIT " + MAX_POPULAR_QUIZZES + ";";
 //		ResultSet rs = stmt.executeQuery(sqlQuizJoinTaken);
+=======
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlQuizJoinTaken = 
+				"SELECT quizzes.quiz_name, COUNT(*) AS popularity FROM quizzes " +
+					"JOIN quizzes_taken " +
+						"ON quizzes_taken.quiz_name = quizzes.quiz_name " + 
+				"GROUP BY quizzes.quiz_name " + 
+				"ORDER BY popularity DESC " +
+				"LIMIT " + MAX_POPULAR_QUIZZES + ";";
+		ResultSet rs = stmt.executeQuery(sqlQuizJoinTaken);
+>>>>>>> ee2067858048916d65c905f8cb837816ef83809b
 		// Create quiz collection and starting filling
 		QuizCollection popularQuizzes = quizFactory.getQuizCollection();
-//		while (rs.next())
-//			popularQuizzes.add(rs.getString(1)); // name column
-		String s = "a";
-		for(char i='b'; i<'e'; i++) {
-			s += i;
-			popularQuizzes.add(s);
-		}
+		while (rs.next())
+			popularQuizzes.add(rs.getString(1)); // name column
 		return popularQuizzes;
 	}
 
 	// Returns list of recently created quizzes
 	@Override
 	public QuizCollection getRecentlyCreatedQuizzes() throws SQLException {
+<<<<<<< HEAD
 //		Statement stmt = conHandler.getConnection().createStatement();
 //		String sqlRecentCreatedQuizzes = 
 //				"SELECT quiz_name FROM quizzes " +
 //				"ORDER BY creation_date DESC " + 
 //				"LIMIT " + MAX_RECENTRY_CREATED_QUIZZES + ";";
 //		ResultSet rs = stmt.executeQuery(sqlRecentCreatedQuizzes);
+=======
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlRecentCreatedQuizzes = 
+				"SELECT quiz_name FROM quizzes " +
+				"ORDER BY creation_date DESC " + 
+				"LIMIT " + MAX_RECENTRY_CREATED_QUIZZES + ";";
+		ResultSet rs = stmt.executeQuery(sqlRecentCreatedQuizzes);
+>>>>>>> ee2067858048916d65c905f8cb837816ef83809b
 		QuizCollection recentQuizzes = quizFactory.getQuizCollection();
-//		while (rs.next())
-//			recentQuizzes.add(rs.getString(1)); // quizName column
-
-		String s = "x";
-		for(char i='e'; i<'h'; i++) {
-			s += i;
-			recentQuizzes.add(s);
-		}
+		while (rs.next())
+			recentQuizzes.add(rs.getString(1)); // quizName column
 		return recentQuizzes;
 	}
 
 	// Returns list of recent quiz takers
 	@Override
+<<<<<<< HEAD
 	public UserList getRecentTestTakers(String quizName, Date date) throws SQLException {
 //		Statement stmt = conHandler.getConnection().createStatement();
 //		String sqlUserJoinQuizzes = 
@@ -598,6 +678,8 @@ public class DefaultDatabaseGrabber implements
 		return recentTakers;
 	}
 	
+=======
+>>>>>>> ee2067858048916d65c905f8cb837816ef83809b
 	public History getRecentTakersStats(Timestamp date) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlRecentStats = 
@@ -622,6 +704,7 @@ public class DefaultDatabaseGrabber implements
 
 
 	// Returns list of highest performer user for particular quiz, starting from given date
+<<<<<<< HEAD
 	public UserList getHighestPerformers(String quizName, Timestamp date) throws SQLException {
 //		Statement stmt = conHandler.getConnection().createStatement();
 //		String sqlUserJoinQuizzes = 
@@ -631,14 +714,22 @@ public class DefaultDatabaseGrabber implements
 //				"ORDER BY percent_correct DESC " + 
 //				"LIMIT " + MAX_HIGHEST_PERFORMERS + ";";
 //		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
+=======
+	@Override
+	public UserList getHighestPerformers(String quizName, Timestamp date) throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlHighestPerformers = 
+				"SELECT username FROM quizzes_taken " +
+				"WHERE quiz_name = '" + quizName + "' " + 
+					"AND attempt_date > '" + date + "' " +
+				"ORDER BY percent_correct DESC " + 
+				"LIMIT " + MAX_HIGHEST_PERFORMERS + ";";
+		ResultSet rs = stmt.executeQuery(sqlHighestPerformers);
+>>>>>>> ee2067858048916d65c905f8cb837816ef83809b
 		UserList highestPerformers = userFactory.getUserList();
-//		while (rs.next())
-//			highestPerformers.add(rs.getString(1)); // username column
-//		stmt.close();
-		String name = "name";
-		for(int i=0; i<5; i++) {
-			highestPerformers.add(name + i);
-		}
+		while (rs.next())
+			highestPerformers.add(rs.getString(1)); // username column
+		stmt.close();
 		return highestPerformers;
 	}
 
@@ -695,11 +786,180 @@ public class DefaultDatabaseGrabber implements
 		stmt.close();
 	}
 
+	
+	// Adds friend request record to database
+	@Override
+	public boolean addFriendRequest(String from, String to) throws SQLException {
+		if (getFriendshipId(from, to) != -1) // stop man, they are friends already
+			return false;
+		if (friendshipRequested(from, to))   // maybe you are not created for each other 
+			return false;
+		// 'to' already requested friendship with 'from'
+		if (friendshipRequested(to, from)){ 
+			acceptFriendRequest(from, to);
+		    return true;
+		}
+		// Add request to 'friend_requests' table
+		Statement stmt = conHandler.getConnection().createStatement();
+		String addFriendRequestMessage = 
+				"INSERT INTO friend_requests VALUES('" + 
+					from + "','" + to + "');";
+		stmt.executeUpdate(addFriendRequestMessage);
+		return true;
+	}
+
+
+	private boolean friendshipRequested(String from, String to) throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlIsFriendshipRequested = 
+				"SELECT * FROM friend_requests " +
+				"WHERE initiator = '" + from + "' "  +
+					"AND " +
+				"acceptor = '" + to + "';";
+		ResultSet rs = stmt.executeQuery(sqlIsFriendshipRequested);
+		boolean isFriendshipRequest = rs.next();
+		stmt.close();
+		return isFriendshipRequest;
+	}
+
 
 	@Override
+	public boolean acceptFriendRequest(String acceptor, String from) 
+			throws SQLException {
+		if (getFriendshipId(acceptor, from) != -1) // they are friends already
+			return false;
+		if (!friendshipRequested(from, acceptor)) // man what are you accepting?
+			return false;
+		deleteFriendRequest(from, acceptor);
+		// Make first argument the lexicographically smaller one
+		if (acceptor.compareTo(from) > 0){
+			String temp = acceptor;
+			acceptor = from;
+			from = temp;
+		}
+		// Add friendship record to database
+		Statement stmt = conHandler.getConnection().createStatement();
+		// Make first argument lexicographically smaller one
+		if (acceptor.compareTo(from) > 0){
+			String temp = acceptor;
+			acceptor = from;
+			from = temp;
+		}
+		String sqlAcceptRequest = 
+				"INSERT INTO friends VALUES('" + acceptor +
+				"','" + from + "', NULL);";
+		stmt.executeUpdate(sqlAcceptRequest);
+		stmt.close();
+		return true;
+	}
+
+
+	// Deletes friend request coming from 'from' to 'acceptor'.
+	private void deleteFriendRequest(String from, String acceptor) 
+			throws SQLException{
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlDeleteFriendRequest =
+				"DELETE FROM friend_requests " + 
+				"WHERE initiator = '" + from  + "' " +
+					"AND " +
+				"acceptor = '" + acceptor + "';";
+		stmt.executeUpdate(sqlDeleteFriendRequest);
+		stmt.close();
+	}
+
+
+	private FriendList getFriends(String userName) throws SQLException {
+		FriendList friends = userFactory.getFriendList();
+		friends.addAll(getFriendsFromColumn(userName, false));
+		friends.addAll(getFriendsFromColumn(userName, true));
+		return friends;
+	}
+
+
+	private FriendList getFriendsFromColumn(String userName, boolean swapColumns) 
+			throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		String firstColumn = "first_user_name", secondColumn = "second_user_name";
+		if (swapColumns){
+			String temp = firstColumn;
+			firstColumn = secondColumn;
+			secondColumn = temp;
+		}
+		String sqlRetrieveFriends = 
+				"SELECT " + firstColumn + " FROM friends " + 
+				"WHERE " + secondColumn + "='" + userName + "';";
+		ResultSet rs = stmt.executeQuery(sqlRetrieveFriends);
+		FriendList friends = userFactory.getFriendList();
+		while (rs.next())
+			friends.add(rs.getString(1)); // friend name column
+		stmt.close();
+		return friends;
+	}
+
+
+	// Sends message from -> to (users are already friends)
+	@Override
+<<<<<<< HEAD
 	public UserList highestPerformers(String quizName, Date date) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
+=======
+	public boolean sendMessage(String from, String to, String message, Timestamp date) 
+			throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		// unique id of frienship in database
+		int friendshipId = getFriendshipId(from, to);
+		if (friendshipId == -1)
+			return false;
+		// in friends table first username is the lexicographically smaller one
+		int directionBit = (from.compareTo(to) > 0) ? 1 : 0;
+		String sqlSendMessage =
+				"INSERT INTO messages VALUES(NULL," + friendshipId + ",'" + message +
+				"','" + date + "'," + directionBit + ");"; 
+		stmt.executeUpdate(sqlSendMessage);
+		stmt.close();
+		return true;
+	}
+
+
+	/* Returns friendship id for two provided user name, or -1
+	 * if provided users are not friends */
+	private int getFriendshipId(String firstUser, String secondUser) 
+			throws SQLException {
+		// Make first argument lexicographically smaller one
+		if (firstUser.compareTo(secondUser) > 0){
+			String temp = firstUser;
+			firstUser = secondUser;
+			secondUser = temp;
+		}
+		// Retrieve id from 'friends' tables
+		Statement stmt = conHandler.getConnection().createStatement();
+		String retrieveFriendshipId = 
+				"SELECT friendship_id FROM friends " +
+				"WHERE first_user_name ='" + firstUser +
+					"'AND second_user_name = '" + secondUser + "';";
+		ResultSet rs = stmt.executeQuery(retrieveFriendshipId);
+		if (!rs.next())
+			return -1;
+		return rs.getInt(1); // friendship_id column
+	}
+
+
+	// Removes friend realation between users from database
+	@Override
+	public boolean removeFriend(String firstUser, String secondUser) 
+			throws SQLException {
+		int friendshipId = getFriendshipId(firstUser, secondUser);
+		if (friendshipId == -1) // I mean you are not even friends 
+			return false;
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlRemoveFriend = 
+				"DELETE FROM friends " + 
+				"WHERE friendship_id = " + friendshipId + ";";
+		stmt.executeUpdate(sqlRemoveFriend);
+		stmt.close();
+		return true;
+>>>>>>> ee2067858048916d65c905f8cb837816ef83809b
 	}
 
 }

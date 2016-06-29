@@ -32,7 +32,7 @@ USE `MockQuizWebsite` ;
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`users` (
 
   `username`          CHARACTER(45)  NOT NULL,
-  `passw_hash`        CHAR(100)      NOT NULL,
+  `passw_hash`        CHAR(160)      NOT NULL,
   `profile_pic_url`   TEXT           NULL, # default
   `description`       TEXT           NULL, # to null
 
@@ -40,20 +40,6 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`users` (
 
 ENGINE = InnoDB
 COMMENT = 'Table stores users of system.';
-
-
--- -----------------------------------------------------
--- Table `MockQuizWebsite`.`quiz_categories`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`quiz_categories` (
-
-  `category_id`      INT           NOT NULL,
-  `category_name`    VARCHAR(45)   NOT NULL,
-
-  PRIMARY KEY (`category_id`))
-
-ENGINE = InnoDB
-COMMENT = 'Stores thematic categories, e.g. Geograpy, Math...';
 
 
 -- -----------------------------------------------------
@@ -72,22 +58,15 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`quizzes` (
   PRIMARY KEY (`quiz_name`),
 
   /* Indexing foreign keys */
-  /*INDEX `quiz_to_category_idx` (`category_id` ASC), */
   INDEX `quiz_to_creator_idx` (`quiz_creator` ASC),
 
-  /* Adding foreign key constraint to `category_id` and `quiz_creator`. */
-/** 
-  CONSTRAINT `quiz_to_category`
-    FOREIGN KEY (`category_id`)
-    REFERENCES `MockQuizWebsite`.`quiz_categories` (`category_id`),
-**/
+  /* Adding foreign key constrain to `quiz_creator`. */
   CONSTRAINT `quiz_to_creator`
     FOREIGN KEY (`quiz_creator`)
     REFERENCES `MockQuizWebsite`.`users` (`username`))
 
 ENGINE = InnoDB
 COMMENT = 'Stores quiz properties; actual content will be composed by joining other tables.
-           `category_id` column implements one-to-many relation between categories and quizzes.
            `quiz_creator_id` column points to username, who is the author of particular quiz,
            implements one-to-many relation between users(authors) and created quzzes';
 
@@ -113,7 +92,8 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`quizzes_taken` (
   /* Adding foreign key constraints. */ 
   CONSTRAINT `quiz`
     FOREIGN KEY (`quiz_name`)
-    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`),
+    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`)
+    ON DELETE CASCADE,
   CONSTRAINT `user`
     FOREIGN KEY (`username`)
     REFERENCES `MockQuizWebsite`.`users` (`username`))
@@ -128,10 +108,11 @@ COMMENT = 'Implements many-to-many relationship between users and
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`friends` (
 
-  `first_user_name`      CHARACTER(45)     NOT NULL,  # initiator of friendship
-  `second_user_name`     CHARACTER(45)     NOT NULL,  # the one to accept
-  `status`               ENUM('0','1')     NOT NULL,  # pending / accepted (by second user)
-  `friendship_id`        INT               NOT NULL, 
+  `first_user_name`      CHARACTER(45)     NOT NULL,  # lexicographically <
+  `second_user_name`     CHARACTER(45)     NOT NULL,  # lexicographically >
+  `friendship_id`        INT               NOT NULL AUTO_INCREMENT, 
+
+  CHECK (first_user_name < second_user_name),
 
   PRIMARY KEY (`friendship_id`),
 
@@ -151,8 +132,23 @@ ENGINE = InnoDB
 COMMENT = 'Links users to each other implementing \'friends\' feature.
            via many-to-many relation between users on both sides. 
            As an attempt to reduce data redundancy, each pair of users
-           is stored only once, with first_user being the one who
-           inititated friendship (sent request)';
+           is stored only once, with first_user_name being the 
+           lexicographically smaller one';
+
+
+-- -----------------------------------------------------
+-- Table `MockQuizWebsite`.`friend_requests`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`friend_requests` (
+
+  `initiator`      CHARACTER(45)     NOT NULL,  # one who sends request
+  `acceptor`       CHARACTER(45)     NOT NULL,  # one to whom request is sent
+
+  PRIMARY KEY (`initiator`, `acceptor`))
+
+ENGINE = InnoDB
+COMMENT = 'Stores friend requests in database. The combination of initiator
+           and acceptor is unique in the table.';
 
 
 -- -----------------------------------------------------
@@ -160,12 +156,12 @@ COMMENT = 'Links users to each other implementing \'friends\' feature.
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`messages` (
 
-  `message_id`               INT               NOT NULL,
+  `message_id`               INT               NOT NULL AUTO_INCREMENT,
   `friendship_id`            INT               NOT NULL,
-  `text`                     TEXT              NULL,
-  `sent_date`                DATE              NULL,
-  `sender`                   ENUM('0', '1')    NULL,  # indicates which part sent particular message.
-
+  `text`                     TEXT              NOT NULL,
+  `sent_date`                TIMESTAMP         NOT NULL,
+  `sender`                   BIT               NOT NULL,  # indicates which part sent particular message.
+                                                          # "false" - first_user, "true" - second
   PRIMARY KEY (`message_id`),
 
   /* Indexing foreign keys */
@@ -174,7 +170,8 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`messages` (
   /* Adding foreign key constraint*/ 
   CONSTRAINT `fk_messages_friends`
     FOREIGN KEY (`friendship_id`)
-    REFERENCES `MockQuizWebsite`.`friends` (`friendship_id`))
+    REFERENCES `MockQuizWebsite`.`friends` (`friendship_id`)
+    ON DELETE CASCADE)
 
 ENGINE = InnoDB
 COMMENT = 'Stores messages associated with particular friendship entry.';

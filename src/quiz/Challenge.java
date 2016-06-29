@@ -2,10 +2,24 @@ package quiz;
 
 public class Challenge implements Message {
 
-	@Override
-	public void displayMessage() {
-		// TODO Auto-generated method stub
+	private String quizUrl, senderName;
+	
+	/** Empty constructor */
+	public Challenge(){}
 
+	public void setQuizUrl(String quizUrl){
+		this.quizUrl = quizUrl;
+	}
+	
+	public void setSenderName(String senderName){
+		this.senderName = senderName;
+	}
+	
+	@Override
+	public String displayMessage() {
+		return "Come on, " + senderName + 
+				" challenged you on the quiz " + 
+				quizUrl;
 	}
 	
 	@Override
@@ -22,6 +36,12 @@ public class Challenge implements Message {
 	public boolean isRead() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+
+	@Override
+	public void setRead() {
+		// TODO Auto-generated method stub
 	}
 	
 }

@@ -38,4 +38,22 @@ public interface UserFactory {
 	 * @return UserList
 	 */
 	public UserList getUserList();
+	
+	/**
+	 * Constructs 'TextMessage' object
+	 * @return text message
+	 */
+	public TextMessage getTextMessage();
+	
+	/**
+	 * Constructs 'FriendRequest' object
+	 * @return friend request
+	 */
+	public FriendRequest getFriendRequest();
+	
+	/**
+	 * Constructs 'Challenge' object
+	 * @return challenge
+	 */
+	public Challenge getChallenge();
 }

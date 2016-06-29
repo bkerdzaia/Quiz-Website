@@ -9,7 +9,6 @@ SET UNIQUE_CHECKS=0;
 SET FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS `users`;
-DROP TABLE IF EXISTS `quiz_categories`;
 DROP TABLE IF EXISTS `quizzes`;
 DROP TABLE IF EXISTS `quizzes_taken`;
 DROP TABLE IF EXISTS `friends`;
@@ -24,6 +23,7 @@ DROP TABLE IF EXISTS `multiple_choise`;
 DROP TABLE IF EXISTS `multiple_choise_answers`;
 DROP TABLE IF EXISTS `picture_response`;
 DROP TABLE IF EXISTS `picture_response_correct_answers`;
+DROP TABLE IF EXISTS `friend_requests`;
 
 # Restore configuration.
 SET UNIQUE_CHECKS=1;

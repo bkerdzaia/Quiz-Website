@@ -5,11 +5,10 @@ import java.security.*;
 public class Encryption {
 
 	
-	public Encryption() {
-		// TODO Auto-generated constructor stub
-	}
+	/** Empty constructor */
+	public Encryption() {}
 	
-	/*
+	/**
 	 Given a byte[] array, produces a hex String,
 	 such as "234a6f". with 2 chars for each byte in the array.
 	 (provided code)
@@ -26,9 +25,10 @@ public class Encryption {
 	}
 	
 	/**
-	 * 
-	 * @param data
-	 * @return
+	 * Method encryprs provided string and hands
+	 * back encrypted verstion.
+	 * @param data - string to encrypt
+	 * @return encrypted string
 	 */
 	public String encrypt(String data) {
 		try {
