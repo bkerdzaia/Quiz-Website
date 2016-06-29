@@ -1,38 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="application.*, quiz.*"%>
+<%@ page errorPage="error-page.jsp" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>Quiz Summary Page</title>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="script.js"></script>
+<script type="text/javascript">
+	loadOrderDate();
+</script>
 </head>
 <body>
 
-	<script type="text/javascript">
-		function loadOrderDate() {
-			$(function(){
-				$("#performanceOrder").load("order-by-date.jsp");
-			});
-		}
-	
-		$(function() {
-			$("input[name=performance]").click(function() {
-				// alert(this.value);
-				if (this.value === 'date') {
-					loadOrderDate();
-				} else {
-					$("#performanceOrder").empty();
-				}
-			});
-		});
-		loadOrderDate();
-	</script>
 
 	<%
 		Quiz quiz = (Quiz) session.getAttribute("quizName");
-		User user = (User) session.getAttribute("userName");
+		String user = (String) session.getAttribute("userName");
 		UserList highestPerformers = (UserList) session.getAttribute("highestPerformers");
 		UserList topPerformers = (UserList) session.getAttribute("topPerformers");
 		UserList recentPerformers = (UserList) session.getAttribute("recentPerformers");
@@ -49,6 +35,8 @@
 			return htmlUser;
 		}
 	%>
+	
+	<div id="logOutId"></div>
 
 	<p>Hello at quiz ${param.name}</p>
 	
@@ -65,12 +53,12 @@
 		<input type="radio" name="performance" value="date" checked>date
 		<input type="radio" name="performance" value="percentCorrect">percent correct
 		<input type="radio" name="performance" value="amountTime">amount of time</p>
-		<p><b>user is <%= user.getName() %></b> past performance is </p>
+		<p><b>user is <%= user %></b> past performance is </p>
 
 		
 		<div id="performanceOrder"></div>
 		
-		<%
+		<%--
 			History history = user.getHistory(); 
 			for (QuizPerformance madeQuiz : history) {
 				if (quiz.getName().equals(madeQuiz.getQuiz())) {
@@ -78,7 +66,7 @@
 							madeQuiz.getDate() + " percent correct: " + madeQuiz.getPercentCorrect() + "%</p>");
 				}
 			}
-		%>
+		--%>
 		
 	</div>
 
@@ -105,7 +93,7 @@
 	<div>
 		<%
 			String creator = quiz.getCreator();
-			if(creator.equals(user.getName())) {
+			if(creator.equals(user)) {
 				out.println("<p>edit quiz for owner of quiz<//p>");
 			}
 		%>

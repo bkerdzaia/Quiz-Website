@@ -6,6 +6,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="script.js"></script>
 </head>
 <body>
 
@@ -17,6 +19,8 @@
 		int questionIndex = Integer.parseInt(request.getParameter("question"));
 		Question question = questions.get(questionIndex-1);
 	%>
+	
+	<div id="logOutId"></div>
 	
 	<p>Question is: <b><%= question.getQuestionText() %></b></p>
 	<p>Possible answers are: <b>

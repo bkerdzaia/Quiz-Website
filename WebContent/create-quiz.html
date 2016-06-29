@@ -5,61 +5,7 @@
 <title>Create a quiz</title>
 
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-
-<script>
-	function toName(className, number) {
-		return className + number;
-	}
-
-	function getInputTextTag(name) {
-		return "<input type= \"text\" name= " + name + " required><br>";	
-	}
-	
-	function addPossibleAnswer(className) {
-		$("#addPossibleAnswerButtonId" + className).before("Enter Possible Answer: " + 
-				getInputTextTag(className));
-	}
-	
-	function getQuestionAnswers(parantClassName, idNumber) {
-		var className = toName(parantClassName, idNumber);
-		return "Enter Question Here: " + getInputTextTag(className) +
-				"Enter Possible Answer: " + getInputTextTag(className) +
-				"<button type=\"button\" id=\"addPossibleAnswerButtonId" + className + 
-				"\" onclick=\"addPossibleAnswer(" + "'" + className + "')\">+ Add Another answer</button><br>";
-	}
-	
-	var fillInTheBlankQuestionNumber = 0;
-	var pictureResponseQuestionNumber = 0;
-	var questionResponseTypeNumber = 0;
-	var multipleChoiceTypeNumber = 0;
-
-	$(function() {
-		$("#addQuestionButton").click(function () {
-			var questionTypeValue = $("#questionTypeElements").val();
-			if (questionTypeValue === "MultipleChoiceType") {
-				multipleChoiceTypeNumber++;
-				var className = toName("multipleChoiceQuestion", multipleChoiceTypeNumber);
-				$("#addQuestionsType").prepend("<div class=\"multipleChoiceQuestion\"> " +
-						"Enter Question Here: " + getInputTextTag(className) +
-						"Enter Correct Answer: " + getInputTextTag(className) +
-						"Enter Possible Answer: " + getInputTextTag(className) +
-						"Enter Possible Answer: " + getInputTextTag(className) +
-						"Enter Possible Answer: " + getInputTextTag(className) +
-						"</div><br>");	
-			} else if(questionTypeValue === "FillInTheBlankType") {
-				fillInTheBlankQuestionNumber++;
-				$("#addQuestionsType").prepend("<div  class=\"fillInTheBlankQuestion\">" + getQuestionAnswers("fillInTheBlankQuestion", fillInTheBlankQuestionNumber) +"</div>");
-			} else if(questionTypeValue === "QuestionResponseType") {
-				questionResponseTypeNumber++;
-				$("#addQuestionsType").prepend("<div  class=\"questionResponseQuestion\">" + getQuestionAnswers("questionResponseQuestion", questionResponseTypeNumber) +"</div>");
-			} else if(questionTypeValue === "PictureResponseType") {
-				pictureResponseQuestionNumber++;
-				$("#addQuestionsType").prepend("<div  class=\"pictureResponseQuestion\">" + getQuestionAnswers("pictureResponseQuestion", pictureResponseQuestionNumber) +"</div>");
-			}
-			$("#addQuestionsType").prepend("<p><b>" + questionTypeValue + ": </b></p>");
-		});
-	});
-</script>
+<script src="script.jsp"></script>
 
 </head>
 <body>
