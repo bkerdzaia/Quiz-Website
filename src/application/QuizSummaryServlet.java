@@ -1,16 +1,14 @@
 package application;
 
 import java.io.*;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
-import database.DatabaseGrabber;
-import database.DatabaseListener;
-import factory.DefaultDatabaseFactory;
+import database.*;
+import factory.*;
 import quiz.*;
 
 /**
@@ -25,17 +23,18 @@ public class QuizSummaryServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		System.out.println("quiz summary page");
-		DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DatabaseListener.ATTRIBUTE_NAME);
-		if (db == null) {
-			db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
-			request.getServletContext().setAttribute(DatabaseListener.ATTRIBUTE_NAME, db);
-		}
-		HttpSession session = request.getSession();
+		String address;
 		try {
+			System.out.println("quiz summary page");
+			DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(LoginServlet.DATABASE_ATTRIBUTE);
+			if (db == null) {
+				db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
+				request.getServletContext().setAttribute(LoginServlet.DATABASE_ATTRIBUTE, db);
+			}
+			HttpSession session = request.getSession();
 			db.connect();
 			String quizName = request.getParameter("name");
-			Quiz quiz = db.loadQuiz(quizName);
+			Quiz quiz = null; //db.loadQuiz(quizName);
 			if (quiz == null) {
 				quiz = new Quiz();
 				quiz.setCreator("go");
@@ -52,9 +51,13 @@ public class QuizSummaryServlet extends HttpServlet {
 			session.setAttribute("topPerformers", topPerformersLastDay);
 			session.setAttribute("recentPerformers", recentPerformers);
 			db.close();
-			RequestDispatcher dispatcher = request.getRequestDispatcher("quiz-summary-page.jsp?name=" + quizName);
-			dispatcher.forward(request, response);
-		} catch (SQLException e) {e.printStackTrace();}
+			address = "quiz-summary-page.jsp?name=" + quizName;
+		} catch (Exception e) {
+			e.printStackTrace();
+			address = "error-page.jsp";
+		}
+		RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+		dispatcher.forward(request, response);
 	}
 
 	/**
