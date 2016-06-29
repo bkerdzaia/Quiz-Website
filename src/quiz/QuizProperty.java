@@ -1,5 +1,13 @@
 package quiz;
 
+/**
+ * @author dav23r
+ * The class encapsulates properties of the quiz.
+ * Currently three properties are supported. They
+ * are: randomizing order of questions, displaying
+ * one/multiple page variant, and immediately 
+ * evaluating user's answers.
+ */
 public class QuizProperty {
 	
 	private boolean randomQuestions;

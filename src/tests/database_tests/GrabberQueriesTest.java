@@ -115,7 +115,7 @@ public class GrabberQueriesTest {
 		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
 		dbGrabber.connect();
 		// Surely, there should not be such entry
-		assertNull(dbGrabber.authenticateUser("Esteban", "asdf"));
+		assertFalse(dbGrabber.authenticateUser("Esteban", "asdf"));
 		dbGrabber.close();
 	}
 	
@@ -157,12 +157,13 @@ public class GrabberQueriesTest {
 		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
 		dbGrabber.connect();
 		dbGrabber.registerUser("Armando", "1234");
-		User armando = dbGrabber.authenticateUser("Armando", "1234");
+		assertTrue(dbGrabber.authenticateUser("Armando", "1234"));
+		User armando = dbGrabber.loadUser("armando");
 		assertNotNull(armando);
 		assertEquals("1234", armando.getPasswordHash());
 		// pass wrong credentials
-		assertNull(dbGrabber.authenticateUser("Armando", "12345"));
-		assertNull(dbGrabber.authenticateUser("Sam", "1234"));
+		assertFalse(dbGrabber.authenticateUser("Armando", "12345"));
+		assertFalse(dbGrabber.authenticateUser("Sam", "1234"));
 		dbGrabber.close();
 	}
 	

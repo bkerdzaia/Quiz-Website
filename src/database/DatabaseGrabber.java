@@ -39,15 +39,14 @@ public interface DatabaseGrabber {
 
 	/**
 	 * Authenticates user in database. Ensure that right credentials
-	 * are supplied, and if that is the case returns corresponding
-	 * 'user' object. If user doesn't exist or password hashes do not
-	 * match, null object is handed back
+	 * are supplied, and if that is the case returns true. If user 
+	 * doesn't exist or password hashes do not match, 'false' is handed back.
 	 * @param userName
 	 * @param passwHash
 	 * @return corresponding 'user' or null
 	 * @throws SQLException
 	 */
-	public User authenticateUser(String userName, String passwHash) 
+	public boolean authenticateUser(String userName, String passwHash) 
 			throws SQLException;
 	
 
@@ -218,7 +217,7 @@ public interface DatabaseGrabber {
 	/**
 	 * Provides means of sending message from one user of the system to
 	 * another. The message is stored in database, and will be viewed 
-	 * by recepient once he/she logs in. A check is done for user to 
+	 * by recepient once he/she logs in. A check is done for users to 
 	 * be friends.
 	 * @param from - sender's name
 	 * @param to - recepient's name

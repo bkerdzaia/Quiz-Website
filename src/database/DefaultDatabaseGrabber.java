@@ -116,7 +116,7 @@ public class DefaultDatabaseGrabber implements
 
 	// Authenticate user based on login and hash of password
 	@Override
-	public User authenticateUser(String userName, String passwHash) 
+	public boolean authenticateUser(String userName, String passwHash) 
 			throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String queryUser = 
@@ -126,16 +126,16 @@ public class DefaultDatabaseGrabber implements
 		// User with provided userName doesn't exist in database
 		if (!rs.next()){
 			stmt.close();
-			return null;
+			return false;
 		}
 		// Otherwise check if stored hash and provided one are equal
 		if (!rs.getString(USER.PASSW_HASH.num()).equals(passwHash)){
 			stmt.close();
-			return null;
+			return false;
 		}
 		// If valid credentials are provided, return corresponding user.
 		stmt.close();
-		return loadUser(userName);	
+		return true;
 	}
 
 

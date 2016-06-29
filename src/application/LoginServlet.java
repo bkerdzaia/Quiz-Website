@@ -25,7 +25,9 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DatabaseListener.ATTRIBUTE_NAME);
+		DatabaseGrabber db = (DatabaseGrabber) 
+				request.getServletContext().getAttribute(DatabaseListener.ATTRIBUTE_NAME);
+		// If database is not initialized do so and store refference in context object
 		if (db == null) {
 			db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
 			request.getServletContext().setAttribute(DatabaseListener.ATTRIBUTE_NAME, db);

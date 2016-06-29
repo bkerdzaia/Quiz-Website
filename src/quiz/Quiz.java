@@ -1,8 +1,12 @@
 package quiz;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
+/**
+ * @author dav23r
+ * The class encapsulates quiz with all it's properties and 
+ * corresponding getters and setter to set and retrieve them.
+ */
 public class Quiz {
 
 	private String name;
@@ -13,6 +17,7 @@ public class Quiz {
 	private QuizQuestions questions;
 	private QuizProperty property;
 	
+	/** Empty constructor */
 	public Quiz() {}
 
 	public String getName() {

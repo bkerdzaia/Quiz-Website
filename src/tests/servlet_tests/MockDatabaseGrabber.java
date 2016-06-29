@@ -20,11 +20,11 @@ public class MockDatabaseGrabber implements DatabaseGrabber {
 	}
 
 	@Override
-	public User authenticateUser(String userName, String passwHash) throws SQLException {
+	public boolean authenticateUser(String userName, String passwHash) throws SQLException {
 		User sample = new User();
 		sample.setName("John");
 		sample.setAboutMe("Nice person");
-		return null;
+		return true;
 	}
 
 	@Override
