@@ -16,7 +16,7 @@ import factory.*;
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	public static String DATABASE_ATTRIBUTE = "database";
+	public static final String DATABASE_ATTRIBUTE = "database";
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse

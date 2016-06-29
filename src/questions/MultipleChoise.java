@@ -1,8 +1,6 @@
 package questions;
 
 import java.util.ArrayList;
-import java.util.Set;
-
 import factory.QuestionFactory;
 
 public class MultipleChoise extends Question {

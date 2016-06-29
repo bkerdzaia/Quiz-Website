@@ -8,7 +8,6 @@ import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
 import database.*;
-import factory.*;
 import quiz.*;
 
 /**
@@ -28,10 +27,6 @@ public class QuizSummaryServlet extends HttpServlet {
 		try {
 			System.out.println("quiz summary page");
 			DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(LoginServlet.DATABASE_ATTRIBUTE);
-			if (db == null) {
-				db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
-				request.getServletContext().setAttribute(LoginServlet.DATABASE_ATTRIBUTE, db);
-			}
 			HttpSession session = request.getSession();
 			db.connect();
 			String quizName = request.getParameter("name");

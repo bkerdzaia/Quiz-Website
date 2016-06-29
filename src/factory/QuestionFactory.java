@@ -63,4 +63,29 @@ public interface QuestionFactory {
 	 * @return
 	 */
 	public QuestionAdd getQuestionAdd();
+	
+	/**
+	 * Constructs new problem of type FillBlankCreator
+	 * @return
+	 */
+	public FillBlankCreator getFillBlankCreator();
+	
+	/**
+	 * Constructs new problem of type PictureResponseCreator
+	 * @return
+	 */
+	public PictureResponseCreator getPictureResponseCreator();
+	
+	/**
+	 * Constructs new problem of type QuestionResponceCreator
+	 * @return
+	 */
+	public QuestionResponseCreator getQuestionResponceCreator();
+	
+	/**
+	 * Constructs new problem of type MultipleChoiseCreator
+	 * @return
+	 */
+	public MultipleChoiseCreator getMultipleChoiseCreator();
+	
 }

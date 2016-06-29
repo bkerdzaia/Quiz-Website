@@ -50,6 +50,15 @@ function getQuestionAnswers(parantClassName, idNumber) {
 			"\" onclick=\"addPossibleAnswer(" + "'" + className + "')\">+ Add Another answer</button><br>";
 }
 
+function getPictureResponseQuestion(parantClassName, idNumber) {
+	var className = toName(parantClassName, idNumber);
+	return "Enter Question Here: " + getInputTextTag(className) +
+			"Enter URL Here: " + getInputTextTag(className) +
+			"Enter Possible Answer: " + getInputTextTag(className) +
+			"<button type=\"button\" id=\"addPossibleAnswerButtonId" + className + 
+			"\" onclick=\"addPossibleAnswer(" + "'" + className + "')\">+ Add Another answer</button><br>";
+}
+
 /* variables for counting question types added number */
 var fillInTheBlankQuestionNumber = 0;
 var pictureResponseQuestionNumber = 0;
@@ -78,7 +87,7 @@ $(function() {
 			$("#addQuestionsType").prepend("<div  class=\"questionResponseQuestion\">" + getQuestionAnswers("questionResponseQuestion", questionResponseTypeNumber) +"</div>");
 		} else if(questionTypeValue === "PictureResponseType") {
 			pictureResponseQuestionNumber++;
-			$("#addQuestionsType").prepend("<div  class=\"pictureResponseQuestion\">" + getQuestionAnswers("pictureResponseQuestion", pictureResponseQuestionNumber) +"</div>");
+			$("#addQuestionsType").prepend("<div  class=\"pictureResponseQuestion\">" + getPictureResponseQuestion("pictureResponseQuestion", pictureResponseQuestionNumber) +"</div>");
 		}
 		$("#addQuestionsType").prepend("<p><b>" + questionTypeValue + ": </b></p>");
 	});

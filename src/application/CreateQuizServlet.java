@@ -1,13 +1,14 @@
 package application;
 
 import java.io.*;
+import java.sql.Timestamp;
 import java.util.*;
-import java.util.stream.*;
 
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
+import database.DatabaseGrabber;
 import factory.*;
 import questions.*;
 import quiz.*;
@@ -25,59 +26,46 @@ public class CreateQuizServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		System.err.println("create quiz servlet");
-		HttpSession session = request.getSession();
-		String user = (String) session.getAttribute("userName");
-		System.out.println("creator user is: " + user);
-		
-		String quizName = request.getParameter("quizNameText");
-		String description = request.getParameter("quizDescriptionText");
-		String[] quizProperty = request.getParameterValues("QuizProperties");
-		Enumeration<String> x = request.getParameterNames();
-		while (x.hasMoreElements()) {
-			System.out.println("param names: " + x.nextElement());
+		String address;
+		try {
+			DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(LoginServlet.DATABASE_ATTRIBUTE);
+			db.connect();
+			HttpSession session = request.getSession();
+			QuestionFactory questionFactory = DefaultQuestionFactory.getFactoryInstance();
+			QuizFactory quizFactory = DefaultQuizFactory.getFactoryInstance();
+			String user = (String) session.getAttribute("userName");
+			String quizName = request.getParameter("quizNameText");
+			String description = request.getParameter("quizDescriptionText");
+			String[] quizProperty = request.getParameterValues("QuizProperties");
+			QuizProperty property = quizFactory.getQuizProperty();
+			List<String> properties = Arrays.asList(quizProperty);
+			property.setOnePage(properties.contains("DisplayOnePage"));
+			property.setRandomQuestion(properties.contains("RandomQuestions"));
+			property.setInstantCorrection(properties.contains("ImmediateCorrection"));
+			Map<String, String[]> map = request.getParameterMap();
+			QuestionAdd add = questionFactory.getQuestionAdd();
+			QuizQuestions questions = quizFactory.getQuizQuestions();
+			add.addQuestionType(map, "fillInTheBlankQuestion", questionFactory.getFillBlankCreator(), questions);
+			add.addQuestionType(map, "multipleChoiceQuestion", questionFactory.getMultipleChoiseCreator(), questions);
+			add.addQuestionType(map, "questionResponseQuestion", questionFactory.getQuestionResponceCreator(), questions);
+			add.addQuestionType(map, "pictureResponseQuestion", questionFactory.getPictureResponseCreator(), questions);
+			Quiz quiz = quizFactory.getQuiz();
+			quiz.setName(quizName);
+			quiz.setDescription(description);
+			quiz.setCreator(user);
+			quiz.setCreationDate(new Timestamp(System.currentTimeMillis()));
+			quiz.setProperty(property);
+			quiz.setQuestions(questions);
+			quiz.setSummaryStatistics(0);
+			db.uploadQuiz(quiz);
+			db.close();
+			address = "homepage.jsp?name="+user;
+		} catch (Exception e) {
+			e.printStackTrace();
+			address = "error-page.jsp";
 		}
-		
-		Map<String, String[]> map = request.getParameterMap();
-		Set<String> paramKeySet = map.keySet();
-		Stream<String> blankQuestions = paramKeySet.stream().filter(key -> key.startsWith("fillInTheBlankQuestion"));
-		Stream<String> multipleChoiceQuestions = paramKeySet.stream().filter(key -> key.startsWith("multipleChoiceQuestion"));
-		Stream<String> questionResponseQuestions = paramKeySet.stream().filter(key -> key.startsWith("questionResponseQuestion"));
-		Stream<String> pictureResponseQuestions = paramKeySet.stream().filter(key -> key.startsWith("pictureResponseQuestion"));
-		
-		QuizQuestions questions = DefaultQuizFactory.getFactoryInstance().getQuizQuestions();
-		blankQuestions.forEach(elem -> { 
-			questions.add(createFillBlank(map.get(elem)));
-			System.out.println("blank elem: " + elem);
-		});
-		
-		
-		System.out.println("quizName: " + quizName);
-		System.out.println("description: " + description);
-		if (quizProperty != null) {
-			for (String prop: quizProperty) {
-				System.out.println("property: " + prop);
-			}
-		} else {
-			System.out.println("quiz property null");
-		}
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("homepage.jsp?name="+user);
+		RequestDispatcher dispatcher = request.getRequestDispatcher(address);
 		dispatcher.forward(request, response);
-	}
-	
-	private Question createFillBlank(String[] blankQuestion) {
-		FillBlank blank = DefaultQuestionFactory.getFactoryInstance().getFillBlankQuestion();
-		blank.setQuestionText(blankQuestion[0]);
-		System.out.println("question: " + blankQuestion[0]);
-		Set<String> answers = new HashSet<>();
-		for (int i=1; i<blankQuestion.length; i++) {
-			System.out.println("answers: " + blankQuestion[i]);
-			answers.add(blankQuestion[i]);
-		}
-		blank.setCorrectAnswers(answers);
-		return blank;
 	}
 
 }
