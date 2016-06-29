@@ -73,7 +73,8 @@ public class DefaultDatabaseConnectionHandler implements
 	@Override
 	public void close(){
 		try{
-			mysqlConnection.close();
+			if (mysqlConnection != null)
+				mysqlConnection.close();
 		}catch(SQLException e){
 			e.printStackTrace();
 		}

@@ -1,10 +1,8 @@
 package tests.database_tests;
 
 import database.DatabaseGrabber;
-import database.DefaultDatabaseGrabber;
 import factory.DatabaseFactory;
 import factory.DefaultDatabaseFactory;
-import factory.UserFactory;
 
 import static org.junit.Assert.*;
 
@@ -41,10 +39,12 @@ public class DatabaseGrabberTestSimple {
 		assertNotNull(dbGrabber.loadUser("ab"));
 		dbGrabber.truncateDatabase();
 		dbGrabber.close();
+	
 		for (int i = 0; i < 10; i++ ){
 			dbGrabber.connect();
 			dbGrabber.close();
 		}
+		
 	}
 
 }

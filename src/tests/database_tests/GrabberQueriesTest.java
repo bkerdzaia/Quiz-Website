@@ -35,6 +35,7 @@ import quiz.QuizPerformance;
 import quiz.QuizProperty;
 import quiz.QuizQuestions;
 import quiz.User;
+import quiz.UserList;
 
 /**
  * @author dav23r
@@ -351,9 +352,43 @@ public class GrabberQueriesTest {
 		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
 		dbGrabber.connect();
 		Timestamp now = new Timestamp(new Date().getTime());
-		assertEquals(0, dbGrabber.getHighestPerformers(sampleQuiz.getName(), now).size());
+		assertEquals(0, 
+				dbGrabber.getHighestPerformers(sampleQuiz.getName(), now).size());
+		dbGrabber.registerUser(sampleQuiz.getCreator(), "1");
+		dbGrabber.registerUser("sam", "12");
+		dbGrabber.registerUser("samuel", "34");
+		dbGrabber.uploadQuiz(sampleQuiz);
+
+		QuizPerformance lowPerf = new QuizPerformance();
+		lowPerf.setAmountTime(23);
+		lowPerf.setDate(now);
+		lowPerf.setPercentCorrect(10);
+		lowPerf.setQuiz(sampleQuiz.getName());
+		lowPerf.setUser("sam");
+		
+		QuizPerformance highPerf = new QuizPerformance();
+		highPerf.setAmountTime(67);
+		highPerf.setDate(now);
+		highPerf.setPercentCorrect(99);
+		highPerf.setQuiz(sampleQuiz.getName());
+		highPerf.setUser("samuel");
+		
+		dbGrabber.storeAttempt(lowPerf);
+		dbGrabber.storeAttempt(highPerf);
+		
+		Timestamp past = new Timestamp(now.getTime() - 3000);
+		UserList users = 
+				dbGrabber.getHighestPerformers(sampleQuiz.getName(), past);
+		assertEquals(2, users.size());
+		assertEquals("samuel", users.get(0));
+		assertEquals("sam", users.get(1));
+		
+		Timestamp future = new Timestamp(now.getTime() + 1000);
+		assertEquals(0, 
+			dbGrabber.getHighestPerformers(sampleQuiz.getName(), future).size());
 	}
 	
+
 	@Test
 	public void testRecentlyCreatedQuizzes() throws SQLException {
 		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
@@ -370,4 +405,45 @@ public class GrabberQueriesTest {
 		assertEquals("newQuiz", recentQuizzes.get(0));
 		assertEquals(oldName, recentQuizzes.get(1));
 	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testGetRecentTakersStats() throws SQLException {
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		dbGrabber.connect();
+		dbGrabber.registerUser(sampleQuiz.getCreator(), "12");
+		dbGrabber.uploadQuiz(sampleQuiz);
+		
+		dbGrabber.registerUser("sam", "12");
+		dbGrabber.registerUser("samuel", "34");
+	
+		Timestamp now = new Timestamp(new Date().getTime());
+		Timestamp past = new Timestamp(now.getTime() - 5000);
+		Timestamp future = new Timestamp(now.getTime() + 5000);
+
+		QuizPerformance recentPerf = new QuizPerformance();
+		recentPerf.setAmountTime(12);
+		recentPerf.setDate(now);
+		recentPerf.setPercentCorrect(89);
+		recentPerf.setQuiz(sampleQuiz.getName());
+		recentPerf.setUser("sam");
+		
+		QuizPerformance futurePerf = new QuizPerformance();
+		futurePerf.setAmountTime(11);
+		futurePerf.setDate(future);
+		futurePerf.setPercentCorrect(34);
+		futurePerf.setQuiz(sampleQuiz.getName());
+		futurePerf.setUser("samuel");
+		
+		dbGrabber.storeAttempt(recentPerf);
+		dbGrabber.storeAttempt(futurePerf);
+
+		History recentStats = dbGrabber.getRecentTakersStats(past);
+		assertEquals(2, recentStats.size());
+		assertEquals(11, recentStats.get(0).getAmountTime());
+		assertEquals(future.getMinutes(), recentStats.get(0).getDate().getMinutes());
+		assertEquals((int)89, (int)recentStats.get(1).getPercentCorrect());
+		assertEquals(sampleQuiz.getName(), recentStats.get(1).getQuiz());
+	}
+
 }

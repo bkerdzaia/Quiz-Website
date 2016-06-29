@@ -58,7 +58,6 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`quizzes` (
   PRIMARY KEY (`quiz_name`),
 
   /* Indexing foreign keys */
-  /*INDEX `quiz_to_category_idx` (`category_id` ASC), */
   INDEX `quiz_to_creator_idx` (`quiz_creator` ASC),
 
   /* Adding foreign key constrain to `quiz_creator`. */
@@ -135,6 +134,21 @@ COMMENT = 'Links users to each other implementing \'friends\' feature.
            As an attempt to reduce data redundancy, each pair of users
            is stored only once, with first_user_name being the 
            lexicographically smaller one';
+
+
+-- -----------------------------------------------------
+-- Table `QuizWebsite`.`friend_requests`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `QuizWebsite`.`friend_requests` (
+
+  `initiator`      CHARACTER(45)     NOT NULL,  # one who sends request
+  `acceptor`       CHARACTER(45)     NOT NULL,  # one to whom request is sent
+
+  PRIMARY KEY (`initiator`, `acceptor`))
+
+ENGINE = InnoDB
+COMMENT = 'Stores friend requests in database. The combination of initiator
+           and acceptor is unique in the table.';
 
 
 -- -----------------------------------------------------

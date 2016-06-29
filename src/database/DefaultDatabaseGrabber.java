@@ -641,13 +641,13 @@ public class DefaultDatabaseGrabber implements
 	@Override
 	public UserList getHighestPerformers(String quizName, Timestamp date) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlUserJoinQuizzes = 
+		String sqlHighestPerformers = 
 				"SELECT username FROM quizzes_taken " +
 				"WHERE quiz_name = '" + quizName + "' " + 
 					"AND attempt_date > '" + date + "' " +
 				"ORDER BY percent_correct DESC " + 
 				"LIMIT " + MAX_HIGHEST_PERFORMERS + ";";
-		ResultSet rs = stmt.executeQuery(sqlUserJoinQuizzes);
+		ResultSet rs = stmt.executeQuery(sqlHighestPerformers);
 		UserList highestPerformers = userFactory.getUserList();
 		while (rs.next())
 			highestPerformers.add(rs.getString(1)); // username column

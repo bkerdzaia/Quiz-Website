@@ -114,10 +114,9 @@ public class MockDatabaseGrabber implements DatabaseGrabber {
 	}
 
 	@Override
-	public void sendMessage(String from, String to, String message, Timestamp date) throws SQLException {
+	public boolean sendMessage(String from, String to, String message, Timestamp date) throws SQLException {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
-
 
 }
