@@ -149,15 +149,15 @@ public interface DatabaseGrabber {
 			throws SQLException;
 	
 	/**
-	 * Method retrieves stats of most recent quiz takers.
-	 * Threshold for amount of user is specified in 
+	 * Method retrieves stats of most recent quiz takers for 
+	 * specified quiz.Threshold for amount of user is specified in 
 	 * 'UIParameters' interface. Users are in order of decreasing
 	 * date of taking (most recent taker first)
 	 * @param quizName
 	 * @return UserList of recent takers of the quiz.
 	 * @throws SQLException
 	 */
-	public History getRecentTakersStats(Timestamp date) 
+	public History getRecentTakersStats(String quizName, Timestamp date) 
 			throws SQLException; 
 	
 	/**

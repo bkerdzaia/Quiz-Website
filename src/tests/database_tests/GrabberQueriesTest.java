@@ -310,7 +310,8 @@ public class GrabberQueriesTest {
 		dbGrabber.storeAttempt(perf);
 		perf.setDate(new Timestamp(perf.getDate().getTime() - milisecondsOffset2)); 
 		dbGrabber.storeAttempt(perf);
-		History  recentStats = dbGrabber.getRecentTakersStats(new Timestamp
+		History  recentStats = 
+				dbGrabber.getRecentTakersStats(sampleQuiz.getName(), new Timestamp
 				(new Date().getTime() - milisecondsOffset1));
 		assertEquals(1, recentStats.size());
 		QuizPerformance samePerf = recentStats.get(0);
@@ -439,7 +440,8 @@ public class GrabberQueriesTest {
 		dbGrabber.storeAttempt(recentPerf);
 		dbGrabber.storeAttempt(futurePerf);
 
-		History recentStats = dbGrabber.getRecentTakersStats(past);
+		History recentStats = 
+				dbGrabber.getRecentTakersStats(sampleQuiz.getName(),past);
 		assertEquals(2, recentStats.size());
 		assertEquals(11, recentStats.get(0).getAmountTime());
 		assertEquals(future.getMinutes(), recentStats.get(0).getDate().getMinutes());

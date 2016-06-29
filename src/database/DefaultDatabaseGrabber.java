@@ -614,11 +614,13 @@ public class DefaultDatabaseGrabber implements
 
 	// Returns list of recent quiz takers
 	@Override
-	public History getRecentTakersStats(Timestamp date) throws SQLException {
+	public History getRecentTakersStats(String quizName, Timestamp date) 
+			throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlRecentStats = 
 				"SELECT * FROM quizzes_taken " + 
-				"WHERE attempt_date > '" + date + "' " +
+				"WHERE attempt_date > '" + date + "' " + 
+					" AND quiz_name = '" + quizName + "' " +  
 				"ORDER BY attempt_date DESC " + 
 				"LIMIT " + MAX_RECENT_TAKERS_STATS + ";";
 		ResultSet rs = stmt.executeQuery(sqlRecentStats);
