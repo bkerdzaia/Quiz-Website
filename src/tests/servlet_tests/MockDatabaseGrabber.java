@@ -119,4 +119,10 @@ public class MockDatabaseGrabber implements DatabaseGrabber {
 		return false;
 	}
 
+	@Override
+	public boolean removeFriend(String firstUser, String secondUser) throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 /**
  * @author dav23r
- * Encapsulates collection of friends (user objects) as
+ * Encapsulates collection of friend names as
  * an iterable arraylist.
  */
-public class FriendList extends ArrayList<User> {}
+public class FriendList extends ArrayList<String> {}

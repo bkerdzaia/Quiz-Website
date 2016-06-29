@@ -179,7 +179,8 @@ public interface DatabaseGrabber {
 	 * is friendship initiator's user name, the second - the one the first 
 	 * wants to be friends with. As a precondition, both string should represent
 	 * valid user names contained in system. Method ensures that users are 
-	 * not friends already, in which case it returns 'false'. 
+	 * not friends already, in which case it returns 'false'. Also method 
+	 * returns 'false' if request is already sent by same user.
 	 * !! Note: if 'to' already requested friendship with 'from', new friendship
 	 * entry is automatically added to database.
 	 * @param from - user who wants to be friends with 'to'
@@ -200,6 +201,18 @@ public interface DatabaseGrabber {
 	 * @throws SQLException
 	 */
 	public boolean acceptFriendRequest(String acceptor, String initiator) 
+			throws SQLException;
+	
+	/**
+	 * Provided with two user names, removes friend relationship between
+	 * them from database. If user are not friends hands back 'false'
+	 * as a sign of failure. As a precondition, both names should 
+	 * belong to valid registered users in database.
+	 * @param firstUser
+	 * @param secondUser
+	 * @return completion status ('true' if success, 'false' otherwise)
+	 */
+	public boolean removeFriend(String firstUser, String secondUser) 
 			throws SQLException;
 	
 	/**

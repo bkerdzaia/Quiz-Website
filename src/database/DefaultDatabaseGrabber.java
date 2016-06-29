@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +22,6 @@ import factory.UserFactory;
 import quiz.FriendList;
 import quiz.FriendRequest;
 import quiz.History;
-import quiz.Message;
 import quiz.Quiz;
 import quiz.QuizCollection;
 import quiz.QuizPerformance;
@@ -181,6 +179,7 @@ public class DefaultDatabaseGrabber implements
 		// Set friends and messages
 		retrievedUser.setFriends(getFriends(userName));
 		retrievedUser.setMessages(getMessages(userName));
+		stmt.close();
 		return retrievedUser;
 	}
 
@@ -714,6 +713,8 @@ public class DefaultDatabaseGrabber implements
 	public boolean addFriendRequest(String from, String to) throws SQLException {
 		if (getFriendshipId(from, to) != -1) // stop man, they are friends already
 			return false;
+		if (friendshipRequested(from, to))   // maybe you are not created for each other 
+			return false;
 		// 'to' already requested friendship with 'from'
 		if (friendshipRequested(to, from)){ 
 			acceptFriendRequest(from, to);
@@ -811,7 +812,8 @@ public class DefaultDatabaseGrabber implements
 		ResultSet rs = stmt.executeQuery(sqlRetrieveFriends);
 		FriendList friends = userFactory.getFriendList();
 		while (rs.next())
-			friends.add(loadUser(rs.getString(1))); // friend name column
+			friends.add(rs.getString(1)); // friend name column
+		stmt.close();
 		return friends;
 	}
 
@@ -823,11 +825,13 @@ public class DefaultDatabaseGrabber implements
 		Statement stmt = conHandler.getConnection().createStatement();
 		// unique id of frienship in database
 		int friendshipId = getFriendshipId(from, to);
+		if (friendshipId == -1)
+			return false;
 		// in friends table first username is the lexicographically smaller one
 		int directionBit = (from.compareTo(to) > 0) ? 1 : 0;
 		String sqlSendMessage =
 				"INSERT INTO messages VALUES(NULL," + friendshipId + ",'" + message +
-				"','" + date + "'," + directionBit + ";"; 
+				"','" + date + "'," + directionBit + ");"; 
 		stmt.executeUpdate(sqlSendMessage);
 		stmt.close();
 		return true;
@@ -854,6 +858,23 @@ public class DefaultDatabaseGrabber implements
 		if (!rs.next())
 			return -1;
 		return rs.getInt(1); // friendship_id column
+	}
+
+
+	// Removes friend realation between users from database
+	@Override
+	public boolean removeFriend(String firstUser, String secondUser) 
+			throws SQLException {
+		int friendshipId = getFriendshipId(firstUser, secondUser);
+		if (friendshipId == -1) // I mean you are not even friends 
+			return false;
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlRemoveFriend = 
+				"DELETE FROM friends " + 
+				"WHERE friendship_id = " + friendshipId + ";";
+		stmt.executeUpdate(sqlRemoveFriend);
+		stmt.close();
+		return true;
 	}
 
 }
