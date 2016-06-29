@@ -19,6 +19,7 @@ import factory.DatabaseFactory;
 import factory.DefaultQuestionFactory;
 import factory.DefaultQuizFactory;
 import factory.DefaultUserFactory;
+import quiz.FriendList;
 import quiz.Quiz;
 import quiz.QuizProperty;
 import quiz.QuizQuestions;
@@ -143,6 +144,24 @@ public class UserRelationsTest {
 		assertEquals(1, samuelsMessages.size());
 		assertEquals("I cant be friends with trump supporter", 
 				     samuelsMessages.get(0).displayMessage());
+		String someNonsense =
+				"Hillay and Ted Cruz will make 2 + 2 = 4" + 
+				" Im not saying its 5 maybe Jeb is saying that..";
+		assertTrue(dbGrabber.sendMessage("samuel", "sam", 
+				someNonsense, someTime));
+		User sam = dbGrabber.loadUser("sam");
+		// Lets see sams friends
+		FriendList samsFriends = sam.getFriends();
+		assertEquals(1, samsFriends.size());
+		assertEquals("samuel", samsFriends.get(0));
+		// Sam reading inbox
+		UserMessageList samsMessages = 
+				sam.getMessages();
+		assertEquals(1, samsMessages.size());
+		assertEquals(someNonsense, samsMessages.get(0).displayMessage());
+		// Angry sam deletes samuel twice!
+		assertTrue(dbGrabber.removeFriend("sam", "samuel"));
+		assertFalse(dbGrabber.removeFriend("samuel", "sam"));
 	}
 
 }

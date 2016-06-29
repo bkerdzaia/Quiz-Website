@@ -170,7 +170,8 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`messages` (
   /* Adding foreign key constraint*/ 
   CONSTRAINT `fk_messages_friends`
     FOREIGN KEY (`friendship_id`)
-    REFERENCES `MockQuizWebsite`.`friends` (`friendship_id`))
+    REFERENCES `MockQuizWebsite`.`friends` (`friendship_id`)
+    ON DELETE CASCADE)
 
 ENGINE = InnoDB
 COMMENT = 'Stores messages associated with particular friendship entry.';
