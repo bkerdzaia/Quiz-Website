@@ -74,7 +74,7 @@ public class DefaultDatabaseConnectionHandler implements
 	public void close(){
 		try{
 			mysqlConnection.close();
-		}catch(SQLException e){
+		}catch(Exception e){
 			e.printStackTrace();
 		}
 		mysqlConnection = null;

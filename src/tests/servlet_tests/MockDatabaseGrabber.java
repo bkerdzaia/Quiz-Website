@@ -107,8 +107,6 @@ public class MockDatabaseGrabber implements DatabaseGrabber {
 		
 	}
 
-<<<<<<< HEAD
-=======
 	@Override
 	public History getRecentTakersStats(Timestamp date) throws SQLException {
 		// TODO Auto-generated method stub
@@ -121,5 +119,4 @@ public class MockDatabaseGrabber implements DatabaseGrabber {
 		return null;
 	}
 
->>>>>>> e3d39706cabbf4620b586a2fcc0adc5dcbc64417
 }

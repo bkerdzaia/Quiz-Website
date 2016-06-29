@@ -57,4 +57,10 @@ public interface QuestionFactory {
 	 * @return
 	 */
 	public PictureResponseView getPictureResponseView();
+	
+	/**
+	 * Constructs new problem of type QuestionAdd
+	 * @return
+	 */
+	public QuestionAdd getQuestionAdd();
 }
