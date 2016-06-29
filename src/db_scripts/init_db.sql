@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`friends` (
 
   `first_user_name`      CHARACTER(45)     NOT NULL,  # lexicographically <
   `second_user_name`     CHARACTER(45)     NOT NULL,  # lexicographically >
-  `friendship_id`        INT               NOT NULL, 
+  `friendship_id`        INT               NOT NULL AUTO_INCREMENT, 
 
   CHECK (first_user_name < second_user_name),
 

@@ -723,7 +723,7 @@ public class DefaultDatabaseGrabber implements
 		Statement stmt = conHandler.getConnection().createStatement();
 		String addFriendRequestMessage = 
 				"INSERT INTO friend_requests VALUES('" + 
-					from + "','" + to + "';";
+					from + "','" + to + "');";
 		stmt.executeUpdate(addFriendRequestMessage);
 		return true;
 	}
@@ -737,8 +737,9 @@ public class DefaultDatabaseGrabber implements
 					"AND " +
 				"acceptor = '" + to + "';";
 		ResultSet rs = stmt.executeQuery(sqlIsFriendshipRequested);
+		boolean isFriendshipRequest = rs.next();
 		stmt.close();
-		return rs.next();
+		return isFriendshipRequest;
 	}
 
 
@@ -766,7 +767,7 @@ public class DefaultDatabaseGrabber implements
 		}
 		String sqlAcceptRequest = 
 				"INSERT INTO friends VALUES('" + acceptor +
-				"'," + from + "', NULL;";
+				"','" + from + "', NULL);";
 		stmt.executeUpdate(sqlAcceptRequest);
 		stmt.close();
 		return true;
@@ -782,7 +783,7 @@ public class DefaultDatabaseGrabber implements
 				"WHERE initiator = '" + from  + "' " +
 					"AND " +
 				"acceptor = '" + acceptor + "';";
-		stmt.executeQuery(sqlDeleteFriendRequest);
+		stmt.executeUpdate(sqlDeleteFriendRequest);
 		stmt.close();
 	}
 

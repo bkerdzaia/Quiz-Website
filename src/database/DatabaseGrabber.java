@@ -199,7 +199,7 @@ public interface DatabaseGrabber {
 	 * @return completion status ('true' if success, 'false' otherwise)
 	 * @throws SQLException
 	 */
-	public boolean acceptFriendRequest(String firstUser, String secondUser) 
+	public boolean acceptFriendRequest(String acceptor, String initiator) 
 			throws SQLException;
 	
 	/**
