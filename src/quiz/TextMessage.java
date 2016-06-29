@@ -16,25 +16,14 @@ public class TextMessage implements Message {
 	@Override
 	public String displayMessage() {
 		return message;
-		// TODO Auto-generated method stub
-
 	}
 
-	@Override
-	public boolean isRead() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
+	/**
+	 * Sets message text.
+	 * @param message - text to be set
+	 */
 	public void setMessage(String message){
 		this.message = message;
-	}
-
-	@Override
-	public void setRead() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

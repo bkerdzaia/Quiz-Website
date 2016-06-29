@@ -14,15 +14,4 @@ public interface Message {
 	 */
 	public String displayMessage();
 	
-	/**
-	 * Returns whether the message has been read or not.
-	 * @return 'true' if read, otherwise 'false'
-	 */
-	public boolean isRead();
-	
-	/**
-	 * Sets message statuts or 'read' by user.
-	 */
-	public void setRead();
-
 }
