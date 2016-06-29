@@ -212,7 +212,7 @@ public class DefaultDatabaseGrabber implements
 			throws SQLException{
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlMessagesToUser = 
-				"SELECT text FROM friends " +
+				"SELECT text, sent_date FROM friends " +
 					"JOIN messages ON " + 
 						"friends.friendship_id = messages.friendship_id " +
 					" AND (" +
@@ -222,7 +222,8 @@ public class DefaultDatabaseGrabber implements
 						" OR " +
 							"second_user_name = '" + userName + "'" +
 								" AND " +
-							"sender = 0);";
+							"sender = 0) " +
+				"ORDER BY sent_date DESC;" ;
 		ResultSet rs = stmt.executeQuery(sqlMessagesToUser);
 		UserMessageList textMessages = userFactory.getMessageList();
 		while (rs.next()){

@@ -163,5 +163,11 @@ public class UserRelationsTest {
 		assertTrue(dbGrabber.removeFriend("sam", "samuel"));
 		assertFalse(dbGrabber.removeFriend("samuel", "sam"));
 	}
+	
+	
+	public void testFriendshipIntermediate() throws SQLException{
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		dbGrabber.connect();
+	}
 
 }
