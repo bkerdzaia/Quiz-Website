@@ -1,13 +1,17 @@
 package factory;
 
 import questions.FillBlank;
+import questions.FillBlankCreator;
 import questions.FillBlankView;
 import questions.MultipleChoise;
+import questions.MultipleChoiseCreator;
 import questions.MultipleChoiseView;
 import questions.PictureResponse;
+import questions.PictureResponseCreator;
 import questions.PictureResponseView;
 import questions.QuestionAdd;
 import questions.QuestionResponce;
+import questions.QuestionResponseCreator;
 import questions.QuestionResponceView;
 
 /**
@@ -76,6 +80,26 @@ public class DefaultQuestionFactory implements QuestionFactory {
 	@Override
 	public QuestionAdd getQuestionAdd() {
 		return new QuestionAdd();
+	}
+
+	@Override
+	public FillBlankCreator getFillBlankCreator() {
+		return new FillBlankCreator();
+	}
+
+	@Override
+	public PictureResponseCreator getPictureResponseCreator() {
+		return new PictureResponseCreator();
+	}
+
+	@Override
+	public MultipleChoiseCreator getMultipleChoiseCreator() {
+		return new MultipleChoiseCreator();
+	}
+
+	@Override
+	public QuestionResponseCreator getQuestionResponceCreator() {
+		return new QuestionResponseCreator();
 	}
 
 }
