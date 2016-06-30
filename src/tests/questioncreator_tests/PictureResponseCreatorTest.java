@@ -19,7 +19,7 @@ public class PictureResponseCreatorTest {
 		pictureResp = DefaultQuestionFactory.getFactoryInstance().getPictureResponseCreator();
 	}
 
-	/* Test picture response having two answers */
+	/* Test picture response having two answers and isCorrectAnswer */
 	@Test
 	public void test() {
 		String questionText = "Who is this species?";
@@ -34,9 +34,13 @@ public class PictureResponseCreatorTest {
 		assertEquals(questionText, question.getQuestionText());
 		assertEquals(pictUrl, question.getPictureUrl());
 		assertEquals(posAnsw, question.getCorrectAnswers());
+		// test is correct answer
+		assertTrue(question.isCorrectAnswer(posAnsw1));
+		assertTrue(question.isCorrectAnswer(posAnsw2));
+		assertFalse(question.isCorrectAnswer("dog"));
 	}
 
-	/* Test picture response having one answers */
+	/* Test picture response having one answers and isCorrectAnswer */
 	@Test
 	public void test2() {
 		String questionText = "Who is this species?";
@@ -49,9 +53,12 @@ public class PictureResponseCreatorTest {
 		assertEquals(questionText, question.getQuestionText());
 		assertEquals(pictUrl, question.getPictureUrl());
 		assertEquals(posAnsw, question.getCorrectAnswers());
+		// test is correct answer
+		assertTrue(question.isCorrectAnswer(posAnsw1));
+		assertFalse(question.isCorrectAnswer("dog"));
 	}
 
-	/* Test picture response having more than three answers */
+	/* Test picture response having more than three answers and isCorrectAnswer */
 	@Test
 	public void test3() {
 		String questionText = "Who is this species?";
@@ -71,7 +78,14 @@ public class PictureResponseCreatorTest {
 				create(new String[] {questionText, pictUrl, posAnsw1, posAnsw2, posAnsw3, posAnsw4, posAnsw5});
 		assertEquals(questionText, question.getQuestionText());
 		assertEquals(pictUrl, question.getPictureUrl());
-	    assertEquals(posAnsw, question.getCorrectAnswers());	
+	    assertEquals(posAnsw, question.getCorrectAnswers());
+		// test is correct answer
+		assertTrue(question.isCorrectAnswer(posAnsw1));
+		assertTrue(question.isCorrectAnswer(posAnsw2));
+		assertTrue(question.isCorrectAnswer(posAnsw3));
+		assertTrue(question.isCorrectAnswer(posAnsw4));
+		assertTrue(question.isCorrectAnswer(posAnsw5));
+		assertFalse(question.isCorrectAnswer("dog"));	
 	}
 
 }

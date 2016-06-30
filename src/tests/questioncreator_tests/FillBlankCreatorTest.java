@@ -18,7 +18,7 @@ public class FillBlankCreatorTest {
 		blank = DefaultQuestionFactory.getFactoryInstance().getFillBlankCreator();
 	}
 
-	/* Test fill the blank having two answers */
+	/* Test fill the blank having two answers and isCorrectAnswer */
 	@Test
 	public void test() {
 		String questionText = "__ is USA first president";
@@ -30,9 +30,13 @@ public class FillBlankCreatorTest {
 		FillBlank question = (FillBlank) blank.create(new String[] {questionText, posAnsw1, posAnsw2});
 		assertEquals(questionText, question.getQuestionText());
 	    assertEquals(posAnsw, question.getCorrectAnswers());
+		// test is correct answer
+		assertTrue(question.isCorrectAnswer(posAnsw1));
+		assertTrue(question.isCorrectAnswer(posAnsw2));
+		assertFalse(question.isCorrectAnswer("Tom"));
 	}
 
-	/* Test fill the blank having one answer */
+	/* Test fill the blank having one answer and isCorrectAnswer */
 	@Test
 	public void test2() {
 		String questionText = "__ is USA first president";
@@ -42,9 +46,12 @@ public class FillBlankCreatorTest {
 		FillBlank question = (FillBlank) blank.create(new String[] { questionText, posAnsw1 });
 		assertEquals(questionText, question.getQuestionText());
 		assertEquals(posAnsw, question.getCorrectAnswers());
+		// test is correct answer
+		assertTrue(question.isCorrectAnswer(posAnsw1));
+		assertFalse(question.isCorrectAnswer("Tom"));
 	}
 
-	/* Test fill the blank having more than three answers */
+	/* Test fill the blank having more than three answers and isCorrectAnswer */
 	@Test
 	public void test3() {
 		String questionText = "__ is USA first president";
@@ -63,5 +70,12 @@ public class FillBlankCreatorTest {
 				.create(new String[] { questionText, posAnsw1, posAnsw2, posAnsw3, posAnsw4, posAnsw5 });
 		assertEquals(questionText, question.getQuestionText());
 		assertEquals(posAnsw, question.getCorrectAnswers());
+		// test is correct answer
+		assertTrue(question.isCorrectAnswer(posAnsw1));
+		assertTrue(question.isCorrectAnswer(posAnsw2));
+		assertTrue(question.isCorrectAnswer(posAnsw3));
+		assertTrue(question.isCorrectAnswer(posAnsw4));
+		assertTrue(question.isCorrectAnswer(posAnsw5));
+		assertFalse(question.isCorrectAnswer("Tom"));
 	}
 }

@@ -21,7 +21,7 @@ public class MultipleChoiceCreatorTest {
 		multChoice = DefaultQuestionFactory.getFactoryInstance().getMultipleChoiseCreator();
 	}
 
-	/* Test multiple choice question */
+	/* Test multiple choice question and isCorrectAnswer */
 	@Test
 	public void test() {
 		String questionText = "Who is USA first president?";
