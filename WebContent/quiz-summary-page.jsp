@@ -38,7 +38,7 @@
 	
 	<div id="logOutId"></div>
 
-	<p>Hello at quiz ${param.name}</p>
+	<p>Welcome to funz ${param.name} !</p>
 	
 	<div>
 		<p>description: <b><%= quiz.getDescription() %></b></p>
@@ -87,7 +87,9 @@
 	</div>
 	
 	<div>
-		<p><a href="quiz-question.jsp?question=1">take a quiz</a></p>
+		<form name="take-a-quiz" action="DisplayQuizServlet" method="get">
+			 <button type="submit" name="quizName" value=<%=quiz.getName()%>>Take a Quiz</button>
+		</form>
 	</div>
 	
 	<div>
