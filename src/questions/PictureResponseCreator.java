@@ -9,6 +9,9 @@ import factory.DefaultQuestionFactory;
 
 public class PictureResponseCreator implements QuestionCreator {
 
+	/**
+	 * Creates a picture response question from given questions array.
+	 */
 	@Override
 	public Question create(String[] questions) {
 		PictureResponse pictureResponse = DefaultQuestionFactory.getFactoryInstance().getPictureResponseQuestion();

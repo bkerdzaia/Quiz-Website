@@ -9,7 +9,7 @@ import factory.DefaultQuestionFactory;
 public class MultipleChoiseCreator implements QuestionCreator {
 
 	/**
-	 * 
+	 * Creates a multiple choice question from given questions array.
 	 */
 	@Override
 	public Question create(String[] questions) {

@@ -6,13 +6,19 @@ import quiz.QuizQuestions;
 public class QuestionAdd {
 
 	/***
-	 * Add all question create by creator to the questions from map keys that
-	 * starts startKey
+	 * Add all question created by creator to the questions from map values,
+	 * whose key starts with startKey.
 	 * 
-	 * @param map 
+	 * @param map
+	 *            - the map of key values, where each key corresponds some
+	 *            questions and answers array
 	 * @param startKey
+	 *            - the map keys prefix string
 	 * @param creator
+	 *            - the interface that creates Question type object from map
+	 *            values
 	 * @param questions
+	 *            - the collection of questions where to add created quizzes
 	 */
 	public void addQuestionType(Map<String, String[]> map, String startKey, QuestionCreator creator,
 			QuizQuestions questions) {

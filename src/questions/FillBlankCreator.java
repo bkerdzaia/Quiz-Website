@@ -10,7 +10,7 @@ import factory.DefaultQuestionFactory;
 public class FillBlankCreator implements QuestionCreator {
 
 	/**
-	 * Create a blank question 
+	 * Creates a blank question from given questions array.
 	 */
 	@Override
 	public Question create(String[] questions) {
