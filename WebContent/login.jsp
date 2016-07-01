@@ -2,9 +2,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Login</title>
-
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<title>Login</title>
+	<script src="script.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 
 <script>
 	function passwordStrength() {
@@ -36,38 +37,12 @@
 	loginClick();
 </script>
 
-<style>
-	input{
-		width: 30%;
-		padding: 10px;
-    	border: 3px;
-    	display: block;
-    	margin : 0 auto;
-	}
-	
-	input[type = submit]{
-    	margin: 4px 2px;
-    	margin-left: auto;
-    	margin-right: auto;
-    	background-color: lightblue;
-    	color: white;
-	}
-	
-	h1, h2{
-		text-align: center;
-		color: lightblue;
-	}
-	
-	h1{
-		font-size: 400%;
-	}
-	
-</style>
+
 
 </head>
 <body>
 <h1>Welcome to Funz!</h1>
-<h2>place where fun quizzes are made</h2>
+<h2 id="intro">[place where fun quizzes are made]</h2>
 <br> <br> <br>
 	<div>
 		<form  id="login-form-id" action="LoginServlet" method="post">
@@ -79,12 +54,11 @@
 		</form>
 	</div>
 	
-	<div id="message">
+	<div class="failure-message">
 		<% 
 			String completionMessage = (String) request.getAttribute("message");
 			if (completionMessage != null)
-				out.println(completionMessage);
-			System.out.println(completionMessage);
+				out.println("<h3>" + completionMessage + "</h3");
 		%> 
 	</div>
 

@@ -1,3 +1,4 @@
+$("intro").hide();
 
 /* load log out html */
 $(function() {
