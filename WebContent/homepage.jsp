@@ -23,7 +23,7 @@
 		QuizCollection recentlyCreatedQuiz = db.getRecentlyCreatedQuizzes();
 		db.close();
 	%>
-<%-- 
+
 	<%!
 		private String getHtmlQuizzes(QuizCollection quizzes) {
 			if (quizzes == null) return "";
@@ -73,16 +73,15 @@
 			}
 		%>
 	</div>
-	--%>
+
 	<div>
 		<p>friends recent activities (quizzes taken or created)</p>
-		<%--
+		<%
 			FriendList friends = user.getFriends();
-			for (User friend : friends) {
-				out.println(friend.getHistory());
-				out.println(getHtmlQuizzes(friend.getCreatedQuizzes()));
+			for (String friend : friends) {
+				out.println(friend);
 			}
-		--%>
+		%>
 	</div>
 </body>
 </html>
