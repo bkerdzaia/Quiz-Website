@@ -13,28 +13,31 @@ import factory.*;
  * Servlet implementation class LoginServlet
  */
 @WebServlet("/LoginServlet")
-public class LoginServlet extends HttpServlet {
+public class LoginServlet extends HttpServlet implements ServletConstants{
 	private static final long serialVersionUID = 1L;
 	
-	public static final String DATABASE_ATTRIBUTE = "database";
-
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String address = "login.html";			
+		HttpSession session = request.getSession();
+		String addressToRedirect = LOGIN_ADDRESS;			
+		String userName = request.getParameter(USER_NAME_PARAM);
+		Encryption encryptor = new Encryption();
+		String encryptedPassword = encryptor.encrypt(request.getParameter(PASSWORD_PARAM));
+
 		try {
-			DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
+			DatabaseGrabber db = (DatabaseGrabber) 
+					request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
 			if (db == null) {
 				db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
 				request.getServletContext().setAttribute(DATABASE_ATTRIBUTE, db);
 			}
 		
-			// read all information and pass home page as session
-			HttpSession session = request.getSession();
 			db.connect();
+<<<<<<< HEAD
 			String name = request.getParameter("userName");
 			Encryption encryption = new Encryption();
 			String encryptPassword = encryption.encrypt(request.getParameter("password"));
@@ -47,15 +50,38 @@ public class LoginServlet extends HttpServlet {
 				session.setAttribute("userName", name);
 				address = "homepage.jsp?userName=" + name;
 				System.out.println("Successfull Login");
+=======
+			// If user wants to register in the system
+			if(request.getParameter(REGISTER_PARAM) != null) { 
+				// Case of failure
+				if (!db.registerUser(userName, encryptedPassword)){
+					request.setAttribute(MESSAGE_ATTR, CANT_REGISTER);
+				// Everything went good
+				}else{ 
+					addressToRedirect = HOMEPAGE_ADDRESS + "?" + USER_NAME_PARAM + "=" + userName;
+					session.setAttribute(USER_NAME_PARAM, userName);
+				}
+			} 
+			// Otherwise login is issued by user
+			else {
+				// User with provided credentials exists in database
+				if(db.authenticateUser(userName, encryptedPassword)){
+					session.setAttribute(USER_NAME_PARAM, userName);
+					addressToRedirect = HOMEPAGE_ADDRESS + "?" + USER_NAME_PARAM + "=" + userName;
+				}
+				// Who the heck you are?
+				else{
+					request.setAttribute(MESSAGE_ATTR, CANT_LOGIN);
+				}
+>>>>>>> dd6bc9d69a74786754dcaa0a46a30c6b9e861446
 			}
-			db.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			address = "error-page.jsp";
+			addressToRedirect = ERROR_PAGE_ADDRESS;
 		}
-		RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+
+		RequestDispatcher dispatcher = request.getRequestDispatcher(addressToRedirect);
 		dispatcher.forward(request, response);
 	}
-
 
 }

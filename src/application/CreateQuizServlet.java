@@ -17,7 +17,7 @@ import quiz.*;
  * Servlet implementation class CreateQuizServlet
  */
 @WebServlet("/CreateQuizServlet")
-public class CreateQuizServlet extends HttpServlet {
+public class CreateQuizServlet extends HttpServlet implements ServletConstants{
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -28,7 +28,7 @@ public class CreateQuizServlet extends HttpServlet {
 			throws ServletException, IOException {
 		String address;
 		try {
-			DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(LoginServlet.DATABASE_ATTRIBUTE);
+			DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
 			db.connect();
 			HttpSession session = request.getSession();
 			QuestionFactory questionFactory = DefaultQuestionFactory.getFactoryInstance();
