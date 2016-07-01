@@ -80,7 +80,12 @@
 	</div>
 	
 	<div id="message">
-		Completion Message !
+		<% 
+			String completionMessage = (String) request.getAttribute("message");
+			if (completionMessage != null)
+				out.println(completionMessage);
+			System.out.println(completionMessage);
+		%> 
 	</div>
 
 </body>
