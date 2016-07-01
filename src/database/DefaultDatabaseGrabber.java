@@ -154,34 +154,6 @@ public class DefaultDatabaseGrabber implements
 	}
 
 
-	// Return user object based on name.
-	@Override
-	public User loadUser(String userName) throws SQLException {
-		Statement stmt = conHandler.getConnection().createStatement();
-		String queryUser = 
-				"SELECT * FROM users " +
-				"WHERE username = " + "'" + userName + "';";
-		ResultSet rs = stmt.executeQuery(queryUser);
-		if (!rs.next())
-			return null;
-		User retrievedUser = userFactory.getUser();
-		// Fill user bean
-		retrievedUser.setName(rs.getString(USER.USERNAME.num()));
-		retrievedUser.setPictureUrl(rs.getString(USER.PROFILE_PICTURE_URL.num()));
-		retrievedUser.setAboutMe(rs.getString(USER.ABOUT_ME.num()));
-		retrievedUser.setPasswordHash(rs.getString(USER.PASSW_HASH.num()));
-		// Fill more complex fields, first list of created quizzes
-		retrievedUser.setCreatedQuizzes(
-				getCreatedQuizzesByUserName(rs.getString(USER.USERNAME.num())));
-		// Now, history of performance
-		History userHistory = fillHistoryByUserName(rs.getString(USER.USERNAME.num()));
-		retrievedUser.setHistory(userHistory);
-		// Set friends and messages
-		retrievedUser.setFriends(getFriends(userName));
-		retrievedUser.setMessages(getMessages(userName));
-		stmt.close();
-		return retrievedUser;
-	}
 
 
 	// Returns message sent to user with provided user name.
@@ -416,45 +388,6 @@ public class DefaultDatabaseGrabber implements
 	}
 
 
-	// Return quiz from database with provided name.
-	@Override
-	public Quiz loadQuiz(String quizName) throws SQLException {
-		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlGetQuiz =
-				"SELECT * FROM quizzes " +
-				"WHERE quiz_name = " + "'" + quizName + "';";
-		ResultSet rs = stmt.executeQuery(sqlGetQuiz);
-		// If doesn't exist, return null
-		if (!rs.next())
-			return null;
-		Quiz retrievedQuiz = quizFactory.getQuiz();
-		// Fill quiz bean
-		retrievedQuiz.setName(rs.getString(QUIZ.QUIZ_NAME.num()));
-		retrievedQuiz.setDescription(rs.getString(QUIZ.QUIZ_DESCRIPTION.num()));
-		retrievedQuiz.setCreationDate(rs.getTimestamp(QUIZ.DATE_CREATION.num()));
-		retrievedQuiz.setCreator(rs.getString(QUIZ.CREATOR_NAME.num()));
-		retrievedQuiz.setSummaryStatistics(getAverageScoreOnQuiz(quizName));
-		// Fill property bean
-		QuizProperty prop = quizFactory.getQuizProperty();
-		prop.setInstantCorrection(rs.getBoolean(QUIZ.INSTANT_CORRECTION.num()));
-		prop.setRandomQuestion(rs.getBoolean(QUIZ.RANDOM_ORDER.num()));
-		prop.setOnePage(rs.getBoolean(QUIZ.ONE_MULTIPLE_PAGE_MODE.num()));
-		retrievedQuiz.setProperty(prop);
-		// Collect questions
-		ArrayList<Positioner> positioner = 
-				new ArrayList<Positioner>(); // inner class for sorting
-		collectQuestionResponse(quizName, positioner);
-		collectFillBlank(quizName, positioner);
-		collectMultipleChoise(quizName, positioner);
-		collectPictureResponse(quizName, positioner);
-		// Add question to retrivedQuiz
-		Collections.sort(positioner);  // Sort questions to appear in order
-		QuizQuestions questions = quizFactory.getQuizQuestions();
-		for (Positioner p : positioner)
-			questions.add(p.question);
-		retrievedQuiz.setQuestions(questions);
-		return retrievedQuiz;
-	}
 
 	// Returns average score of users on the quiz
 	private double getAverageScoreOnQuiz(String quizName) throws SQLException {
@@ -578,39 +511,7 @@ public class DefaultDatabaseGrabber implements
 		return answers;
 	}
 
-	// Hands back list of names of popular quizzes
-	@Override
-	public QuizCollection getPopularQuizzes() throws SQLException {
-		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlQuizJoinTaken = 
-				"SELECT quizzes.quiz_name, COUNT(*) AS popularity FROM quizzes " +
-					"JOIN quizzes_taken " +
-						"ON quizzes_taken.quiz_name = quizzes.quiz_name " + 
-				"GROUP BY quizzes.quiz_name " + 
-				"ORDER BY popularity DESC " +
-				"LIMIT " + MAX_POPULAR_QUIZZES + ";";
-		ResultSet rs = stmt.executeQuery(sqlQuizJoinTaken);
-		// Create quiz collection and starting filling
-		QuizCollection popularQuizzes = quizFactory.getQuizCollection();
-		while (rs.next())
-			popularQuizzes.add(rs.getString(1)); // name column
-		return popularQuizzes;
-	}
 
-	// Returns list of recently created quizzes
-	@Override
-	public QuizCollection getRecentlyCreatedQuizzes() throws SQLException {
-		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlRecentCreatedQuizzes = 
-				"SELECT quiz_name FROM quizzes " +
-				"ORDER BY creation_date DESC " + 
-				"LIMIT " + MAX_RECENTRY_CREATED_QUIZZES + ";";
-		ResultSet rs = stmt.executeQuery(sqlRecentCreatedQuizzes);
-		QuizCollection recentQuizzes = quizFactory.getQuizCollection();
-		while (rs.next())
-			recentQuizzes.add(rs.getString(1)); // quizName column
-		return recentQuizzes;
-	}
 
 	// Returns list of recent quiz takers
 	@Override
@@ -879,6 +780,127 @@ public class DefaultDatabaseGrabber implements
 		stmt.executeUpdate(sqlRemoveFriend);
 		stmt.close();
 		return true;
+	}
+
+
+	// Return user object based on name.
+	@Override
+	public User loadUser(String userName) throws SQLException {
+		// Statement stmt = conHandler.getConnection().createStatement();
+		// String queryUser =
+		// "SELECT * FROM users " +
+		// "WHERE username = " + "'" + userName + "';";
+		// ResultSet rs = stmt.executeQuery(queryUser);
+		// if (!rs.next())
+		// return null;
+		User retrievedUser = userFactory.getUser();
+		// Fill user bean
+		// retrievedUser.setName(rs.getString(USER.USERNAME.num()));
+		// retrievedUser.setPictureUrl(rs.getString(USER.PROFILE_PICTURE_URL.num()));
+		// retrievedUser.setAboutMe(rs.getString(USER.ABOUT_ME.num()));
+		// retrievedUser.setPasswordHash(rs.getString(USER.PASSW_HASH.num()));
+		// // Fill more complex fields, first list of created quizzes
+		// retrievedUser.setCreatedQuizzes(
+		// getCreatedQuizzesByUserName(rs.getString(USER.USERNAME.num())));
+		// // Now, history of performance
+		// History userHistory =
+		// fillHistoryByUserName(rs.getString(USER.USERNAME.num()));
+		// retrievedUser.setHistory(userHistory);
+
+		retrievedUser.setName(userName);
+		retrievedUser.setHistory(factory.DefaultUserFactory.getFactoryInstance().getHistory());
+		retrievedUser.setMessages(factory.DefaultUserFactory.getFactoryInstance().getMessageList());
+		retrievedUser.setCreatedQuizzes(factory.DefaultQuizFactory.getFactoryInstance().getQuizCollection());
+		retrievedUser.setFriends(factory.DefaultUserFactory.getFactoryInstance().getFriendList());
+		return retrievedUser;
+	}
+
+
+	// Return quiz from database with provided name.
+	@Override
+	public Quiz loadQuiz(String quizName) throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlGetQuiz = "SELECT * FROM quizzes " + "WHERE quiz_name = " + "'" + quizName + "';";
+		ResultSet rs = stmt.executeQuery(sqlGetQuiz);
+		// If doesn't exist, return null
+		if (!rs.next())
+			return null;
+		Quiz retrievedQuiz = quizFactory.getQuiz();
+		// Fill quiz bean
+		retrievedQuiz.setName(rs.getString(QUIZ.QUIZ_NAME.num()));
+		retrievedQuiz.setDescription(rs.getString(QUIZ.QUIZ_DESCRIPTION.num()));
+		retrievedQuiz.setCreationDate(rs.getTimestamp(QUIZ.DATE_CREATION.num()));
+		retrievedQuiz.setCreator(rs.getString(QUIZ.CREATOR_NAME.num()));
+		retrievedQuiz.setSummaryStatistics(getAverageScoreOnQuiz(quizName));
+		// Fill property bean
+		QuizProperty prop = quizFactory.getQuizProperty();
+		prop.setInstantCorrection(rs.getBoolean(QUIZ.INSTANT_CORRECTION.num()));
+		prop.setRandomQuestion(rs.getBoolean(QUIZ.RANDOM_ORDER.num()));
+		prop.setOnePage(rs.getBoolean(QUIZ.ONE_MULTIPLE_PAGE_MODE.num()));
+		retrievedQuiz.setProperty(prop);
+		// Collect questions
+		ArrayList<Positioner> positioner = new ArrayList<Positioner>(); // inner
+																		// class
+																		// for
+																		// sorting
+		collectQuestionResponse(quizName, positioner);
+		collectFillBlank(quizName, positioner);
+		collectMultipleChoise(quizName, positioner);
+		collectPictureResponse(quizName, positioner);
+		// Add question to retrivedQuiz
+		Collections.sort(positioner); // Sort questions to appear in order
+		QuizQuestions questions = quizFactory.getQuizQuestions();
+		for (Positioner p : positioner)
+			questions.add(p.question);
+		retrievedQuiz.setQuestions(questions);
+		return retrievedQuiz;
+	}
+
+
+	// Hands back list of names of popular quizzes
+	@Override
+	public QuizCollection getPopularQuizzes() throws SQLException {
+		// Statement stmt = conHandler.getConnection().createStatement();
+		// String sqlQuizJoinTaken =
+		// "SELECT quizzes.quiz_name, COUNT(*) AS popularity FROM quizzes " +
+		// "JOIN quizzes_taken " +
+		// "ON quizzes_taken.quiz_name = quizzes.quiz_name " +
+		// "GROUP BY quizzes.quiz_name " +
+		// "ORDER BY popularity DESC " +
+		// "LIMIT " + MAX_POPULAR_QUIZZES + ";";
+		// ResultSet rs = stmt.executeQuery(sqlQuizJoinTaken);
+		// Create quiz collection and starting filling
+		QuizCollection popularQuizzes = quizFactory.getQuizCollection();
+		// while (rs.next())
+		// popularQuizzes.add(rs.getString(1)); // name column
+		String s = "a";
+		for (char i = 'b'; i < 'e'; i++) {
+			s += i;
+			popularQuizzes.add(s);
+		}
+		return popularQuizzes;
+
+	}
+
+	// Returns list of recently created quizzes
+	@Override
+	public QuizCollection getRecentlyCreatedQuizzes() throws SQLException {
+		// Statement stmt = conHandler.getConnection().createStatement();
+		// String sqlRecentCreatedQuizzes =
+		// "SELECT quiz_name FROM quizzes " +
+		// "ORDER BY creation_date DESC " +
+		// "LIMIT " + MAX_RECENTRY_CREATED_QUIZZES + ";";
+		// ResultSet rs = stmt.executeQuery(sqlRecentCreatedQuizzes);
+		QuizCollection recentQuizzes = quizFactory.getQuizCollection();
+		// while (rs.next())
+		// recentQuizzes.add(rs.getString(1)); // quizName column
+
+		String s = "x";
+		for (char i = 'e'; i < 'h'; i++) {
+			s += i;
+			recentQuizzes.add(s);
+		}
+		return recentQuizzes;
 	}
 
 }

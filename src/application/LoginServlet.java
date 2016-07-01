@@ -39,13 +39,13 @@ public class LoginServlet extends HttpServlet {
 			Encryption encryption = new Encryption();
 			String encryptPassword = encryption.encrypt(request.getParameter("password"));
 			boolean userEntered = db.authenticateUser(name, encryptPassword);
-			if(request.getParameter("register") != null) {// && db.registerUser(name, encryptPassword)){
+			if(request.getParameter("register") != null && db.registerUser(name, encryptPassword)) {// ){
 				session.setAttribute("userName", name);
-				address = "homepage.jsp?name=" + name;
+				address = "homepage.jsp?userName=" + name;
 			}
 			if(userEntered){
 				session.setAttribute("userName", name);
-				address = "homepage.jsp?name=" + name;
+				address = "homepage.jsp?userName=" + name;
 				System.out.println("Successfull Login");
 			}
 			db.close();

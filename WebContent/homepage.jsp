@@ -2,7 +2,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="application.*, quiz.*, database.*"%>
-<%@ page errorPage="error-page.jsp" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -17,6 +16,7 @@
 		DatabaseGrabber db = (DatabaseGrabber) application.getAttribute(LoginServlet.DATABASE_ATTRIBUTE);
 		db.connect();
 		String userName = (String) session.getAttribute("userName");
+		out.println("User Name = " + userName);
 		User user = db.loadUser(userName);
 		QuizCollection popularQuizzes = db.getPopularQuizzes(); 
 		QuizCollection recentlyCreatedQuiz = db.getRecentlyCreatedQuizzes();
@@ -86,7 +86,7 @@
 	<div>
 		<form action="create-quiz.html">
 		<%
-			if(request.getParameter("name").equals(user.getName())) {
+			if(request.getParameter("userName").equals(user.getName())) {
 				out.println("<input type=\"submit\" value=\"create a quiz\">");
 			}
 		%>
@@ -95,7 +95,7 @@
 	
 	<div>
 		<%
-			String parameterUserName = request.getParameter("name");
+			String parameterUserName = request.getParameter("userName");
 			if(!parameterUserName.equals(user.getName())) {
 				out.println("<button type=\"button\">send friend request</button>");
 			}
