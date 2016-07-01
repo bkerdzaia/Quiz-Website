@@ -14,15 +14,16 @@
 <body>
 
 	<%
-		DatabaseGrabber db = (DatabaseGrabber) application.getAttribute(LoginServlet.DATABASE_ATTRIBUTE);
-		db.connect();
+		DatabaseGrabber db = (DatabaseGrabber) application.getAttribute(ServletConstants.DATABASE_ATTRIBUTE);
+		db.connect(); 
+		System.out.println("here");
 		String userName = (String) session.getAttribute("userName");
 		User user = db.loadUser(userName);
 		QuizCollection popularQuizzes = db.getPopularQuizzes(); 
 		QuizCollection recentlyCreatedQuiz = db.getRecentlyCreatedQuizzes();
 		db.close();
 	%>
-
+<%-- 
 	<%!
 		private String getHtmlQuizzes(QuizCollection quizzes) {
 			if (quizzes == null) return "";
@@ -35,6 +36,7 @@
 		}
 	%>
 	
+	
 	<div id="logOutId"></div>
 
 	<p><b>Hello ${param.name}</b></p>
@@ -44,7 +46,7 @@
 
 	<div>
 		<p>list of popular quizzes</p>
-		<%= getHtmlQuizzes(popularQuizzes)	%>
+		<%= getHtmlQuizzes(popularQuizzes) %>
 	</div>
 
 	<div>
@@ -64,14 +66,14 @@
 
 	<div>
 		<p>received messages</p>
-		<%--
+		<%
 			UserMessageList messages = user.getMessages();
 			for (Message message : messages) {
 				
 			}
-		--%>
+		%>
 	</div>
-
+	--%>
 	<div>
 		<p>friends recent activities (quizzes taken or created)</p>
 		<%--
@@ -82,25 +84,5 @@
 			}
 		--%>
 	</div>
-	
-	<div>
-		<form action="create-quiz.html">
-		<%
-			if(request.getParameter("name").equals(user.getName())) {
-				out.println("<input type=\"submit\" value=\"create a quiz\">");
-			}
-		%>
-		</form>
-	</div>
-	
-	<div>
-		<%
-			String parameterUserName = request.getParameter("name");
-			if(!parameterUserName.equals(user.getName())) {
-				out.println("<button type=\"button\">send friend request</button>");
-			}
-		%>
-	</div>
-
 </body>
 </html>

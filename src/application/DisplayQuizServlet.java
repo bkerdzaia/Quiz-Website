@@ -30,7 +30,7 @@ import quiz.UserList;
  * Servlet implementation class DisplayQuizServlet
  */
 @WebServlet("/DisplayQuizServlet")
-public class DisplayQuizServlet extends HttpServlet {
+public class DisplayQuizServlet extends HttpServlet implements ServletConstants{
 	private static final long serialVersionUID = 1L;
        
 
@@ -41,10 +41,10 @@ public class DisplayQuizServlet extends HttpServlet {
 		String address;
 		try {
 			System.out.println("Quiz is being displayed");
-			DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(LoginServlet.DATABASE_ATTRIBUTE);
+			DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
 			if (db == null) {
 				db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
-				request.getServletContext().setAttribute(LoginServlet.DATABASE_ATTRIBUTE, db);
+				request.getServletContext().setAttribute(DATABASE_ATTRIBUTE, db);
 			}
 			HttpSession session = request.getSession();
 			db.connect();

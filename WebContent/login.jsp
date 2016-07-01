@@ -59,7 +59,7 @@
 	}
 	
 	h1{
-	font-size: 400%;
+		font-size: 400%;
 	}
 	
 </style>
@@ -77,6 +77,10 @@
 			<input name="register" type="submit" value="Register">
 			<br><br>
 		</form>
+	</div>
+	
+	<div id="message">
+		Completion Message !
 	</div>
 
 </body>
