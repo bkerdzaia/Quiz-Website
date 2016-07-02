@@ -37,20 +37,6 @@ public class LoginServlet extends HttpServlet implements ServletConstants{
 			}
 		
 			db.connect();
-<<<<<<< HEAD
-			String name = request.getParameter("userName");
-			Encryption encryption = new Encryption();
-			String encryptPassword = encryption.encrypt(request.getParameter("password"));
-			boolean userEntered = db.authenticateUser(name, encryptPassword);
-			if(request.getParameter("register") != null && db.registerUser(name, encryptPassword)) {// ){
-				session.setAttribute("userName", name);
-				address = "homepage.jsp?userName=" + name;
-			}
-			if(userEntered){
-				session.setAttribute("userName", name);
-				address = "homepage.jsp?userName=" + name;
-				System.out.println("Successfull Login");
-=======
 			// If user wants to register in the system
 			if(request.getParameter(REGISTER_PARAM) != null) { 
 				// Case of failure
@@ -73,7 +59,6 @@ public class LoginServlet extends HttpServlet implements ServletConstants{
 				else{
 					request.setAttribute(MESSAGE_ATTR, CANT_LOGIN);
 				}
->>>>>>> dd6bc9d69a74786754dcaa0a46a30c6b9e861446
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

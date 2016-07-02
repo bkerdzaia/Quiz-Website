@@ -15,9 +15,9 @@ public interface ServletConstants {
 	public static final String REGISTER_PARAM = "register";
 	public static final String MESSAGE_ATTR = "message";
 	public static final String CANT_REGISTER = 
-			"User with provided user name already exists. Pick another";
+			"User with provided name already exists. Pick another.";
 	public static final String LOGIN_SUCCESS = "Login successfull!";
-	public static final String CANT_LOGIN = "Unable to login. Check you name/password";
+	public static final String CANT_LOGIN = "Unable to login. Check you name/password.";
 	
 	
 	public static final String APPLICATION_FACTORY = "applicationFactory";

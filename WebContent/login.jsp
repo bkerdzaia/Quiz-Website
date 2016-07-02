@@ -6,6 +6,13 @@
 	<script src="script.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<!--  If session already contains user redirect to user's homepage -->
+<%
+	if (session.getAttribute("userName") != null){
+    	String redirectURL = "homepage.jsp";
+    	response.sendRedirect(redirectURL);
+	}
+%>
 
 <script>
 	function passwordStrength() {
@@ -58,7 +65,7 @@
 		<% 
 			String completionMessage = (String) request.getAttribute("message");
 			if (completionMessage != null)
-				out.println("<h3>" + completionMessage + "</h3");
+				out.println("<h3>*" + completionMessage + "</h3");
 		%> 
 	</div>
 

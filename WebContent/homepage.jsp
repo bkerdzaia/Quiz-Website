@@ -69,7 +69,7 @@
 		<%
 			UserMessageList messages = user.getMessages();
 			for (Message message : messages) {
-				
+				out.println(message.displayMessage());		
 			}
 		%>
 	</div>
