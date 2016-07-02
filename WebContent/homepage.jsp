@@ -88,6 +88,7 @@
 		%>
 	</div>
 	
+	<%-- create a quiz display to the user that is logged in --%>
 	<%
 		if(request.getParameter(ServletConstants.USER_NAME_PARAM).equals(user.getName())) {
 			out.println("<div><form action='create-quiz.html'>");
@@ -96,6 +97,7 @@
 		}
 	%>
 	
+	<%-- send friend request display to the user that is viewed by logged in user --%>
 	<%
 		String parameterUserName = request.getParameter(ServletConstants.USER_NAME_PARAM);
 		if(!parameterUserName.equals(user.getName())) {
@@ -106,6 +108,12 @@
 		}
 		
 	%>
+	
+	<div>
+		<form action="send-note.jsp">
+			<input type="submit" value="Send Message">
+		</form>	
+	</div>
 	
 </body>
 </html>
