@@ -6,6 +6,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+	<!-- Redirect to login page if session does not contain user name atribute -->
+	<%
+		if (session.getAttribute(ServletConstants.USER_NAME_PARAM) == null){
+			response.sendRedirect(ServletConstants.LOGIN_ADDRESS);
+			return;
+		}
+	%>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Hello to Funz</title>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
@@ -15,7 +22,8 @@
 <body>
 
 	<%
-		DatabaseGrabber db = (DatabaseGrabber) application.getAttribute(ServletConstants.DATABASE_ATTRIBUTE);
+		DatabaseGrabber db = (DatabaseGrabber) 
+			application.getAttribute(ServletConstants.DATABASE_ATTRIBUTE);
 		db.connect(); 
 		System.out.println("here");
 		String userName = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
