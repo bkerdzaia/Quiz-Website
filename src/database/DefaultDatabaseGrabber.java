@@ -38,7 +38,8 @@ import quiz.UserMessageList;
  * @author dav23r Default implementation of DatabaseGrabber interface. Should be
  *         used to interact with database in production code.
  */
-public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParameters, UIParameters {
+public class DefaultDatabaseGrabber implements DatabaseGrabber, 
+						DatabaseParameters, UIParameters {
 
 	// Factory is used to acquire connection handler.
 	private DatabaseFactory dbFactory = null;
@@ -72,12 +73,16 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 			+ DatabaseParameters.DB_TRUNCATE_SCRIPT;
 
 	// Accept and store factories, to compose objects later.
-	public DefaultDatabaseGrabber(DatabaseFactory dbFactory, UserFactory userFactory, QuizFactory quizFactory,
-			QuestionFactory questionFactory) {
+	public DefaultDatabaseGrabber(DatabaseFactory dbFactory, 
+								  UserFactory userFactory, 
+								  QuizFactory quizFactory,
+								  QuestionFactory questionFactory) {
+
 		this.dbFactory = dbFactory;
 		this.userFactory = userFactory;
 		this.quizFactory = quizFactory;
 		this.questionFactory = questionFactory;
+
 	}
 
 	// Initialize connection via connection handler.
@@ -90,9 +95,9 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 	@Override
 	public boolean registerUser(String userName, String passwHash) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlNumberEntriesSameName = "SELECT username " + "FROM users " + "WHERE username = " + "'" + userName
-				+ "'" + ";";
-
+		String sqlNumberEntriesSameName = 
+				"SELECT username " + "FROM users " + 
+				"WHERE username = " + "'" + userName + "'" + ";";
 		ResultSet rs = stmt.executeQuery(sqlNumberEntriesSameName);
 		// If database already contains entry with same name terminate.
 		if (rs.next()) {
@@ -114,7 +119,9 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 	@Override
 	public boolean authenticateUser(String userName, String passwHash) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
-		String queryUser = "SELECT * FROM users " + "WHERE username = " + "'" + userName + "';";
+		String queryUser = 
+				"SELECT * FROM users " + 
+				"WHERE username = " + "'" + userName + "';";
 		ResultSet rs = stmt.executeQuery(queryUser);
 		// User with provided userName doesn't exist in database
 		if (!rs.next()) {
@@ -154,7 +161,9 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 
 	private UserMessageList getFriendRequests(String userName) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlFriendRequests = "SELECT initiator FROM friend_requests " + "WHERE acceptor = '" + userName + "';";
+		String sqlFriendRequests = 
+				"SELECT initiator FROM friend_requests " + 
+				"WHERE acceptor = '" + userName + "';";
 		ResultSet rs = stmt.executeQuery(sqlFriendRequests);
 		UserMessageList friendRequests = userFactory.getMessageList();
 		while (rs.next()) {
@@ -166,10 +175,18 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 
 	private UserMessageList getTextMessagesAndChallenges(String userName) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlMessagesToUser = "SELECT text, sent_date FROM friends " + "JOIN messages ON "
-				+ "friends.friendship_id = messages.friendship_id " + " AND (" + "first_user_name = '" + userName + "'"
-				+ " AND " + "sender = 1" + " OR " + "second_user_name = '" + userName + "'" + " AND " + "sender = 0) "
-				+ "ORDER BY sent_date DESC;";
+		String sqlMessagesToUser = 
+				"SELECT text, sent_date FROM friends " + 
+					"JOIN messages ON " + 
+						"friends.friendship_id = messages.friendship_id " + 
+							" AND (" + 
+						"first_user_name = '" + userName + "'" + 
+									" AND " + "sender = 1" + 
+								" OR " + 
+									"second_user_name = '" + userName + "'" + 
+									" AND " + 
+								"sender = 0) " + 
+				"ORDER BY sent_date DESC;";
 		ResultSet rs = stmt.executeQuery(sqlMessagesToUser);
 		UserMessageList textMessages = userFactory.getMessageList();
 		while (rs.next()) {
@@ -187,8 +204,11 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 	private History<UsersPerformance> fillHistoryByUserName(String userName) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		History<UsersPerformance> userHistory = userFactory.getHistoryUsersPerformance();
-		String sqlTakenQuizzes = "SELECT * FROM quizzes_taken " + "WHERE username = " + "'" + userName + "' "
-				+ "ORDER BY attempt_date DESC " + "LIMIT " + MAX_HISTORY_ENTRIES + ";";
+		String sqlTakenQuizzes = 
+				"SELECT * FROM quizzes_taken " + 
+				"WHERE username = " + "'" + userName + "' " + 
+				"ORDER BY attempt_date DESC " + 
+				"LIMIT " + MAX_HISTORY_ENTRIES + ";";
 		ResultSet rs = stmt.executeQuery(sqlTakenQuizzes);
 		// Iterate over result set and collect performance objects.
 		while (rs.next()) {
@@ -208,8 +228,10 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 	// Returns collection of user's recently created quizzes
 	public QuizCollection getCreatedQuizzesByUserName(String userName) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlQuizNameByUserName = "SELECT quiz_name FROM quizzes " + "WHERE quiz_creator = " + "'" + userName
-				+ "' " + "ORDER BY creation_date " + "LIMIT " + MAX_RECENTLY_CREATED_BY_USER + " ;";
+		String sqlQuizNameByUserName = 
+				"SELECT quiz_name FROM quizzes " + 
+				"WHERE quiz_creator = " + "'" + userName + "' " + 
+				"ORDER BY creation_date " + "LIMIT " + MAX_RECENTLY_CREATED_BY_USER + " ;";
 		ResultSet rs = stmt.executeQuery(sqlQuizNameByUserName);
 		// Acquire new QuizCollection and start filling
 		QuizCollection createdQuizzes = quizFactory.getQuizCollection();
@@ -283,14 +305,17 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 			throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		PictureResponse curQuestion = (PictureResponse) question;
-		String sqlAddPictureResponseQuestion = "INSERT INTO picture_response " + "VALUES(NULL," + "'" + quizName + "','"
-				+ curQuestion.getQuestionText() + "','" + curQuestion.getPictureUrl() + "'," + position + ");";
+		String sqlAddPictureResponseQuestion = 
+				"INSERT INTO picture_response " + 
+				"VALUES(NULL," + "'" + quizName + "','" + curQuestion.getQuestionText() + 
+					"','" + curQuestion.getPictureUrl() + "'," + position + ");";
 		stmt.executeUpdate(sqlAddPictureResponseQuestion);
 		// Add answers
 		int questionId = getLastAutoIncrement(stmt);
 		for (String correctAnswer : curQuestion.getCorrectAnswers()) {
-			String sqlAddCorrect = "INSERT INTO picture_response_correct_answers " + "VALUES(" + questionId + ",'"
-					+ correctAnswer + "');";
+			String sqlAddCorrect = 
+					"INSERT INTO picture_response_correct_answers " + 
+							"VALUES(" + questionId + ",'" + correctAnswer + "');";
 			stmt.executeUpdate(sqlAddCorrect);
 		}
 		stmt.close();
@@ -300,14 +325,17 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 			throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		QuestionResponce curQuestion = (QuestionResponce) question;
-		String sqlAddQuestionResponce = "INSERT INTO question_response " + "VALUES(NULL,'"
-				+ curQuestion.getQuestionText() + "','" + quizName + "'," + position + ");";
+		String sqlAddQuestionResponce = 
+				"INSERT INTO question_response " + 
+				"VALUES(NULL,'" + curQuestion.getQuestionText() + "','" + 
+						quizName + "'," + position + ");";
 		stmt.executeUpdate(sqlAddQuestionResponce);
 		// Populate answers
 		int questionId = getLastAutoIncrement(stmt);
 		for (String correctAnswer : curQuestion.getCorrectAnswers()) {
-			String sqlAddCorrect = "INSERT INTO question_response_correct_answers " + "VALUES(" + questionId + ",'"
-					+ correctAnswer + "');";
+			String sqlAddCorrect = 
+					"INSERT INTO question_response_correct_answers " + 
+					"VALUES(" + questionId + ",'" + correctAnswer + "');";
 			stmt.executeUpdate(sqlAddCorrect);
 		}
 		stmt.close();
@@ -316,14 +344,17 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 	private void addFillBlank(Question question, int position, String quizName) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		FillBlank curQuestion = (FillBlank) question;
-		String sqlAddFillBlankQuestion = "INSERT INTO fill_in_blank " + "VALUES(NULL,'" + curQuestion.getQuestionText()
-				+ "','" + quizName + "'," + curQuestion.getFieldPositionIndex() + "," + position + ");";
+		String sqlAddFillBlankQuestion = 
+				"INSERT INTO fill_in_blank " + 
+				"VALUES(NULL,'" + curQuestion.getQuestionText() + "','" + quizName + 
+						"'," + curQuestion.getFieldPositionIndex() + "," + position + ");";
 		stmt.executeUpdate(sqlAddFillBlankQuestion);
 		// Move on to answers
 		int questionId = getLastAutoIncrement(stmt);
 		for (String correctAnswer : curQuestion.getCorrectAnswers()) {
-			String sqlAddCorrect = "INSERT INTO fill_in_blank_correct_answers " + "VALUES (" + questionId + ",'"
-					+ correctAnswer + "');";
+			String sqlAddCorrect = 
+					"INSERT INTO fill_in_blank_correct_answers " + 
+					"VALUES (" + questionId + ",'" + correctAnswer + "');";
 			stmt.executeUpdate(sqlAddCorrect);
 		}
 		stmt.close();
@@ -341,8 +372,9 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 	// Returns average score of users on the quiz
 	private double getAverageScoreOnQuiz(String quizName) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlAverageScoreOnQuiz = "SELECT AVG(percent_correct) FROM quizzes_taken " + "WHERE quiz_name = " + "'"
-				+ quizName + "';";
+		String sqlAverageScoreOnQuiz = 
+				"SELECT AVG(percent_correct) FROM quizzes_taken " + 
+				"WHERE quiz_name = " + "'" + quizName + "';";
 		ResultSet rs = stmt.executeQuery(sqlAverageScoreOnQuiz);
 		if (!rs.next())
 			return 0;
@@ -435,7 +467,9 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 	 */
 	private Set<String> collectAnswers(String table, int id) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlAnswers = "SELECT correct_answer FROM " + table + " " + "WHERE problem_id = " + id + ";";
+		String sqlAnswers = 
+				"SELECT correct_answer FROM " + table + " " + 
+				"WHERE problem_id = " + id + ";";
 		ResultSet rs = stmt.executeQuery(sqlAnswers);
 		Set<String> answers = new HashSet<String>();
 		while (rs.next()) {
@@ -630,8 +664,9 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 			firstColumn = secondColumn;
 			secondColumn = temp;
 		}
-		String sqlRetrieveFriends = "SELECT " + firstColumn + " FROM friends " + "WHERE " + secondColumn + "='"
-				+ userName + "';";
+		String sqlRetrieveFriends = 
+				"SELECT " + firstColumn + " FROM friends " + 
+				"WHERE " + secondColumn + "='" + userName + "';";
 		ResultSet rs = stmt.executeQuery(sqlRetrieveFriends);
 		FriendList friends = userFactory.getFriendList();
 		while (rs.next())
@@ -642,7 +677,8 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 
 	// Sends message from -> to (users are already friends)
 	@Override
-	public boolean sendMessage(String from, String to, String message, Timestamp date) throws SQLException {
+	public boolean sendMessage(String from, String to, String message, Timestamp date) 
+			throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		// unique id of frienship in database
 		int friendshipId = getFriendshipId(from, to);
@@ -651,8 +687,8 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 		// in friends table first username is the lexicographically smaller one
 		int directionBit = (from.compareTo(to) > 0) ? 1 : 0;
 		String sqlSendMessage = 
-				"INSERT INTO messages VALUES(NULL," + friendshipId + ",'" + message + "','" + date
-				+ "'," + directionBit + ");";
+				"INSERT INTO messages VALUES(NULL," + friendshipId + ",'" + message + "','" + 
+						date + "'," + directionBit + ");";
 		stmt.executeUpdate(sqlSendMessage);
 		stmt.close();
 		return true;
@@ -688,7 +724,9 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 		if (friendshipId == -1) // I mean you are not even friends
 			return false;
 		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlRemoveFriend = "DELETE FROM friends " + "WHERE friendship_id = " + friendshipId + ";";
+		String sqlRemoveFriend = 
+				"DELETE FROM friends " + 
+				"WHERE friendship_id = " + friendshipId + ";";
 		stmt.executeUpdate(sqlRemoveFriend);
 		stmt.close();
 		return true;
@@ -698,7 +736,9 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 	@Override
 	public User loadUser(String userName) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
-		String queryUser = "SELECT * FROM users " + "WHERE username = " + "'" + userName + "';";
+		String queryUser = 
+				"SELECT * FROM users " + 
+				"WHERE username = " + "'" + userName + "';";
 		ResultSet rs = stmt.executeQuery(queryUser);
 		if (!rs.next())
 			return null;
@@ -724,7 +764,9 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 	@Override
 	public Quiz loadQuiz(String quizName) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
-		String sqlGetQuiz = "SELECT * FROM quizzes " + "WHERE quiz_name = " + "'" + quizName + "';";
+		String sqlGetQuiz = 
+				"SELECT * FROM quizzes " + 
+				"WHERE quiz_name = " + "'" + quizName + "';";
 		ResultSet rs = stmt.executeQuery(sqlGetQuiz);
 		// If doesn't exist, return null
 		if (!rs.next())

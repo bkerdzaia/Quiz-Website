@@ -29,9 +29,10 @@ import questions.MultipleChoise;
 import questions.PictureResponse;
 import questions.QuestionResponce;
 import quiz.History;
+import quiz.Performance;
+import quiz.PerformanceOnQuiz;
 import quiz.Quiz;
 import quiz.QuizCollection;
-import quiz.QuizPerformance;
 import quiz.QuizProperty;
 import quiz.QuizQuestions;
 import quiz.User;
@@ -135,10 +136,6 @@ public class GrabberQueriesTest {
 		assertNotNull(david);
 		assertNotNull(sandro);
 		assertNotNull(baduri);
-		// Ensure valid passwords
-		assertEquals("bla1", david.getPasswordHash());
-		assertEquals("bla2", sandro.getPasswordHash());
-		assertEquals("bla3", baduri.getPasswordHash());
 		// Assert other parameters to be empty
 		assertNull(david.getAboutMe());
 		assertFalse(sandro.getHistory().iterator().hasNext());
@@ -160,7 +157,6 @@ public class GrabberQueriesTest {
 		assertTrue(dbGrabber.authenticateUser("Armando", "1234"));
 		User armando = dbGrabber.loadUser("armando");
 		assertNotNull(armando);
-		assertEquals("1234", armando.getPasswordHash());
 		// pass wrong credentials
 		assertFalse(dbGrabber.authenticateUser("Armando", "12345"));
 		assertFalse(dbGrabber.authenticateUser("Sam", "1234"));
@@ -300,24 +296,22 @@ public class GrabberQueriesTest {
 		dbGrabber.connect();
 		dbGrabber.registerUser("sam", "12");
 		dbGrabber.uploadQuiz(sampleQuiz);
-		QuizPerformance perf = new QuizPerformance();
+		Performance perf = new Performance();
 		perf.setAmountTime(1);
 		perf.setDate(new Timestamp(new Date().getTime()));
 		perf.setPercentCorrect(100);
-		perf.setUser(sampleQuiz.getCreator()); 
-		perf.setQuiz(sampleQuiz.getName());     
 
 		int milisecondsOffset1 = 1000;
 		int milisecondsOffset2 = 2000;
-		dbGrabber.storeAttempt(perf);
+		dbGrabber.storeAttempt(perf, sampleQuiz.getCreator(), sampleQuiz.getName());
 		perf.setDate(new Timestamp(perf.getDate().getTime() - milisecondsOffset2)); 
-		dbGrabber.storeAttempt(perf);
-		History  recentStats = 
+		dbGrabber.storeAttempt(perf, sampleQuiz.getCreator(), sampleQuiz.getName());
+		History<PerformanceOnQuiz>  recentStats = 
 				dbGrabber.getRecentTakersStats(sampleQuiz.getName(), new Timestamp
 				(new Date().getTime() - milisecondsOffset1));
 		assertEquals(1, recentStats.size());
-		QuizPerformance samePerf = recentStats.get(0);
-		assertEquals(sampleQuiz.getName(), samePerf.getQuiz());
+		PerformanceOnQuiz samePerf = recentStats.get(0);
+		assertEquals(sampleQuiz.getCreator(), samePerf.getUser());
 	}
 
 	@Test
@@ -332,18 +326,15 @@ public class GrabberQueriesTest {
 		sampleQuiz.setName(newName);
 		assertTrue(dbGrabber.uploadQuiz(sampleQuiz));
 		
-		QuizPerformance perf = new QuizPerformance();
+		Performance perf = new Performance();
 		perf.setAmountTime(1);
 		perf.setDate(new Timestamp(new Date().getTime()));
 		perf.setPercentCorrect(100);
-		perf.setUser(sampleQuiz.getCreator()); 
-		perf.setQuiz(oldName);
 
-		dbGrabber.storeAttempt(perf);
-		dbGrabber.storeAttempt(perf);
+		dbGrabber.storeAttempt(perf, sampleQuiz.getCreator(), oldName);
+		dbGrabber.storeAttempt(perf, sampleQuiz.getCreator(), oldName);
 		
-		perf.setQuiz(newName);
-		dbGrabber.storeAttempt(perf);
+		dbGrabber.storeAttempt(perf, sampleQuiz.getCreator(), newName);
 		QuizCollection popular = dbGrabber.getPopularQuizzes();
 		assertEquals(2, popular.size());
 		// Ensure that first quiz is the one with two attemtps
@@ -363,22 +354,18 @@ public class GrabberQueriesTest {
 		dbGrabber.registerUser("samuel", "34");
 		dbGrabber.uploadQuiz(sampleQuiz);
 
-		QuizPerformance lowPerf = new QuizPerformance();
+		Performance lowPerf = new Performance();
 		lowPerf.setAmountTime(23);
 		lowPerf.setDate(now);
 		lowPerf.setPercentCorrect(10);
-		lowPerf.setQuiz(sampleQuiz.getName());
-		lowPerf.setUser("sam");
 		
-		QuizPerformance highPerf = new QuizPerformance();
+		Performance highPerf = new Performance();
 		highPerf.setAmountTime(67);
 		highPerf.setDate(now);
 		highPerf.setPercentCorrect(99);
-		highPerf.setQuiz(sampleQuiz.getName());
-		highPerf.setUser("samuel");
 		
-		dbGrabber.storeAttempt(lowPerf);
-		dbGrabber.storeAttempt(highPerf);
+		dbGrabber.storeAttempt(lowPerf, "sam", sampleQuiz.getName());
+		dbGrabber.storeAttempt(highPerf, "samuel", sampleQuiz.getName());
 		
 		Timestamp past = new Timestamp(now.getTime() - 3000);
 		UserList users = 
@@ -425,30 +412,25 @@ public class GrabberQueriesTest {
 		Timestamp past = new Timestamp(now.getTime() - 5000);
 		Timestamp future = new Timestamp(now.getTime() + 5000);
 
-		QuizPerformance recentPerf = new QuizPerformance();
+		Performance recentPerf = new Performance();
 		recentPerf.setAmountTime(12);
 		recentPerf.setDate(now);
 		recentPerf.setPercentCorrect(89);
-		recentPerf.setQuiz(sampleQuiz.getName());
-		recentPerf.setUser("sam");
 		
-		QuizPerformance futurePerf = new QuizPerformance();
+		Performance futurePerf = new Performance();
 		futurePerf.setAmountTime(11);
 		futurePerf.setDate(future);
 		futurePerf.setPercentCorrect(34);
-		futurePerf.setQuiz(sampleQuiz.getName());
-		futurePerf.setUser("samuel");
 		
-		dbGrabber.storeAttempt(recentPerf);
-		dbGrabber.storeAttempt(futurePerf);
+		dbGrabber.storeAttempt(recentPerf, "sam", sampleQuiz.getName());
+		dbGrabber.storeAttempt(futurePerf, "samuel", sampleQuiz.getName());
 
-		History recentStats = 
+		History<PerformanceOnQuiz> recentStats = 
 				dbGrabber.getRecentTakersStats(sampleQuiz.getName(),past);
 		assertEquals(2, recentStats.size());
 		assertEquals(11, recentStats.get(0).getAmountTime());
 		assertEquals(future.getMinutes(), recentStats.get(0).getDate().getMinutes());
 		assertEquals((int)89, (int)recentStats.get(1).getPercentCorrect());
-		assertEquals(sampleQuiz.getName(), recentStats.get(1).getQuiz());
 	}
 	
 	@Test
@@ -463,7 +445,6 @@ public class GrabberQueriesTest {
 		assertNotNull(sam.getHistory());
 		assertNotNull(sam.getMessages());
 		assertNotNull(sam.getName());
-		assertNotNull(sam.getPasswordHash());
 		// Now these fields should be null initially
 		assertNull(sam.getAboutMe());
 		assertNull(sam.getPictureUrl());
