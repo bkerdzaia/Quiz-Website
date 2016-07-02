@@ -10,6 +10,7 @@
 <title>Hello to Funz</title>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="script.js"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 
@@ -41,9 +42,11 @@
 
 	<p><b>Hello ${param.name}</b></p>
 	
-	<p><b>user name: <%= user.getName() %></b></p>
-	<p><b>parameter value: <%= request.getParameter("name") %></b></p>
-
+	<div id="user-info">
+		<p>user name: <%= user.getName() %></p>
+		<p><b>parameter value: <%= request.getParameter("name") %></b></p>
+	</div>
+	
 	<div>
 		<p>list of popular quizzes</p>
 		<%= getHtmlQuizzes(popularQuizzes) %>

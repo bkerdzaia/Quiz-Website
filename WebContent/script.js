@@ -1,5 +1,31 @@
-$("intro").hide();
 
+function passwordStrength() {
+	var weak = "";
+	if (document.getElementById("register-form-id").password.value.length < 6) {
+		weak = "* weak password";
+	}
+	$("#register-form-id > span").text(weak);
+};
+
+function validateName() {
+	var pat = /^[\w]+$/;
+	return pat.test(document.getElementById("register-form-id").userName.value);
+};
+
+function registerClick() {
+	$(function() {
+		$("#login-form-id").hide();
+		$("#register-form-id").show();
+	});
+};
+
+function loginClick() {
+	$(function() {
+		$("#register-form-id").hide();
+		$("#login-form-id").show();
+	});
+};
+	
 /* load log out html */
 $(function() {
 	$("#logOutId").load("logout.html");
