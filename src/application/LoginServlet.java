@@ -68,5 +68,23 @@ public class LoginServlet extends HttpServlet implements ServletConstants{
 		RequestDispatcher dispatcher = request.getRequestDispatcher(addressToRedirect);
 		dispatcher.forward(request, response);
 	}
+	
+	
+	/**
+	 * 'Get method' is called from 'logout' button to delete userName from session. 
+	 * @throws IOException 
+	 * @throws ServletException 
+	 */
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException{
+
+		HttpSession session = request.getSession();
+		if (request.getParameter(LOG_OUT_PARAM) != null){
+			session.removeAttribute(USER_NAME_PARAM);
+			RequestDispatcher dispatcher = request.getRequestDispatcher(LOGIN_ADDRESS);
+			dispatcher.forward(request, response);
+		}
+	}
 
 }

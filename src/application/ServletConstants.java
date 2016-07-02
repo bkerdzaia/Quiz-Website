@@ -18,6 +18,7 @@ public interface ServletConstants {
 			"User with provided name already exists. Pick another.";
 	public static final String LOGIN_SUCCESS = "Login successfull!";
 	public static final String CANT_LOGIN = "Unable to login. Check you name/password.";
+	public static final String LOG_OUT_PARAM = "logout";
 	
 	
 	public static final String APPLICATION_FACTORY = "applicationFactory";
