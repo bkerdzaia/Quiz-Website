@@ -1,5 +1,8 @@
 package factory;
 
+import quiz.OrderByAmountTime;
+import quiz.OrderByDate;
+import quiz.OrderByPercentCorrect;
 import quiz.Quiz;
 import quiz.QuizCollection;
 import quiz.QuizPerformance;
@@ -15,7 +18,7 @@ import quiz.QuizQuestions;
  */
 public class DefaultQuizFactory implements QuizFactory {
 
-	public static DefaultQuizFactory defQuizFactory = null;
+	private static DefaultQuizFactory defQuizFactory = null;
 	
 	// Hide constructor
 	private DefaultQuizFactory(){};
@@ -54,6 +57,21 @@ public class DefaultQuizFactory implements QuizFactory {
 	@Override
 	public QuizProperty getQuizProperty() {
 		return new QuizProperty();
+	}
+
+	@Override
+	public OrderByDate getOrderByDateInstance() {
+		return new OrderByDate();
+	}
+
+	@Override
+	public OrderByAmountTime getOrderByAmountTimeInstance() {
+		return new OrderByAmountTime();
+	}
+
+	@Override
+	public OrderByPercentCorrect getOrderByPercentCorrectInstance() {
+		return new OrderByPercentCorrect();
 	}
 
 }
