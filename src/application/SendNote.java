@@ -22,7 +22,7 @@ public class SendNote extends HttpServlet implements ServletConstants {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("send note");
 		String reciever = request.getParameter("receiverName");
@@ -42,16 +42,6 @@ public class SendNote extends HttpServlet implements ServletConstants {
 		}
 		RequestDispatcher dispatcher = request.getRequestDispatcher(addressToRedirect);
 		dispatcher.forward(request, response);
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
 	}
 
 }

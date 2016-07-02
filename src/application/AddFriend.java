@@ -17,7 +17,7 @@ public class AddFriend extends HttpServlet implements ServletConstants {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("add friend servlet");
 		String addressToRedirect;
@@ -35,15 +35,6 @@ public class AddFriend extends HttpServlet implements ServletConstants {
 		}
 		RequestDispatcher dispatcher = request.getRequestDispatcher(addressToRedirect);
 		dispatcher.forward(request, response);
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		doGet(request, response);
 	}
 
 }

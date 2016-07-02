@@ -101,7 +101,7 @@
 	<%
 		String parameterUserName = request.getParameter(ServletConstants.USER_NAME_PARAM);
 		if(!parameterUserName.equals(user.getName())) {
-			out.println("<div><form action='AddFriend'>");
+			out.println("<div><form action='AddFriend' method='post'>");
 			out.println("<input type='hidden' name='" + ServletConstants.USER_NAME_PARAM + "' value='" + parameterUserName + "'>");
 			out.println("<input type=\"submit\" value='send friend request'>");
 			out.println("</form></div>");

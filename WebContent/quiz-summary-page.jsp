@@ -106,6 +106,14 @@
 	</div>
 	
 	<div>
+		<p>Challenge Friend</p>
+		<form action="ChallengeServlet" method="post"><br>
+			Enter friend name: <input type="text" name="friendName"><br>
+			<input type="submit" value="challenge">
+		</form>
+	</div>
+	
+	<div>
 		<%
 			String creator = quiz.getCreator();
 			if(creator.equals(user)) {
