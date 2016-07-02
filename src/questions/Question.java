@@ -19,6 +19,7 @@ public abstract class Question {
 	 */
 	private QuestionView view = null;
 	
+	private String usersAns = null;
 	
 	/**
 	 * Sets new view. May be changed dynamically.
@@ -54,6 +55,18 @@ public abstract class Question {
 		return questionText;
 	}
 	
+	
+	public void setUsersChoice(String ans){
+		this.usersAns = ans;
+	}
+	
+	public String getUsersChoice(){
+		return usersAns;
+	}
+	
+	public boolean isUsersAnswerCorrect(){
+		return isCorrectAnswer(usersAns);
+	}
 	/**
 	 * Checks whether provided answer is correct for this 
 	 * question. The actual logic is up to subclasses.
@@ -62,7 +75,7 @@ public abstract class Question {
 	 */
 	public abstract boolean isCorrectAnswer(String answer);
 	
-
+	
 	/**
 	 * Displays question in html format. Returns html text.
 	 */
