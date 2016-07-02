@@ -14,7 +14,7 @@ import quiz.*;
  * Servlet implementation class QuizSummaryServlet
  */
 @WebServlet("/QuizSummaryServlet")
-public class QuizSummaryServlet extends HttpServlet {
+public class QuizSummaryServlet extends HttpServlet implements ServletConstants{
 	private static final long serialVersionUID = 1L;
 	
 	private static final Timestamp START_TIME = new Timestamp(0);
@@ -27,7 +27,7 @@ public class QuizSummaryServlet extends HttpServlet {
 		String address;
 		try {
 			System.out.println("quiz summary page");
-			DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(LoginServlet.DATABASE_ATTRIBUTE);
+			DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
 			HttpSession session = request.getSession();
 			db.connect();
 			String quizName = request.getParameter("name");

@@ -182,6 +182,7 @@ public class GrabberQueriesTest {
 		sampleQuiz.setName("abc");
 		QuizProperty prop = new QuizProperty(true, true, true);
 		sampleQuiz.setProperty(prop);
+		
 		FillBlank fb1 = questFactory.getFillBlankQuestion();
 		FillBlank fb2 = fb1; // shallow copy
 		fb1.setQuestionText("??");
@@ -190,6 +191,7 @@ public class GrabberQueriesTest {
 		ans.add("!!");
 		ans.add("ee");
 		fb1.setCorrectAnswers(ans);
+
 		QuizQuestions questions = new QuizQuestions();
 		questions.add(fb1);
 		questions.add(fb2);
@@ -447,6 +449,24 @@ public class GrabberQueriesTest {
 		assertEquals(future.getMinutes(), recentStats.get(0).getDate().getMinutes());
 		assertEquals((int)89, (int)recentStats.get(1).getPercentCorrect());
 		assertEquals(sampleQuiz.getName(), recentStats.get(1).getQuiz());
+	}
+	
+	@Test
+	public void loadUserFullInfo() throws SQLException{
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		dbGrabber.connect();
+		assertTrue(dbGrabber.registerUser("sam", "as"));
+		User sam = dbGrabber.loadUser("sam");
+		assertNotNull(sam);
+		assertNotNull(sam.getCreatedQuizzes());
+		assertNotNull(sam.getFriends());
+		assertNotNull(sam.getHistory());
+		assertNotNull(sam.getMessages());
+		assertNotNull(sam.getName());
+		assertNotNull(sam.getPasswordHash());
+		// Now these fields should be null initially
+		assertNull(sam.getAboutMe());
+		assertNull(sam.getPictureUrl());
 	}
 
 }

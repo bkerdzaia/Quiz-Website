@@ -1,0 +1,44 @@
+
+input{
+	width: 30%;
+	background-color: #f1f1f1;
+	padding: 10px;
+	border: 3px;
+	display: block;
+	margin : auto;
+	hover: red;
+}
+
+input[type="submit"]{
+	margin: 4px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: cornflowerblue;
+	opacity: 0.6;
+	color: white;
+	position: relative;
+}
+
+input[type="submit"]:hover{
+	opacity: 0.95;
+}
+
+form{
+	margin: auto;
+}
+
+h1, h2{
+	text-align: center;
+	color: lightblue;
+}
+
+h1{
+	font-size: 400%;
+}
+
+div.failure-message{
+	position: fixed;
+	color: darkred;
+    bottom: 0;
+    width: 100%;
+}
