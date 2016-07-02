@@ -2,7 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="application.*, quiz.*, database.*"%>
-<%@ page errorPage="error-page.jsp" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -18,7 +18,8 @@
 		DatabaseGrabber db = (DatabaseGrabber) application.getAttribute(ServletConstants.DATABASE_ATTRIBUTE);
 		db.connect(); 
 		System.out.println("here");
-		String userName = (String) session.getAttribute("userName");
+		String userName = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
+		System.out.println("user in homepage: " + userName);
 		User user = db.loadUser(userName);
 		QuizCollection popularQuizzes = db.getPopularQuizzes(); 
 		QuizCollection recentlyCreatedQuiz = db.getRecentlyCreatedQuizzes();
@@ -30,7 +31,7 @@
 			if (quizzes == null) return "";
 			String htmlQuizes = "";
 			for (String quizName : quizzes) {
-				htmlQuizes += "<p><a href=\"QuizSummaryServlet?name=" + quizName + "\">" 
+				htmlQuizes += "<p><a href=\"QuizSummaryServlet?" + ServletConstants.QUIZ_NAME_PARAM + "=" + quizName + "\">" 
 						+ quizName + "</a></p>\n";
 			}
 			return htmlQuizes;
@@ -44,7 +45,7 @@
 	
 	<div id="user-info">
 		<p>user name: <%= user.getName() %></p>
-		<p><b>parameter value: <%= request.getParameter("name") %></b></p>
+		<p><b>parameter value: <%= request.getParameter(ServletConstants.USER_NAME_PARAM) %></b></p>
 	</div>
 	
 	<div>
@@ -83,6 +84,25 @@
 			FriendList friends = user.getFriends();
 			for (String friend : friends) {
 				out.println(friend);
+			}
+		%>
+	</div>
+	
+	<div>
+		<form action="create-quiz.html">
+		<%
+			if(request.getParameter(ServletConstants.USER_NAME_PARAM).equals(user.getName())) {
+				out.println("<input type=\"submit\" value=\"create a quiz\">");
+			}
+		%>
+		</form>
+	</div>
+	
+	<div>
+		<%
+			String parameterUserName = request.getParameter(ServletConstants.USER_NAME_PARAM);
+			if(!parameterUserName.equals(user.getName())) {
+				out.println("<button type=\"button\">send friend request</button>");
 			}
 		%>
 	</div>

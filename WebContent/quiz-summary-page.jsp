@@ -13,11 +13,11 @@
 
 
 	<%
-		Quiz quiz = (Quiz) session.getAttribute("quizName");
-		String user = (String) session.getAttribute("userName");
-		UserList highestPerformers = (UserList) session.getAttribute("highestPerformers");
-		UserList topPerformers = (UserList) session.getAttribute("topPerformers");
-		History perfomance = (History) session.getAttribute("performance");
+		Quiz quiz = (Quiz) session.getAttribute(ServletConstants.QUIZ_NAME_PARAM);
+		String user = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
+		UserList highestPerformers = (UserList) session.getAttribute(ServletConstants.HIGHEST_PERFORMANCE_ATTRIBUTE);
+		UserList topPerformers = (UserList) session.getAttribute(ServletConstants.TOP_PERFORMANCE_ATTRIBUTE);
+		History perfomance = (History) session.getAttribute(ServletConstants.PERFORMANCE_ATTRIBUTE);
 		QuizFactory quizFactory = DefaultQuizFactory.getFactoryInstance();
 	%>
 	
@@ -26,7 +26,7 @@
 			if (users == null) return "";
 			String htmlUser = "";
 			for (String userName : users) {
-				htmlUser += "<p><a href=\"homepage.jsp?name=" + userName + "\">" 
+				htmlUser += "<p><a href=\"homepage.jsp?" + ServletConstants.USER_NAME_PARAM + "=" + userName + "\">" 
 						+ userName + "</a></p>\n";
 			}
 			return htmlUser;

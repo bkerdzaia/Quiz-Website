@@ -10,7 +10,12 @@ public interface ServletConstants {
 	public static final String LOGIN_ADDRESS = "login.jsp";
 	public static final String HOMEPAGE_ADDRESS = "homepage.jsp";
 	public static final String ERROR_PAGE_ADDRESS = "error-page.jsp";
+	public static final String QUIZ_SUMMARY_PAGE_ADDRESS = "quiz-summary-page.jsp";
 	public static final String USER_NAME_PARAM = "userName";
+	public static final String QUIZ_NAME_PARAM = "quizName";
+	public static final String HIGHEST_PERFORMANCE_ATTRIBUTE = "highestPerformers";
+	public static final String TOP_PERFORMANCE_ATTRIBUTE = "topPerformers";
+	public static final String PERFORMANCE_ATTRIBUTE = "performance";
 	public static final String PASSWORD_PARAM = "password";
 	public static final String REGISTER_PARAM = "register";
 	public static final String MESSAGE_ATTR = "message";

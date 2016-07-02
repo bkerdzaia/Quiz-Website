@@ -30,7 +30,7 @@ public class QuizSummaryServlet extends HttpServlet implements ServletConstants{
 			DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
 			HttpSession session = request.getSession();
 			db.connect();
-			String quizName = request.getParameter("name");
+			String quizName = request.getParameter(QUIZ_NAME_PARAM);
 			Quiz quiz = null; //db.loadQuiz(quizName);
 			if (quiz == null) {
 				quiz = new Quiz();
@@ -39,19 +39,19 @@ public class QuizSummaryServlet extends HttpServlet implements ServletConstants{
 				quiz.setName(quizName);
 				quiz.setSummaryStatistics(0);
 			}
-			session.setAttribute("quizName", quiz);
+			session.setAttribute(QUIZ_NAME_PARAM, quiz);
 			UserList highestPerformers = db.getHighestPerformers(quizName, START_TIME);
 			Timestamp thisTimeYesterday = new Timestamp(System.currentTimeMillis()-24*60*60*1000);
 			UserList topPerformersLastDay = db.getHighestPerformers(quizName, thisTimeYesterday);
 			History performance = db.getRecentTakersStats(quizName, START_TIME);
-			session.setAttribute("highestPerformers", highestPerformers);  
-			session.setAttribute("topPerformers", topPerformersLastDay);
-			session.setAttribute("performance", performance);
+			session.setAttribute(HIGHEST_PERFORMANCE_ATTRIBUTE, highestPerformers);  
+			session.setAttribute(TOP_PERFORMANCE_ATTRIBUTE, topPerformersLastDay);
+			session.setAttribute(PERFORMANCE_ATTRIBUTE, performance);
 			db.close();
-			address = "quiz-summary-page.jsp?name=" + quizName;
+			address = QUIZ_SUMMARY_PAGE_ADDRESS + "?" + QUIZ_NAME_PARAM + "=" + quizName;
 		} catch (Exception e) {
 			e.printStackTrace();
-			address = "error-page.jsp";
+			address = ERROR_PAGE_ADDRESS;
 		}
 		RequestDispatcher dispatcher = request.getRequestDispatcher(address);
 		dispatcher.forward(request, response);
