@@ -27,21 +27,6 @@
 		var pat = /^[\w]+$/;
 		return pat.test(document.getElementById("register-form-id").userName.value);
 	}
-	
-	function registerClick() {
-		$(function() {
-			$("#login-form-id").hide();
-			$("#register-form-id").show();
-		});
-	};
-	
-	function loginClick() {
-		$(function() {
-			$("#register-form-id").hide();
-			$("#login-form-id").show();
-		});
-	};
-	loginClick();
 </script>
 
 
@@ -52,7 +37,7 @@
 <h2 id="intro">[place where fun quizzes are made]</h2>
 <br> <br> <br>
 	<div>
-		<form  id="login-form-id" action="LoginServlet" method="post">
+		<form  id="login-form-id" action="LoginServlet" method="post"  onsubmit="validateName()">
 			<input type="text" name="userName" placeholder="Username" required><br /><br /> 
 			<input type="password" name="password" placeholder="Password" required><br /><br /> 
 			<input name="login" type="submit" value="Log In">
