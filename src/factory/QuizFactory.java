@@ -39,4 +39,22 @@ public interface QuizFactory {
 	 */
 	public QuizProperty getQuizProperty();
 	
+	/**
+	 * The comparator of QuizPerformance objects by date
+	 * @return new comparator OrderByDate
+	 */
+	public OrderByDate getOrderByDateInstance();
+	
+	/**
+	 * The comparator of QuizPerformance objects by amount of time
+	 * @return new comparator OrderByAmountTime
+	 */
+	public OrderByAmountTime getOrderByAmountTimeInstance();
+	
+	/**
+	 * The comparator of QuizPerformance objects by percent correctness
+	 * @return new comparator OrderByPercentCorrect
+	 */
+	public OrderByPercentCorrect getOrderByPercentCorrectInstance();
+	
 }
