@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Quiz Summary Page</title>
+<title>Hello at quiz ${param.quizName}</title>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="script.js"></script>
 </head>
@@ -36,19 +36,21 @@
 	
 	<%!
 		private String getHtmlPerformance(History perfomance, String user, Comparator<QuizPerformance> comparator) {
-			StringBuilder htmlPerformance = new StringBuilder();
+			String htmlPerformance = "";
 			QuizFactory quizFactory = DefaultQuizFactory.getFactoryInstance();
 			for (QuizPerformance quizPerformance : perfomance.sortByUser(user, comparator)) {
-				htmlPerformance.append("<p>quiz: " + quizPerformance.getQuiz() + 
+				htmlPerformance += "<p>quiz: " + quizPerformance.getQuiz() + 
 						" date: " + quizPerformance.getDate() +
-						" percent correct: " + quizPerformance.getPercentCorrect() + "%</p>");
+						" percent correct: " + quizPerformance.getPercentCorrect() + "%</p>";
 			}
-			return htmlPerformance.toString();
+			return htmlPerformance;
 		}
 	%>
 	<div id="logOutId"></div>
 
-	<p>Welcome to funz ${param.name} !</p>
+	<p>Welcome to funz ${param.userName} !</p>
+	
+	<p>quiz name is: <b><%= quiz.getName() %></b></p>
 	
 	<div>
 		<p>description: <b><%= quiz.getDescription() %></b></p>

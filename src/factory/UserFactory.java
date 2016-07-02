@@ -16,10 +16,16 @@ public interface UserFactory {
 	public User getUser();
 	
 	/**
-	 * Constructs 'History' object
+	 * Constructs 'History' of UsersPerformance object
 	 * @return History
 	 */
-	public History getHistory();
+	public History<UsersPerformance> getHistoryUsersPerformance();
+	
+	/**
+	 * Constructs 'History' of PerformanceOnQuiz object
+	 * @return History
+	 */
+	public History<PerformanceOnQuiz> getHistoryPerformanceOnQuiz();
 	
 	/**
 	 * Constructs 'FriendsList' object

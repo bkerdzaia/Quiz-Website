@@ -3,11 +3,12 @@ package factory;
 import quiz.OrderByAmountTime;
 import quiz.OrderByDate;
 import quiz.OrderByPercentCorrect;
+import quiz.PerformanceOnQuiz;
 import quiz.Quiz;
 import quiz.QuizCollection;
-import quiz.QuizPerformance;
 import quiz.QuizProperty;
 import quiz.QuizQuestions;
+import quiz.UsersPerformance;
 
 /**
  * 
@@ -50,11 +51,6 @@ public class DefaultQuizFactory implements QuizFactory {
 	}
 
 	@Override
-	public QuizPerformance getQuizPerformance() {
-		return new QuizPerformance();
-	}
-
-	@Override
 	public QuizProperty getQuizProperty() {
 		return new QuizProperty();
 	}
@@ -72,6 +68,16 @@ public class DefaultQuizFactory implements QuizFactory {
 	@Override
 	public OrderByPercentCorrect getOrderByPercentCorrectInstance() {
 		return new OrderByPercentCorrect();
+	}
+
+	@Override
+	public PerformanceOnQuiz getPerformanceOnQuiz() {
+		return new PerformanceOnQuiz();
+	}
+
+	@Override
+	public UsersPerformance getUsersPerformance() {
+		return new UsersPerformance();
 	}
 
 }

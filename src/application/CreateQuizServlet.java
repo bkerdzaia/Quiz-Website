@@ -33,7 +33,7 @@ public class CreateQuizServlet extends HttpServlet implements ServletConstants{
 			HttpSession session = request.getSession();
 			QuestionFactory questionFactory = DefaultQuestionFactory.getFactoryInstance();
 			QuizFactory quizFactory = DefaultQuizFactory.getFactoryInstance();
-			String user = (String) session.getAttribute("userName");
+			String user = (String) session.getAttribute(USER_NAME_PARAM);
 			String quizName = request.getParameter("quizNameText");
 			String description = request.getParameter("quizDescriptionText");
 			String[] quizProperty = request.getParameterValues("QuizProperties");
@@ -59,10 +59,10 @@ public class CreateQuizServlet extends HttpServlet implements ServletConstants{
 			quiz.setSummaryStatistics(0);
 			db.uploadQuiz(quiz);
 			db.close();
-			address = "homepage.jsp?name="+user;
+			address = HOMEPAGE_ADDRESS + "?" + USER_NAME_PARAM + "=" + user;
 		} catch (Exception e) {
 			e.printStackTrace();
-			address = "error-page.jsp";
+			address = ERROR_PAGE_ADDRESS;
 		}
 		RequestDispatcher dispatcher = request.getRequestDispatcher(address);
 		dispatcher.forward(request, response);

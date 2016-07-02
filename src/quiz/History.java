@@ -11,11 +11,9 @@ import factory.DefaultQuizFactory;
  * Stores history of users performance on various quizzes.
  */
 @SuppressWarnings("serial")
-public class History extends ArrayList<QuizPerformance> {
+public class History<T extends Performance> extends ArrayList<T> {
 	
-	
-	public History() {}
-	
+	/*
 	public QuizCollection getMadeQuizzes() {
 		// Acquire collection of quizzes from factory
 		QuizCollection takenQuizzes = 
@@ -33,5 +31,7 @@ public class History extends ArrayList<QuizPerformance> {
 			.filter(quizPerformance -> quizPerformance.getUser().equals(userName))
 				.sorted(comparator).collect(Collectors.toList());
 	}
+	
+	*/
 
 }
