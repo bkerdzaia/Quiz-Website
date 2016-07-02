@@ -57,7 +57,11 @@
 	</div>
 	
 	<div>
-		<p>creator of quiz: <b><%= quiz.getCreator() %></b></p>
+		<%
+			if (!quiz.getCreator().equals(user)) {
+				out.println("<p><a href=\"homepage.jsp?" + ServletConstants.USER_NAME_PARAM + "=" +  quiz.getCreator() +  "\">" + quiz.getCreator() + "</a></p>");
+			}
+		%>
 	</div>
 	
 	<div>

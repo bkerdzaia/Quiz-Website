@@ -1,3 +1,4 @@
+<%@page import="factory.DefaultUserFactory"%>
 <%@page import="java.awt.TrayIcon.MessageType"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -19,7 +20,6 @@
 		db.connect(); 
 		System.out.println("here");
 		String userName = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
-		System.out.println("user in homepage: " + userName);
 		User user = db.loadUser(userName);
 		QuizCollection popularQuizzes = db.getPopularQuizzes(); 
 		QuizCollection recentlyCreatedQuiz = db.getRecentlyCreatedQuizzes();
@@ -88,23 +88,24 @@
 		%>
 	</div>
 	
-	<div>
-		<form action="create-quiz.html">
-		<%
-			if(request.getParameter(ServletConstants.USER_NAME_PARAM).equals(user.getName())) {
-				out.println("<input type=\"submit\" value=\"create a quiz\">");
-			}
-		%>
-		</form>
-	</div>
+	<%
+		if(request.getParameter(ServletConstants.USER_NAME_PARAM).equals(user.getName())) {
+			out.println("<div><form action='create-quiz.html'>");
+			out.println("<input type=\"submit\" value=\"create a quiz\">");
+			out.println("</form></div>");
+		}
+	%>
 	
-	<div>
-		<%
-			String parameterUserName = request.getParameter(ServletConstants.USER_NAME_PARAM);
-			if(!parameterUserName.equals(user.getName())) {
-				out.println("<button type=\"button\">send friend request</button>");
-			}
-		%>
-	</div>
+	<%
+		String parameterUserName = request.getParameter(ServletConstants.USER_NAME_PARAM);
+		if(!parameterUserName.equals(user.getName())) {
+			out.println("<div><form action='AddFriend'>");
+			out.println("<input type='hidden' name='" + ServletConstants.USER_NAME_PARAM + "' value='" + parameterUserName + "'>");
+			out.println("<input type=\"submit\" value='send friend request'>");
+			out.println("</form></div>");
+		}
+		
+	%>
+	
 </body>
 </html>

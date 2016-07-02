@@ -1,10 +1,7 @@
 package application;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Enumeration;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,15 +13,12 @@ import javax.servlet.http.HttpSession;
 import database.DatabaseGrabber;
 import factory.DefaultDatabaseFactory;
 import factory.DefaultQuestionFactory;
-import factory.QuestionFactory;
 import questions.FillBlank;
 import questions.MultipleChoise;
 import questions.PictureResponse;
-import questions.QuestionResponce;
 import quiz.Quiz;
 import quiz.QuizProperty;
 import quiz.QuizQuestions;
-import quiz.UserList;
 
 /**
  * Servlet implementation class DisplayQuizServlet
