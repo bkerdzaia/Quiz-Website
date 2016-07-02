@@ -87,8 +87,8 @@ public class DisplayQuizServlet extends HttpServlet implements ServletConstants{
 				q.add(q4);
 				
 				
-//				QuizProperty qp = new QuizProperty(true,false,true);
-				QuizProperty qp = new QuizProperty(true,true,true);
+				QuizProperty qp = new QuizProperty(true,false,true);
+//				QuizProperty qp = new QuizProperty(true,true,true);
 				quiz.setProperty(qp);
 				quiz.setQuestions(q);
 			}
