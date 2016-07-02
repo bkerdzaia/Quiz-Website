@@ -3,52 +3,20 @@ package quiz;
 import java.sql.Timestamp;
 
 /**
- * Encapsulates user's particular attemp, it's performance
- * on some quiz. The bean provides getters/setters for 
- * data manipualtion.
+ * @author dav23r
+ * Stores one particular attempt of taking quiz. Is completely unaware 
+ * who took the quiz and which quiz in particular. Classes UsersPerformance
+ * and PerformanceOnQuiz extend this class to add aforementioned functionality.
  */
-public class QuizPerformance {
-	
-	private String userName;
-	private String quizName;
+public class Performance {
+
 	private Timestamp date;
 	private int amountTimeSecs;
 	private double percentCorrect;
 	
 	/** Empty constructor **/
-	public QuizPerformance() {}
+	public Performance() {}
 
-	/**
-	 * Setter for user's name
-	 * @param userName to be set
-	 */
-	public void setUser(String userName){
-		this.userName = userName;
-	}
-	
-	/**
-	 * Getter for user's name
-	 * @return name of the user associated with the attempt
-	 */
-	public String getUser(){
-		return userName;
-	}
-	
-	/**
-	 * Getter for the quiz name.
-	 * @return name of the quiz associated with the attempt
-	 */
-	public String getQuiz() {
-		return quizName;
-	}
-
-	/**
-	 * Setter for quiz name
-	 * @param quizName - name of the quiz to be set
-	 */
-	public void setQuiz(String quizName) {
-		this.quizName = quizName;
-	}
 
 	/**
 	 * Getter for date of the attempt
@@ -99,5 +67,4 @@ public class QuizPerformance {
 	public void setPercentCorrect(double percentCorrect) {
 		this.percentCorrect = percentCorrect;
 	}
-
 }
