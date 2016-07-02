@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@page import="application.ServletConstants"%>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -8,13 +9,14 @@
 	<script src="script.js"></script>
 	
 	<!--  If session already contains user redirect to user's homepage -->
-<%--
-	if (session.getAttribute("userName") != null){
-		System.out.println(session.getAttribute("userName"));
-    	String redirectURL = "homepage.jsp";
+<%
+	if (session.getAttribute(ServletConstants.USER_NAME_PARAM) != null){
+		System.out.println(session.getAttribute(ServletConstants.USER_NAME_PARAM));
+    	String redirectURL = ServletConstants.HOMEPAGE_ADDRESS;
     	response.sendRedirect(redirectURL);
+    	return;
 	}
---%>
+%>
 
 </head>
 <body>

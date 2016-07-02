@@ -49,11 +49,19 @@
 	
 	<div id="logOutId"></div>
 
+	<div>
+		<p> Search for quiz </p>		
+		<form id="quiz-lookup" action="QuizLookupServlet">
+			<input type="text" name="quiz" placeholder="Enter quiz" required>
+			<input type="submit" name="quiz-submit" value="Find Quiz">
+		</form>	
+	</div>
+
 	<p><b>Hello ${param.name}</b></p>
 	
 	<div id="user-info">
 		<p>user name: <%= user.getName() %></p>
-		<p><b>parameter value: <%= request.getParameter(ServletConstants.USER_NAME_PARAM) %></b></p>
+		<p><b>parameter value: <%= session.getAttribute(ServletConstants.USER_NAME_PARAM) %></b></p>
 	</div>
 	
 	<div>
@@ -99,7 +107,7 @@
 	<div>
 		<form action="create-quiz.html">
 		<%
-			if(request.getParameter(ServletConstants.USER_NAME_PARAM).equals(user.getName())) {
+			if(session.getAttribute(ServletConstants.USER_NAME_PARAM).equals(user.getName())) {
 				out.println("<input type=\"submit\" value=\"create a quiz\">");
 			}
 		%>
@@ -108,7 +116,7 @@
 	
 	<div>
 		<%
-			String parameterUserName = request.getParameter(ServletConstants.USER_NAME_PARAM);
+			String parameterUserName = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
 			if(!parameterUserName.equals(user.getName())) {
 				out.println("<button type=\"button\">send friend request</button>");
 			}

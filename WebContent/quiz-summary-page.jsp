@@ -10,7 +10,7 @@
 <script src="script.js"></script>
 </head>
 <body>
-
+<
 
 	<%
 		Quiz quiz = (Quiz) session.getAttribute(ServletConstants.QUIZ_NAME_PARAM);
