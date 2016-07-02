@@ -31,14 +31,7 @@ public class QuizSummaryServlet extends HttpServlet implements ServletConstants{
 			HttpSession session = request.getSession();
 			db.connect();
 			String quizName = request.getParameter(QUIZ_NAME_PARAM);
-			Quiz quiz = null; //db.loadQuiz(quizName);
-			if (quiz == null) {
-				quiz = new Quiz();
-				quiz.setCreator("go");
-				quiz.setDescription("description");
-				quiz.setName(quizName);
-				quiz.setSummaryStatistics(0);
-			}
+			Quiz quiz = db.loadQuiz(quizName);
 			session.setAttribute(QUIZ_NAME_PARAM, quiz);
 			UserList highestPerformers = db.getHighestPerformers(quizName, START_TIME);
 			Timestamp thisTimeYesterday = new Timestamp(System.currentTimeMillis()-24*60*60*1000);
