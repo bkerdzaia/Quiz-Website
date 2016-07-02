@@ -1,7 +1,7 @@
 
 
 input[type="submit"]{
-	margin: 4px;
+	margin: 6px;
 	margin-left: auto;
 	margin-right: auto;
 	background-color: cornflowerblue;
@@ -15,6 +15,7 @@ input[type="submit"]:hover{
 }
 
 form{
+	padding: 15px;
 	margin: auto;
 }
 
@@ -32,18 +33,22 @@ h1{
 }
 
 div.failure-message{
+	color: red;
 	position: fixed;
 	color: darkred;
+	bottom: 0;
+	width: 100%;
 }
 
 input{
-	border: 4px;
+	width: 30%;
+	border: 0;
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
-	margin-top: 3px;
-	margin-bottom: 3px;
-		
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding: 10px;
 }
 
 #logOutId{
