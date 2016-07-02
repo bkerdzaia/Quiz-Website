@@ -13,8 +13,6 @@ import factory.DefaultQuizFactory;
 @SuppressWarnings("serial")
 public class History<T extends Performance> extends ArrayList<T> {
 	
-	
-	public History() {}
 	/*
 	public QuizCollection getMadeQuizzes() {
 		// Acquire collection of quizzes from factory

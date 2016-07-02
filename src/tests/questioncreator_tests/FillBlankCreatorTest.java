@@ -78,4 +78,5 @@ public class FillBlankCreatorTest {
 		assertTrue(question.isCorrectAnswer(posAnsw5));
 		assertFalse(question.isCorrectAnswer("Tom"));
 	}
+	
 }
