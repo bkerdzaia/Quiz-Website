@@ -16,13 +16,14 @@ import quiz.*;
 @WebServlet("/QuizSummaryServlet")
 public class QuizSummaryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	private static final Timestamp START_TIME = new Timestamp(0);
        
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		String address;
 		try {
 			System.out.println("quiz summary page");
@@ -39,13 +40,13 @@ public class QuizSummaryServlet extends HttpServlet {
 				quiz.setSummaryStatistics(0);
 			}
 			session.setAttribute("quizName", quiz);
-			UserList highestPerformers = db.getHighestPerformers(quizName, null);
+			UserList highestPerformers = db.getHighestPerformers(quizName, START_TIME);
 			Timestamp thisTimeYesterday = new Timestamp(System.currentTimeMillis()-24*60*60*1000);
 			UserList topPerformersLastDay = db.getHighestPerformers(quizName, thisTimeYesterday);
-			//UserList recentPerformers = db.getRecentTestTakers(quizName, null); // Method changed
-			session.setAttribute("highestPerformers", highestPerformers);  // see database interface
+			History performance = db.getRecentTakersStats(quizName, START_TIME);
+			session.setAttribute("highestPerformers", highestPerformers);  
 			session.setAttribute("topPerformers", topPerformersLastDay);
-			//session.setAttribute("recentPerformers", recentPerformers);
+			session.setAttribute("performance", performance);
 			db.close();
 			address = "quiz-summary-page.jsp?name=" + quizName;
 		} catch (Exception e) {
