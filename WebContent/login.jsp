@@ -5,6 +5,7 @@
 	<title>Login</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="script.js"></script>
 	
 	<!--  If session already contains user redirect to user's homepage -->
 <%--
@@ -15,26 +16,6 @@
 	}
 --%>
 
-<script>
-	function passwordStrength() {
-		var weak = "";
-		if (document.getElementById("login-form-id").password.value.length < 6) {
-			weak = "* weak password";
-		}
-		$("#login-form-id > span").text(weak);
-	};
-	
-	function validateName() {
-		var pat = /^[\w]+$/;
-		if(!pat.test(document.getElementById("login-form-id").userName.value)) {
-			alert("Input valid name");
-			return false;
-		}
-	}
-</script>
-
-
-
 </head>
 <body>
 <h1>Welcome to Funz!</h1>
@@ -42,8 +23,7 @@
 	<div>
 		<form  id="login-form-id" action="LoginServlet" method="post"  onsubmit="return validateName()">
 			<input type="text" name="userName" placeholder="Username" required><br /><br /> 
-			<input type="password" name="password" placeholder="Password" onkeyup="passwordStrength()" required>
-			<span></span><br /><br /> 
+			<input type="password" name="password" placeholder="Password" required><br /><br /> 
 			<input name="login" type="submit" value="Log In">
 			<input name="register" type="submit" value="Register">
 			<br><br>
