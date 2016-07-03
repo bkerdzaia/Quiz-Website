@@ -39,7 +39,7 @@ public class ChallengeServlet extends HttpServlet implements ServletConstants {
 			System.out.println("user: " + user + " friend: " + friendName + " quizName: " + quiz.getName());
 			Challenge chal = DefaultUserFactory.getFactoryInstance().getChallenge();
 			chal.setSenderName(user);
-			chal.setQuizUrl("QuizSummaryServlet?" + ServletConstants.QUIZ_NAME_PARAM + "=" + quiz.getName());
+			chal.setQuizName(quiz.getName());
 			System.out.println("sending message: " + db.sendMessage(user, friendName, chal.displayMessage(), new Timestamp(System.currentTimeMillis())));
 			db.close();
 			addressToRedirect = HOMEPAGE_ADDRESS + "?" + USER_NAME_PARAM + "=" + user;

@@ -1,14 +1,16 @@
 package quiz;
 
+import application.ServletConstants;
+
 public class Challenge implements Message {
 
-	private String quizUrl, senderName;
+	private String quizName, senderName;
 	
 	/** Empty constructor */
 	public Challenge(){}
 
-	public void setQuizUrl(String quizUrl){
-		this.quizUrl = quizUrl;
+	public void setQuizName(String quizName){
+		this.quizName = quizName;
 	}
 	
 	public void setSenderName(String senderName){
@@ -17,9 +19,9 @@ public class Challenge implements Message {
 	
 	@Override
 	public String displayMessage() {
-		return "Come on, " + senderName + 
-				" challenged you on the quiz " + 
-				quizUrl;
+		return "<div class=challengeClass><p>" + senderName + " has challenged you to take"
+				+ " a quiz <a href='QuizSummaryServlet?'" + ServletConstants.QUIZ_NAME_PARAM 
+				+ "=" + quizName + "'>" + quizName + "</a></p></div>";
 	}
 	
 }

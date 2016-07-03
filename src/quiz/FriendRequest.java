@@ -2,12 +2,17 @@ package quiz;
 
 public class FriendRequest implements Message {
 
-	String senderName, recipientName;
+	private String senderName, recipientName;
 	
 	@Override
 	public String displayMessage() {
-		return "Hey " + recipientName + ", " + senderName + 
-				" wants to be friends with you. Click here to add";
+		return "<div class='freindRequestClass'><form action='AddFriend' method='post'>" +
+				"<p>" + senderName + " want's to become friends</p>" +
+				"<input type='hidden' name='senderName' value='" + senderName + "'>" +
+				"<input type='hidden' name='recipientName' value='" + recipientName + "'>" +
+				"what is your answer <input type='button' value='no'>" +
+				"<input type='submit' value='yes'>" +
+				"</form></div>";
 	}
 	
 	public void setSender(String senderName){

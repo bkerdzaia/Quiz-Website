@@ -156,6 +156,8 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber, DatabaseParamete
 		while (rs.next()) {
 			FriendRequest curRequest = userFactory.getFriendRequest();
 			curRequest.setSender(rs.getString(1)); // initiator column
+			curRequest.setRecipient(userName);
+			friendRequests.add(curRequest);
 		}
 		return friendRequests;
 	}

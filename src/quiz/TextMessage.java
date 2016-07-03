@@ -15,7 +15,7 @@ public class TextMessage implements Message {
 
 	@Override
 	public String displayMessage() {
-		return message;
+		return "<p>" + message + "</p>";
 	}
 
 	/**

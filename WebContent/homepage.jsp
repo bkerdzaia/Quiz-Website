@@ -18,7 +18,6 @@
 	<%
 		DatabaseGrabber db = (DatabaseGrabber) application.getAttribute(ServletConstants.DATABASE_ATTRIBUTE);
 		db.connect(); 
-		System.out.println("here");
 		String userName = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
 		User user = db.loadUser(userName);
 		QuizCollection popularQuizzes = db.getPopularQuizzes(); 
@@ -68,6 +67,7 @@
 		<%= getHtmlQuizzes(user.getCreatedQuizzes()) %>
 	</div>
 
+	<!-- display messages list -->
 	<div>
 		<p>received messages</p>
 		<%
@@ -101,7 +101,7 @@
 	<%
 		String parameterUserName = request.getParameter(ServletConstants.USER_NAME_PARAM);
 		if(!parameterUserName.equals(user.getName())) {
-			out.println("<div><form action='AddFriend' method='post'>");
+			out.println("<div><form action='SendFreindRequest' method='post'>");
 			out.println("<input type='hidden' name='" + ServletConstants.USER_NAME_PARAM + "' value='" + parameterUserName + "'>");
 			out.println("<input type=\"submit\" value='send friend request'>");
 			out.println("</form></div>");
