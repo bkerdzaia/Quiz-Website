@@ -33,11 +33,11 @@ h1{
 }
 
 div.failure-message{
-	color: red;
 	position: fixed;
 	color: darkred;
 	bottom: 0;
 	width: 100%;
+	font-weight: bold;
 }
 
 input{

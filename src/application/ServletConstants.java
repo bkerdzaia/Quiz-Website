@@ -24,7 +24,7 @@ public interface ServletConstants {
 			"User with provided name already exists. Pick another.";
 	public static final String LOGIN_SUCCESS = "Login successfull!";
 	public static final String CANT_LOGIN = "Unable to login. Check your name/password.";
-	public static final String NO_QUIZ_FOUND = "Quiz with provided name doesn't exist";
+	public static final String NO_QUIZ_FOUND = "Quiz with provided name doesn't exist.";
 
 	public static final String LOG_OUT_PARAM = "logout";
 	public static final String QUIZ_FIND = "quizToFind";

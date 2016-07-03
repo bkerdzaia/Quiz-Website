@@ -36,7 +36,7 @@
 		<% 
 			String completionMessage = (String) request.getAttribute("message");
 			if (completionMessage != null)
-				out.println("<h3>*" + completionMessage + "</h3");
+				out.println("<p>*" + completionMessage + "</p");
 		%> 
 	</div>
 
