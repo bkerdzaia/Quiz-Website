@@ -25,9 +25,7 @@
 		DatabaseGrabber db = (DatabaseGrabber) 
 			application.getAttribute(ServletConstants.DATABASE_ATTRIBUTE);
 		db.connect(); 
-		System.out.println("here");
 		String userName = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
-		System.out.println("user in homepage: " + userName);
 		User user = db.loadUser(userName);
 		QuizCollection popularQuizzes = db.getPopularQuizzes(); 
 		QuizCollection recentlyCreatedQuiz = db.getRecentlyCreatedQuizzes();
@@ -51,8 +49,8 @@
 
 	<div>
 		<p> Search for quiz </p>		
-		<form id="quiz-lookup" action="QuizLookupServlet">
-			<input type="text" name="quiz" placeholder="Enter quiz" required>
+		<form id="quiz-lookup" action="QuizLookupServlet" method="get">
+			<input type="text" name="quizToFind" placeholder="Enter quiz name" required>
 			<input type="submit" name="quiz-submit" value="Find Quiz">
 		</form>	
 	</div>
@@ -122,5 +120,15 @@
 			}
 		%>
 	</div>
+	
+	<div class="failure-message">
+	<%
+		String message = (String) request.getAttribute(ServletConstants.MESSAGE_ATTR);
+		if (message != null){
+			out.println("<p>*" + message + "</p>");
+		}
+	%>
+	</div>
+		
 </body>
 </html>

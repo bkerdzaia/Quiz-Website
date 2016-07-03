@@ -1,6 +1,7 @@
 package application;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,6 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import database.DatabaseGrabber;
+import quiz.Quiz;
 
 /**
  * Servlet implementation class QuizLookupServlet
@@ -28,13 +32,31 @@ public class QuizLookupServlet extends HttpServlet implements ServletConstants{
 			return;
 		}
 		// If quizToFind is not provided, redirect to home page
-		String quizToFind = request.getParameter("quizToFind");
+		String quizToFind = request.getParameter(QUIZ_FIND);
 		if (quizToFind == null){
 			RequestDispatcher dispatcher = request.getRequestDispatcher(HOMEPAGE_ADDRESS);
 			dispatcher.forward(request, response);
 			return;
 		}
-			
+		// At this point get database grabber and try to find the quiz
+		DatabaseGrabber dbGrabber = (DatabaseGrabber) 
+				request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
+		try {
+			dbGrabber.connect();
+			Quiz seekQuiz = dbGrabber.loadQuiz(quizToFind);
+			if (seekQuiz == null){
+				request.setAttribute(MESSAGE_ATTR, NO_QUIZ_FOUND);
+				RequestDispatcher dispatcher = request.getRequestDispatcher(HOMEPAGE_ADDRESS);
+				dispatcher.forward(request, response);
+			} else {
+				request.setAttribute(QUIZ_NAME_PARAM, seekQuiz);
+				RequestDispatcher dispatcher = 
+						request.getRequestDispatcher(QUIZ_SUMMARY_PAGE_ADDRESS);
+				dispatcher.forward(request, response);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
