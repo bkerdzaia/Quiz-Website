@@ -1,5 +1,4 @@
 <%@page import="factory.DefaultUserFactory"%>
-<%@page import="java.awt.TrayIcon.MessageType"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="application.*, quiz.*, database.*"%>
@@ -104,63 +103,5 @@
 		%>
 	</div>
 	
-<<<<<<< HEAD
-	<%-- create a quiz display to the user that is logged in --%>
-	<%
-		if(request.getParameter(ServletConstants.USER_NAME_PARAM).equals(user.getName())) {
-			out.println("<div><form action='create-quiz.html'>");
-			out.println("<input type=\"submit\" value=\"create a quiz\">");
-			out.println("</form></div>");
-		}
-	%>
-	
-	<%-- send friend request display to the user that is viewed by logged in user --%>
-	<%
-		String parameterUserName = request.getParameter(ServletConstants.USER_NAME_PARAM);
-		if(!parameterUserName.equals(user.getName())) {
-			out.println("<div><form action='SendFreindRequest' method='post'>");
-			out.println("<input type='hidden' name='" + ServletConstants.USER_NAME_PARAM + "' value='" + parameterUserName + "'>");
-			out.println("<input type=\"submit\" value='send friend request'>");
-			out.println("</form></div>");
-		}
-		
-	%>
-	
-	<div>
-		<form action="send-note.jsp">
-			<input type="submit" value="Send Message">
-		</form>	
-	</div>
-	
-=======
-	<div>
-		<form action="create-quiz.html">
-		<%
-			if(session.getAttribute(ServletConstants.USER_NAME_PARAM).equals(user.getName())) {
-				out.println("<input type=\"submit\" value=\"create a quiz\">");
-			}
-		%>
-		</form>
-	</div>
-	
-	<div>
-		<%
-			String parameterUserName = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
-			if(!parameterUserName.equals(user.getName())) {
-				out.println("<button type=\"button\">send friend request</button>");
-			}
-		%>
-	</div>
-	
-	<div class="failure-message">
-	<%
-		String message = (String) request.getAttribute(ServletConstants.MESSAGE_ATTR);
-		if (message != null){
-			out.println("<p>*" + message + "</p>");
-		}
-	%>
-	</div>
-		
->>>>>>> be70ad2a3665015995df9f7830aabd9975fdff34
 </body>
 </html>
