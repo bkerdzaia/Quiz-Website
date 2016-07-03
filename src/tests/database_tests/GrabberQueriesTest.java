@@ -28,11 +28,11 @@ import questions.FillBlank;
 import questions.MultipleChoise;
 import questions.PictureResponse;
 import questions.QuestionResponce;
-import quiz.History;
 import quiz.Performance;
 import quiz.PerformanceOnQuiz;
 import quiz.Quiz;
 import quiz.QuizCollection;
+import quiz.QuizHistory;
 import quiz.QuizProperty;
 import quiz.QuizQuestions;
 import quiz.User;
@@ -306,7 +306,7 @@ public class GrabberQueriesTest {
 		dbGrabber.storeAttempt(perf, sampleQuiz.getCreator(), sampleQuiz.getName());
 		perf.setDate(new Timestamp(perf.getDate().getTime() - milisecondsOffset2)); 
 		dbGrabber.storeAttempt(perf, sampleQuiz.getCreator(), sampleQuiz.getName());
-		History<PerformanceOnQuiz>  recentStats = 
+		QuizHistory  recentStats = 
 				dbGrabber.getRecentTakersStats(sampleQuiz.getName(), new Timestamp
 				(new Date().getTime() - milisecondsOffset1));
 		assertEquals(1, recentStats.size());
@@ -425,7 +425,7 @@ public class GrabberQueriesTest {
 		dbGrabber.storeAttempt(recentPerf, "sam", sampleQuiz.getName());
 		dbGrabber.storeAttempt(futurePerf, "samuel", sampleQuiz.getName());
 
-		History<PerformanceOnQuiz> recentStats = 
+		QuizHistory recentStats = 
 				dbGrabber.getRecentTakersStats(sampleQuiz.getName(),past);
 		assertEquals(2, recentStats.size());
 		assertEquals(11, recentStats.get(0).getAmountTime());
