@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import database.DatabaseGrabber;
 import quiz.Quiz;
 
@@ -41,22 +40,21 @@ public class QuizLookupServlet extends HttpServlet implements ServletConstants{
 		// At this point get database grabber and try to find the quiz
 		DatabaseGrabber dbGrabber = (DatabaseGrabber) 
 				request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
+		String redirectAddress = HOMEPAGE_ADDRESS;
 		try {
 			dbGrabber.connect();
 			Quiz seekQuiz = dbGrabber.loadQuiz(quizToFind);
 			if (seekQuiz == null){
 				request.setAttribute(MESSAGE_ATTR, NO_QUIZ_FOUND);
-				RequestDispatcher dispatcher = request.getRequestDispatcher(HOMEPAGE_ADDRESS);
-				dispatcher.forward(request, response);
 			} else {
-				request.setAttribute(QUIZ_NAME_PARAM, seekQuiz);
-				RequestDispatcher dispatcher = 
-						request.getRequestDispatcher(QUIZ_SUMMARY_PAGE_ADDRESS);
-				dispatcher.forward(request, response);
+				redirectAddress = QUIZ_SUMMARY_SERVLET + "?" + QUIZ_NAME_PARAM + "=" + quizToFind;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			redirectAddress = ERROR_PAGE_ADDRESS;
 		}
+		RequestDispatcher dispatcher = request.getRequestDispatcher(redirectAddress);
+		dispatcher.forward(request, response);
 	}
 
 }

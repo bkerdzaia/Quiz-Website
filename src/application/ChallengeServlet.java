@@ -31,7 +31,7 @@ public class ChallengeServlet extends HttpServlet implements ServletConstants {
 		System.out.println("challenge servlet");
 		String user = (String) request.getSession().getAttribute(USER_NAME_PARAM);
 		String friendName = request.getParameter("friendName");
-		Quiz quiz = (Quiz) request.getSession().getAttribute(ServletConstants.QUIZ_NAME_PARAM);
+		Quiz quiz = (Quiz) request.getSession().getAttribute(QUIZ_NAME_PARAM);
 		String addressToRedirect;
 		try {
 			DefaultDatabaseGrabber db = (DefaultDatabaseGrabber) request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
@@ -42,7 +42,7 @@ public class ChallengeServlet extends HttpServlet implements ServletConstants {
 			chal.setQuizName(quiz.getName());
 			System.out.println("sending message: " + db.sendMessage(user, friendName, chal.displayMessage(), new Timestamp(System.currentTimeMillis())));
 			db.close();
-			addressToRedirect = HOMEPAGE_ADDRESS + "?" + USER_NAME_PARAM + "=" + user;
+			addressToRedirect = USER_PAGE_ADDRESS + "?" + USER_NAME_PARAM + "=" + user;
 		} catch (Exception e) {
 			e.printStackTrace();
 			addressToRedirect = ERROR_PAGE_ADDRESS;

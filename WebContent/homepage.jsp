@@ -37,7 +37,7 @@
 			if (quizzes == null) return "";
 			String htmlQuizes = "";
 			for (String quizName : quizzes) {
-				htmlQuizes += "<p><a href=\"QuizSummaryServlet?" + ServletConstants.QUIZ_NAME_PARAM + "=" + quizName + "\">" 
+				htmlQuizes += "<p><a href='" + ServletConstants.QUIZ_SUMMARY_SERVLET + "?" + ServletConstants.QUIZ_NAME_PARAM + "=" + quizName + "'>" 
 						+ quizName + "</a></p>\n";
 			}
 			return htmlQuizes;
@@ -54,13 +54,18 @@
 			<input type="submit" name="quiz-submit" value="Find Quiz">
 		</form>	
 	</div>
+	
+	<div class="failure-message">
+	<%
+		String message = (String) request.getAttribute(ServletConstants.MESSAGE_ATTR);
+		if (message != null){
+			out.println("<p>*" + message + "</p>");
+		}
+	%>
+	</div>
 
 	<p><b>Hello ${param.name}</b></p>
 	
-	<div id="user-info">
-		<p>user name: <%= user.getName() %></p>
-		<p><b>parameter value: <%= session.getAttribute(ServletConstants.USER_NAME_PARAM) %></b></p>
-	</div>
 	
 	<div>
 		<p>list of popular quizzes</p>
@@ -87,8 +92,8 @@
 		<p>received messages</p>
 		<%
 			UserMessageList messages = user.getMessages();
-			for (Message message : messages) {
-				out.println(message.displayMessage());		
+			for (Message receivedMessage : messages) {
+				out.println(receivedMessage.displayMessage());		
 			}
 		%>
 	</div>

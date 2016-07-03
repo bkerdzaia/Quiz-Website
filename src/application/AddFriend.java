@@ -28,7 +28,7 @@ public class AddFriend extends HttpServlet implements ServletConstants {
 			String recepient = request.getParameter("recipientName");
 			db.acceptFriendRequest(recepient, sender);
 			db.close();
-			addressToRedirect = HOMEPAGE_ADDRESS + "?" + USER_NAME_PARAM + "=" + recepient;
+			addressToRedirect = HOMEPAGE_ADDRESS;
 		} catch (Exception e) {
 			e.printStackTrace();
 			addressToRedirect = ERROR_PAGE_ADDRESS;

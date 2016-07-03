@@ -41,7 +41,7 @@ public class QuizSummaryServlet extends HttpServlet implements ServletConstants{
 			session.setAttribute(TOP_PERFORMANCE_ATTRIBUTE, topPerformersLastDay);
 			session.setAttribute(PERFORMANCE_ATTRIBUTE, performance);
 			db.close();
-			address = QUIZ_SUMMARY_PAGE_ADDRESS + "?" + QUIZ_NAME_PARAM + "=" + quizName;
+			address = "quiz-summary-page.jsp?" + QUIZ_NAME_PARAM + "=" + quizName;
 		} catch (Exception e) {
 			e.printStackTrace();
 			address = ERROR_PAGE_ADDRESS;

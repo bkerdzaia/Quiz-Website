@@ -35,7 +35,7 @@ public class SendNote extends HttpServlet implements ServletConstants {
 			System.out.println("sender: " + sender + " receiver: " + reciever + " text: " + text);
 			System.out.println("sending message: " + db.sendMessage(sender, reciever, text, new Timestamp(System.currentTimeMillis())));
 			db.close();
-			addressToRedirect = HOMEPAGE_ADDRESS + "?" + USER_NAME_PARAM + "=" + reciever;
+			addressToRedirect = USER_PAGE_ADDRESS + "?" + USER_NAME_PARAM + "=" + reciever;
 		} catch (Exception e) {
 			e.printStackTrace();
 			addressToRedirect = ERROR_PAGE_ADDRESS;

@@ -1,12 +1,52 @@
+<%@page import="quiz.*"%>
+<%@page import="database.*"%>
+<%@page import="application.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>User page: + ${param.name}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>User page: + ${param.name}</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+
+	<%
+		DatabaseGrabber db = (DatabaseGrabber) 
+			application.getAttribute(ServletConstants.DATABASE_ATTRIBUTE);
+		db.connect(); 
+		String userName = request.getParameter(ServletConstants.USER_NAME_PARAM);
+		User user = db.loadUser(userName);
+		db.close();
+	%>
+
+	<p>description: <%= user.getAboutMe()  %></p>
+	
+	<p>my picture: </p>
+	<img src="<%= user.getPictureUrl() %>" alt="<%= user.getName() %>">
+
+
+	<div id="user-info">
+		<p>user name: <%= request.getParameter(ServletConstants.USER_NAME_PARAM) %></p>
+		<p><b>session attribute value: <%= session.getAttribute(ServletConstants.USER_NAME_PARAM) %></b></p>
+	</div>
+	
+	<!-- send friend request display to the user that is viewed by logged in user -->
+	<div id="friendRequestId">
+		<form action="SendFreindRequest" method="post">
+			<input type="hidden" name="<%= ServletConstants.USER_NAME_PARAM %>"
+				value="<%= request.getParameter(ServletConstants.USER_NAME_PARAM) %>">
+			<input type="submit" value="send friend request">
+		</form>
+	</div>
+	
+	<div>
+		<form action="send-note.jsp">
+			<input type="submit" value="Send Message">
+		</form>	
+	</div>
+		
 
 </body>
 </html>

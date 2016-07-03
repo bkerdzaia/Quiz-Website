@@ -9,8 +9,9 @@ public interface ServletConstants {
 	public static final String DATABASE_ATTRIBUTE = "database";
 	public static final String LOGIN_ADDRESS = "login.jsp";
 	public static final String HOMEPAGE_ADDRESS = "homepage.jsp";
+	public static final String USER_PAGE_ADDRESS = "user-page.jsp";
 	public static final String ERROR_PAGE_ADDRESS = "error-page.jsp";
-	public static final String QUIZ_SUMMARY_PAGE_ADDRESS = "quiz-summary-page.jsp";
+	public static final String QUIZ_SUMMARY_SERVLET = "QuizSummaryServlet";
 	public static final String USER_NAME_PARAM = "userName";
 	public static final String QUIZ_NAME_PARAM = "quizName";
 	public static final String HIGHEST_PERFORMANCE_ATTRIBUTE = "highestPerformers";

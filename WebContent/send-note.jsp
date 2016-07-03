@@ -10,7 +10,7 @@
 <body>
 
 	<div>
-		<form action="homepage.jsp?<%=ServletConstants.USER_NAME_PARAM + "=" + session.getAttribute(ServletConstants.USER_NAME_PARAM) %>">
+		<form action="homepage.jsp?">
 			<br><input type="submit" value="go hompage"><br>
 		</form>
 	</div>

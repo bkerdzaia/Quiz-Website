@@ -40,7 +40,7 @@ public class LoginServlet extends HttpServlet implements ServletConstants{
 					request.setAttribute(MESSAGE_ATTR, CANT_REGISTER);
 				// Everything went good
 				}else{ 
-					addressToRedirect = HOMEPAGE_ADDRESS + "?" + USER_NAME_PARAM + "=" + userName;
+					addressToRedirect = HOMEPAGE_ADDRESS;
 					session.setAttribute(USER_NAME_PARAM, userName);
 				}
 			} 
@@ -49,7 +49,7 @@ public class LoginServlet extends HttpServlet implements ServletConstants{
 				// User with provided credentials exists in database
 				if(db.authenticateUser(userName, encryptedPassword)){
 					session.setAttribute(USER_NAME_PARAM, userName);
-					addressToRedirect = HOMEPAGE_ADDRESS + "?" + USER_NAME_PARAM + "=" + userName;
+					addressToRedirect = HOMEPAGE_ADDRESS;
 				}
 				// Who the heck you are?
 				else{

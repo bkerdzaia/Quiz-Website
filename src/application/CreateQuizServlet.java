@@ -59,7 +59,7 @@ public class CreateQuizServlet extends HttpServlet implements ServletConstants{
 			quiz.setSummaryStatistics(0);
 			db.uploadQuiz(quiz);
 			db.close();
-			address = HOMEPAGE_ADDRESS + "?" + USER_NAME_PARAM + "=" + user;
+			address = HOMEPAGE_ADDRESS;
 		} catch (Exception e) {
 			e.printStackTrace();
 			address = ERROR_PAGE_ADDRESS;
