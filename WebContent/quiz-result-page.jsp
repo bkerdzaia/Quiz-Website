@@ -25,8 +25,13 @@ ul#menu li {
   <li id="cor">correct answers:</li>
 </ul>
 	<%	
-		for(Question q: questions)
-			out.println(q.getQuestionText()+""+q.getUsersChoice()+"	"+q.isUsersAnswerCorrect()+"<br>");
+		int score = 0;
+		for(Question q: questions){
+			boolean b=q.isUsersAnswerCorrect();
+			out.println(q.getQuestionText()+""+q.getUsersChoice()+"	"+b+"<br>");
+			if(b)score++;
+		}
+		out.println("<p>Your score is: " + score+"</p>");
 	%>
 	
 	
