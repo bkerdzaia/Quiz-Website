@@ -103,5 +103,12 @@
 		%>
 	</div>
 	
+	<!-- display create a quiz -->
+	<div>
+		<form action="create-quiz.html">
+			<input type="submit" value="create a quiz">
+		</form>
+	</div>
+	
 </body>
 </html>
