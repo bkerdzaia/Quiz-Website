@@ -7,6 +7,7 @@ import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
 import database.*;
+import factory.DefaultApplicationFactory;
 
 /**
  * Servlet implementation class LoginServlet
@@ -24,7 +25,7 @@ public class LoginServlet extends HttpServlet implements ServletConstants{
 		HttpSession session = request.getSession();
 		String addressToRedirect = LOGIN_ADDRESS;			
 		String userName = request.getParameter(USER_NAME_PARAM);
-		Encryption encryptor = new Encryption();
+		Encryption encryptor = DefaultApplicationFactory.getFactoryInstanse().getEncryption();
 		String encryptedPassword = encryptor.encrypt(request.getParameter(PASSWORD_PARAM));
 
 		try {
