@@ -24,11 +24,10 @@
 <h2 id="intro"> [place where fun quizzes are made] </h2>
 	<div>
 		<form  id="login-form-id" action="LoginServlet" method="post"  onsubmit="return validateName()">
-			<input type="text" name="userName" placeholder="Username" required><br /><br /> 
-			<input type="password" name="password" placeholder="Password" required><br /><br /> 
+			<input type="text" name="userName" placeholder="Username" required>
+			<input type="password" name="password" placeholder="Password" required> 
 			<input name="login" type="submit" value="Log In">
 			<input name="register" type="submit" value="Register">
-			<br><br>
 		</form>
 	</div>
 	
