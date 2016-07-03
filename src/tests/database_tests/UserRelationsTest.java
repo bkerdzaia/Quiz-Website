@@ -23,13 +23,14 @@ import quiz.FriendList;
 import quiz.Quiz;
 import quiz.QuizProperty;
 import quiz.QuizQuestions;
+import quiz.TextMessage;
 import quiz.User;
 import quiz.UserMessageList;
 
 
 /**
  * @author dav23r
- * This test suit is concerd with correctness of user relations
+ * This test suit is concerned with correctness of user relations
  * in database; methods of database grabber such as addFriendRequest,
  * sendMessage, etc are under examination.
  */
@@ -142,8 +143,9 @@ public class UserRelationsTest {
 		UserMessageList samuelsMessages = 
 				samuel.getMessages();
 		assertEquals(1, samuelsMessages.size());
-		assertEquals("I cant be friends with trump supporter", 
-				     samuelsMessages.get(0).displayMessage());
+		TextMessage mes = (TextMessage) samuelsMessages.get(0);
+		assertEquals("I cant be friends with trump supporter", mes.getMessage());
+		assertEquals("<p>" + mes.getMessage() + "</p>", mes.displayMessage());
 		String someNonsense =
 				"Hillay and Ted Cruz will make 2 + 2 = 4" + 
 				" Im not saying its 5 maybe Jeb is saying that..";
@@ -158,7 +160,7 @@ public class UserRelationsTest {
 		UserMessageList samsMessages = 
 				sam.getMessages();
 		assertEquals(1, samsMessages.size());
-		assertEquals(someNonsense, samsMessages.get(0).displayMessage());
+		assertEquals(someNonsense, ((TextMessage) samsMessages.get(0)).getMessage());
 		// Angry sam deletes samuel twice!
 		assertTrue(dbGrabber.removeFriend("sam", "samuel"));
 		assertFalse(dbGrabber.removeFriend("samuel", "sam"));

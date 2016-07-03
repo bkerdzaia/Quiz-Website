@@ -11,15 +11,30 @@
 			
 		%>
 <title>Result Page</title>
+<style>
+ul#menu li {
+    display:inline;
+}
+</style>
 </head>
 <body>
 	
-	your answers: 
+<ul id="menu">
+  <li id="que">questions: </li>
+  <li id="ans">your answers: </li>
+  <li id="cor">correct answers:</li>
+</ul>
 	<%	
-		for(Question q: questions)
-			out.println(q.getUsersChoice()+"<br>");
-
+		int score = 0;
+		for(Question q: questions){
+			boolean b=q.isUsersAnswerCorrect();
+			out.println(q.getQuestionText()+""+q.getUsersChoice()+"	"+b+"<br>");
+			if(b)score++;
+		}
+		out.println("<p>Your score is: " + score+"</p>");
 	%>
+	
+	
 	
 	<div>
 		<p>users score and time</p>

@@ -25,5 +25,13 @@ public class TextMessage implements Message {
 	public void setMessage(String message){
 		this.message = message;
 	}
+	
+	/**
+	 * Getter for message text.
+	 * @return bare message withot html
+	 */
+	public String getMessage(){
+		return message;
+	}
 
 }

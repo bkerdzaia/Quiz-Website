@@ -34,42 +34,20 @@
 			<%
 				if(properties.isRandomSeq() && questIndex==0)
 					Collections.shuffle(questions);
-				if(properties.isOnePage()){
-					out.println("<form name=\"answers\"action=\"ResultPageServlet\" method=\"post\">");
-					for(Question q: questions)
-						out.println(q.displayQuestion());
-					out.println("<br><br><button type=\"submit\"\">Submit</button>");
-					out.println("</form>");
-				}else{
 					out.println("<form name=\"answers\"action=\"ResultPageServlet\" method=\"post\">");
 					String hide = "";
 					for(int i =0; i<questions.size();i++){
-						if(i>0) hide = " style='display:none'";
+						if(i>0 && !properties.isOnePage()) hide = " style='display:none'";
 						out.println("<div id = questionId" + i + hide + ">");
 						out.println(questions.get(i).displayQuestion());
 						if(i == questions.size()-1)
 							out.println("<br><br><button type=\"submit\" >Submit</button>");
-						else
+						else if(!properties.isOnePage())
 							out.println("<button type=\"button\" onclick=\"myFunction("+i+")\">next</button>");
 						out.println("</div>");
 					}
 					out.println("</form>");
-				}
 			%>
-			<%-- if(questIndex<questions.size()-1){
-						if(questIndex!=0) out.println(request.getAttribute("possibleAnswer"));
-						out.println("<form action=\"quiz.jsp\" method=\"get\">");
-						out.println(questions.get(questIndex).displayQuestion());
-						out.println("<button type=\"submit\">next</button>");
-						session.setAttribute("questIndex", questIndex+1);
-					}
-					else {
-						out.println("<form action=\"ResultPageServlet\" method=\"get\">");
-						out.println(questions.get(questIndex).displayQuestion());
-						out.println("<br><br><button type=\"submit\">Submit</button>");
-						
-					} --%>
-		<!-- </form>  --> 
 	</div>
 	
 	

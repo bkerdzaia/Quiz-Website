@@ -47,45 +47,7 @@ public class DisplayQuizServlet extends HttpServlet implements ServletConstants{
 //				System.out.println("param names: " + x.nextElement());
 //			}
 			String quizName = request.getParameter("quizName");
-//			String quizName = "ab";
-//			Quiz quiz = db.loadQuiz(quizName);
-			Quiz quiz = null;
-			if (quiz == null) {
-				quiz = new Quiz();
-				quiz.setCreator("Sandro");
-				quiz.setDescription("description");
-				quiz.setName(quizName);
-				quiz.setSummaryStatistics(0);
-				QuizQuestions q = new QuizQuestions();
-				MultipleChoise q3 = DefaultQuestionFactory.getFactoryInstance().getMultipleChoiseQuestion();
-				q3.setQuestionText("Who wrote this?");
-				ArrayList<String> s = new ArrayList<String>();
-				s.add("Sandro");
-				s.add("Baduri");
-				s.add("Daviti");
-				q3.setPossibleChoises(s);
-				q3.setCorrectAnswerIndex(0);
-				q.add(q3);
-				FillBlank q1 = DefaultQuestionFactory.getFactoryInstance().getFillBlankQuestion();
-				q1.setQuestionText("Where are you?");
-				q1.setCorrectAnswers(null);
-				q.add(q1);
-				PictureResponse q2 = DefaultQuestionFactory.getFactoryInstance().getPictureResponseQuestion();
-				q2.setQuestionText("Who is this?");
-				q2.setPictureUrl("https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-xft1/v/t1.0-9/10464363_900142266748629_3826821890834226325_n.jpg?oh=f042d94c493974fd10d922926e9942b0&oe=58027C5B&__gda__=1475986641_7428a87f5a19f4fc26e8c27e10b4e6bf");
-				q2.setCorrectAnswers(null);
-				q.add(q2);
-				FillBlank q4 = DefaultQuestionFactory.getFactoryInstance().getFillBlankQuestion();
-				q4.setQuestionText("What?");
-				q4.setCorrectAnswers(null);
-				q.add(q4);
-				
-				
-				QuizProperty qp = new QuizProperty(true,false,true);
-//				QuizProperty qp = new QuizProperty(true,true,true);
-				quiz.setProperty(qp);
-				quiz.setQuestions(q);
-			}
+			Quiz quiz = db.loadQuiz(quizName);
 			session.setAttribute("quizName", quiz);
 			session.setAttribute("questIndex", 0);
 			db.close();
