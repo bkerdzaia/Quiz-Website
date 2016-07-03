@@ -2,10 +2,10 @@ package quiz;
 
 import java.util.Comparator;
 
-public class OrderByDate implements Comparator<QuizPerformance> {
+public class OrderByDate implements Comparator<Performance> {
 
 	@Override
-	public int compare(QuizPerformance o1, QuizPerformance o2) {
+	public int compare(Performance o1, Performance o2) {
 		return o1.getDate().compareTo(o2.getDate());
 	}
 

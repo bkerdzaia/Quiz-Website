@@ -28,10 +28,16 @@ public interface QuizFactory {
 	public QuizQuestions getQuizQuestions();
 
 	/**
-	 * Encapsulates creation of 'QuizPerformance' object
-	 * @return new QuizPerformance
+	 * Encapsulates creation of 'UsersPerformance' object
+	 * @return new UsersPerformance
 	 */
-	public QuizPerformance getQuizPerformance();
+	public UsersPerformance getUsersPerformance();
+	
+	/**
+	 * Encapsulates creation of 'PerformanceOnQuiz' object
+	 * @return new PerformanceOnQuiz
+	 */
+	public PerformanceOnQuiz getPerformanceOnQuiz();
 	
 	/**
 	 * Encapsulates creation of 'QuizProperty' object

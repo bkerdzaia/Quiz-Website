@@ -7,6 +7,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+	<!-- Redirect to login page if session does not contain user name atribute -->
+	<%
+		if (session.getAttribute(ServletConstants.USER_NAME_PARAM) == null){
+			response.sendRedirect(ServletConstants.LOGIN_ADDRESS);
+			return;
+		}
+	%>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Hello to Funz</title>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
@@ -16,7 +23,8 @@
 <body>
 
 	<%
-		DatabaseGrabber db = (DatabaseGrabber) application.getAttribute(ServletConstants.DATABASE_ATTRIBUTE);
+		DatabaseGrabber db = (DatabaseGrabber) 
+			application.getAttribute(ServletConstants.DATABASE_ATTRIBUTE);
 		db.connect(); 
 		String userName = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
 		User user = db.loadUser(userName);
@@ -40,11 +48,19 @@
 	
 	<div id="logOutId"></div>
 
+	<div>
+		<p> Search for quiz </p>		
+		<form id="quiz-lookup" action="QuizLookupServlet" method="get">
+			<input type="text" name="quizToFind" placeholder="Enter quiz name" required>
+			<input type="submit" name="quiz-submit" value="Find Quiz">
+		</form>	
+	</div>
+
 	<p><b>Hello ${param.name}</b></p>
 	
 	<div id="user-info">
 		<p>user name: <%= user.getName() %></p>
-		<p><b>parameter value: <%= request.getParameter(ServletConstants.USER_NAME_PARAM) %></b></p>
+		<p><b>parameter value: <%= session.getAttribute(ServletConstants.USER_NAME_PARAM) %></b></p>
 	</div>
 	
 	<div>
@@ -88,6 +104,7 @@
 		%>
 	</div>
 	
+<<<<<<< HEAD
 	<%-- create a quiz display to the user that is logged in --%>
 	<%
 		if(request.getParameter(ServletConstants.USER_NAME_PARAM).equals(user.getName())) {
@@ -115,5 +132,35 @@
 		</form>	
 	</div>
 	
+=======
+	<div>
+		<form action="create-quiz.html">
+		<%
+			if(session.getAttribute(ServletConstants.USER_NAME_PARAM).equals(user.getName())) {
+				out.println("<input type=\"submit\" value=\"create a quiz\">");
+			}
+		%>
+		</form>
+	</div>
+	
+	<div>
+		<%
+			String parameterUserName = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
+			if(!parameterUserName.equals(user.getName())) {
+				out.println("<button type=\"button\">send friend request</button>");
+			}
+		%>
+	</div>
+	
+	<div class="failure-message">
+	<%
+		String message = (String) request.getAttribute(ServletConstants.MESSAGE_ATTR);
+		if (message != null){
+			out.println("<p>*" + message + "</p>");
+		}
+	%>
+	</div>
+		
+>>>>>>> be70ad2a3665015995df9f7830aabd9975fdff34
 </body>
 </html>

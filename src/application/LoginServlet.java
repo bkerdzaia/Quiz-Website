@@ -31,10 +31,6 @@ public class LoginServlet extends HttpServlet implements ServletConstants{
 		try {
 			DatabaseGrabber db = (DatabaseGrabber) 
 					request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
-			if (db == null) {
-				db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
-				request.getServletContext().setAttribute(DATABASE_ATTRIBUTE, db);
-			}
 		
 			db.connect();
 			// If user wants to register in the system
@@ -82,8 +78,7 @@ public class LoginServlet extends HttpServlet implements ServletConstants{
 		HttpSession session = request.getSession();
 		if (request.getParameter(LOG_OUT_PARAM) != null){
 			session.removeAttribute(USER_NAME_PARAM);
-			RequestDispatcher dispatcher = request.getRequestDispatcher(LOGIN_ADDRESS);
-			dispatcher.forward(request, response);
+			response.sendRedirect(LOGIN_ADDRESS);
 		}
 	}
 

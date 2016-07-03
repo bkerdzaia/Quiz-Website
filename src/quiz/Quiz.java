@@ -1,6 +1,7 @@
 package quiz;
 
 import java.sql.Timestamp;
+import java.util.Collections;
 
 /**
  * @author dav23r
@@ -61,9 +62,10 @@ public class Quiz {
 	}
 
 	public QuizQuestions getQuestions() {
+//		if(property.isRandomSeq()) Collections.shuffle(questions);
 		return questions;
 	}
-
+	
 	public void setQuestions(QuizQuestions questions) {
 		this.questions = questions;
 	}
@@ -75,5 +77,6 @@ public class Quiz {
 	public void setProperty(QuizProperty property) {
 		this.property = property;
 	}
+	
 	
 }

@@ -10,14 +10,15 @@
 <script src="script.js"></script>
 </head>
 <body>
-
+<
 
 	<%
 		Quiz quiz = (Quiz) session.getAttribute(ServletConstants.QUIZ_NAME_PARAM);
 		String user = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
 		UserList highestPerformers = (UserList) session.getAttribute(ServletConstants.HIGHEST_PERFORMANCE_ATTRIBUTE);
 		UserList topPerformers = (UserList) session.getAttribute(ServletConstants.TOP_PERFORMANCE_ATTRIBUTE);
-		History perfomance = (History) session.getAttribute(ServletConstants.PERFORMANCE_ATTRIBUTE);
+		History<PerformanceOnQuiz> perfomance = (History<PerformanceOnQuiz>) 
+				session.getAttribute(ServletConstants.PERFORMANCE_ATTRIBUTE);
 		QuizFactory quizFactory = DefaultQuizFactory.getFactoryInstance();
 	%>
 	
@@ -46,6 +47,7 @@
 			return htmlPerformance;
 		}
 	%>
+
 	<div id="logOutId"></div>
 
 	<p>Welcome to funz ${param.userName} !</p>
@@ -74,7 +76,6 @@
 		<div id="performanceOrderByDate"><%= getHtmlPerformance(perfomance, user, quizFactory.getOrderByDateInstance()) %></div>
 		<div id="performanceOrderByPercentCorrect" style="display:none"><%= getHtmlPerformance(perfomance, user, quizFactory.getOrderByPercentCorrectInstance()) %></div>
 		<div id="performanceOrderByAmountTime" style="display:none"><%= getHtmlPerformance(perfomance, user, quizFactory.getOrderByAmountTimeInstance()) %></div>
-		
 	</div>
 
 	<div>

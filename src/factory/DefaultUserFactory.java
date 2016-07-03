@@ -4,10 +4,12 @@ import quiz.Challenge;
 import quiz.FriendList;
 import quiz.FriendRequest;
 import quiz.History;
+import quiz.PerformanceOnQuiz;
 import quiz.TextMessage;
 import quiz.User;
 import quiz.UserList;
 import quiz.UserMessageList;
+import quiz.UsersPerformance;
 
 /**
  * @author dav23r
@@ -40,11 +42,6 @@ public class DefaultUserFactory implements UserFactory{
 	}
 
 	@Override
-	public History getHistory() {
-		return new History();
-	}
-
-	@Override
 	public FriendList getFriendList() {
 		return new FriendList();
 	}
@@ -72,6 +69,16 @@ public class DefaultUserFactory implements UserFactory{
 	@Override
 	public Challenge getChallenge() {
 		return new Challenge();
+	}
+
+	@Override
+	public History<UsersPerformance> getHistoryUsersPerformance() {
+		return new History<UsersPerformance>();
+	}
+
+	@Override
+	public History<PerformanceOnQuiz> getHistoryPerformanceOnQuiz() {
+		return new History<PerformanceOnQuiz>();
 	}
 
 }

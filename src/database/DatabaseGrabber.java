@@ -123,9 +123,10 @@ public interface DatabaseGrabber {
 	/**
 	 * Given performance summary of user's attempt on particular
 	 * quiz stores that record in database. It is assumed that
-	 * 'perf' has valid quiz and user names.
+	 * 'valid quiz and user names are provided.
 	 */
-	public void storeAttempt(QuizPerformance perf) throws SQLException;
+	public void storeAttempt(Performance perf, String userName, String quizName) 
+			throws SQLException;
 
 	/**
 	 * Returns 'QuizCollection' object filled with most popular 
@@ -157,7 +158,7 @@ public interface DatabaseGrabber {
 	 * @return UserList of recent takers of the quiz.
 	 * @throws SQLException
 	 */
-	public History getRecentTakersStats(String quizName, Timestamp date) 
+	public History<PerformanceOnQuiz> getRecentTakersStats(String quizName, Timestamp date) 
 			throws SQLException; 
 	
 	/**
