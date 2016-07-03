@@ -1,7 +1,6 @@
 package quiz;
 
 import java.sql.Timestamp;
-import java.util.Collections;
 
 /**
  * @author dav23r

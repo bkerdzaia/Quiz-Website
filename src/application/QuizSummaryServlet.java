@@ -36,7 +36,7 @@ public class QuizSummaryServlet extends HttpServlet implements ServletConstants{
 			UserList highestPerformers = db.getHighestPerformers(quizName, START_TIME);
 			Timestamp thisTimeYesterday = new Timestamp(System.currentTimeMillis()-24*60*60*1000);
 			UserList topPerformersLastDay = db.getHighestPerformers(quizName, thisTimeYesterday);
-			History performance = db.getRecentTakersStats(quizName, START_TIME);
+			QuizHistory performance = (QuizHistory) db.getRecentTakersStats(quizName, START_TIME);
 			session.setAttribute(HIGHEST_PERFORMANCE_ATTRIBUTE, highestPerformers);  
 			session.setAttribute(TOP_PERFORMANCE_ATTRIBUTE, topPerformersLastDay);
 			session.setAttribute(PERFORMANCE_ATTRIBUTE, performance);

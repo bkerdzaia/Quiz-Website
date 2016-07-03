@@ -7,7 +7,6 @@ import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
 import database.*;
-import factory.*;
 
 /**
  * Servlet implementation class LoginServlet

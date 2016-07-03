@@ -10,15 +10,13 @@
 <script src="script.js"></script>
 </head>
 <body>
-<
 
 	<%
 		Quiz quiz = (Quiz) session.getAttribute(ServletConstants.QUIZ_NAME_PARAM);
 		String user = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
 		UserList highestPerformers = (UserList) session.getAttribute(ServletConstants.HIGHEST_PERFORMANCE_ATTRIBUTE);
 		UserList topPerformers = (UserList) session.getAttribute(ServletConstants.TOP_PERFORMANCE_ATTRIBUTE);
-		History<PerformanceOnQuiz> perfomance = (History<PerformanceOnQuiz>) 
-				session.getAttribute(ServletConstants.PERFORMANCE_ATTRIBUTE);
+		QuizHistory perfomance = (QuizHistory) session.getAttribute(ServletConstants.PERFORMANCE_ATTRIBUTE);
 		QuizFactory quizFactory = DefaultQuizFactory.getFactoryInstance();
 	%>
 	
@@ -36,11 +34,11 @@
 	
 	
 	<%!
-		private String getHtmlPerformance(History perfomance, String user, Comparator<QuizPerformance> comparator) {
+		private String getHtmlPerformance(QuizHistory perfomance, String quizName, String user, Comparator<Performance> comparator) {
 			String htmlPerformance = "";
 			QuizFactory quizFactory = DefaultQuizFactory.getFactoryInstance();
-			for (QuizPerformance quizPerformance : perfomance.sortByUser(user, comparator)) {
-				htmlPerformance += "<p>quiz: " + quizPerformance.getQuiz() + 
+			for (PerformanceOnQuiz quizPerformance : perfomance.sortByUser(user, comparator)) {
+				htmlPerformance += "<p>quiz: " + quizName + 
 						" date: " + quizPerformance.getDate() +
 						" percent correct: " + quizPerformance.getPercentCorrect() + "%</p>";
 			}
@@ -73,9 +71,9 @@
 		<input type="radio" name="performance" value="amountTime" onclick="showOrderByAmountTime()">amount of time</p>
 		<p><b>user is <%= user %></b> past performance is </p>
 
-		<div id="performanceOrderByDate"><%= getHtmlPerformance(perfomance, user, quizFactory.getOrderByDateInstance()) %></div>
-		<div id="performanceOrderByPercentCorrect" style="display:none"><%= getHtmlPerformance(perfomance, user, quizFactory.getOrderByPercentCorrectInstance()) %></div>
-		<div id="performanceOrderByAmountTime" style="display:none"><%= getHtmlPerformance(perfomance, user, quizFactory.getOrderByAmountTimeInstance()) %></div>
+		<div id="performanceOrderByDate"><%= getHtmlPerformance(perfomance, quiz.getName(), user, quizFactory.getOrderByDateInstance()) %></div>
+		<div id="performanceOrderByPercentCorrect" style="display:none"><%= getHtmlPerformance(perfomance, quiz.getName(), user, quizFactory.getOrderByPercentCorrectInstance()) %></div>
+		<div id="performanceOrderByAmountTime" style="display:none"><%= getHtmlPerformance(perfomance, quiz.getName(), user, quizFactory.getOrderByAmountTimeInstance()) %></div>
 	</div>
 
 	<div>
@@ -89,7 +87,7 @@
 	<div>
 		<p>recent test takers performance: </p>
 		<%
-			for (QuizPerformance quizPerformance : perfomance) {
+			for (PerformanceOnQuiz quizPerformance : perfomance) {
 				out.println("</p>user: " + quizPerformance.getUser() + " date: " + quizPerformance.getDate()
 					+ " percent correct: " + quizPerformance.getPercentCorrect() + " time amount:  " + quizPerformance.getAmountTime() + "</p>");
 			}
