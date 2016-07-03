@@ -158,7 +158,7 @@ public interface DatabaseGrabber {
 	 * @return UserList of recent takers of the quiz.
 	 * @throws SQLException
 	 */
-	public History<PerformanceOnQuiz> getRecentTakersStats(String quizName, Timestamp date) 
+	public QuizHistory getRecentTakersStats(String quizName, Timestamp date) 
 			throws SQLException; 
 	
 	/**

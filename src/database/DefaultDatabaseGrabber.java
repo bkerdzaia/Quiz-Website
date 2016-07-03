@@ -25,6 +25,7 @@ import quiz.History;
 import quiz.Performance;
 import quiz.Quiz;
 import quiz.QuizCollection;
+import quiz.QuizHistory;
 import quiz.UsersPerformance;
 import quiz.PerformanceOnQuiz;
 import quiz.QuizProperty;
@@ -483,7 +484,7 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 
 	// Returns list of recent quiz takers
 	@Override
-	public History<PerformanceOnQuiz> getRecentTakersStats(String quizName, Timestamp date) 
+	public QuizHistory getRecentTakersStats(String quizName, Timestamp date) 
 			throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlRecentStats = 
@@ -493,7 +494,7 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 				"ORDER BY attempt_date DESC " + "LIMIT "
 				+ MAX_RECENT_TAKERS_STATS + ";";
 		ResultSet rs = stmt.executeQuery(sqlRecentStats);
-		History<PerformanceOnQuiz> recentStats = userFactory.getHistoryPerformanceOnQuiz();
+		QuizHistory recentStats = userFactory.getHistoryPerformanceOnQuiz();
 		while (rs.next()) {
 			PerformanceOnQuiz curPerf = quizFactory.getPerformanceOnQuiz();
 			curPerf.setDate(rs.getTimestamp(QUIZ_TAKEN.ATTEMPT_DATE.num()));

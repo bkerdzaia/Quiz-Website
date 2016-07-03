@@ -4,7 +4,7 @@ import quiz.Challenge;
 import quiz.FriendList;
 import quiz.FriendRequest;
 import quiz.History;
-import quiz.PerformanceOnQuiz;
+import quiz.QuizHistory;
 import quiz.TextMessage;
 import quiz.User;
 import quiz.UserList;
@@ -77,8 +77,8 @@ public class DefaultUserFactory implements UserFactory{
 	}
 
 	@Override
-	public History<PerformanceOnQuiz> getHistoryPerformanceOnQuiz() {
-		return new History<PerformanceOnQuiz>();
+	public QuizHistory getHistoryPerformanceOnQuiz() {
+		return new QuizHistory();
 	}
 
 }

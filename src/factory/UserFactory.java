@@ -25,7 +25,7 @@ public interface UserFactory {
 	 * Constructs 'History' of PerformanceOnQuiz object
 	 * @return History
 	 */
-	public History<PerformanceOnQuiz> getHistoryPerformanceOnQuiz();
+	public QuizHistory getHistoryPerformanceOnQuiz();
 	
 	/**
 	 * Constructs 'FriendsList' object
