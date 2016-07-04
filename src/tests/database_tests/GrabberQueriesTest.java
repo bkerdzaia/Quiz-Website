@@ -3,7 +3,6 @@ package tests.database_tests;
 import database.DatabaseConnectionHandler;
 import static org.junit.Assert.*;
 
-import java.awt.SystemTray;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;

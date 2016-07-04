@@ -15,4 +15,5 @@ TRUNCATE TABLE `multiple_choise_answers`;
 TRUNCATE TABLE `picture_response`;
 TRUNCATE TABLE `picture_response_correct_answers`;
 TRUNCATE TABLE `friend_requests`;
+TRUNCATE TABLE `challenges`;
 SET FOREIGN_KEY_CHECKS=1;

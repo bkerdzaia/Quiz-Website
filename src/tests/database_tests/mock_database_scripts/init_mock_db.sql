@@ -143,7 +143,23 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`friend_requests` (
 
   `initiator`      CHARACTER(45)     NOT NULL,  # one who sends request
   `acceptor`       CHARACTER(45)     NOT NULL,  # one to whom request is sent
-  CHECK (`initiator` != `acceptor`),
+  CHECK (`initiator` <> `acceptor`),
+
+  /* Indexing foreign keys */
+  INDEX `fk_initiator_idx` (`initiator` ASC),
+  INDEX `fk_acceptor_idx` (`acceptor` ASC),
+
+  /* Adding foreign key constraint*/ 
+  CONSTRAINT `fk_initiator_to_users`
+    FOREIGN KEY (`initiator`)
+    REFERENCES `MockQuizWebsite`.`users` (`username`)
+    ON DELETE CASCADE,
+
+  /* Adding foreign key constraint*/ 
+  CONSTRAINT `fk_acceptor_to_users`
+    FOREIGN KEY (`acceptor`)
+    REFERENCES `MockQuizWebsite`.`users` (`username`)
+    ON DELETE CASCADE,
 
   PRIMARY KEY (`initiator`, `acceptor`))
 
@@ -168,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`messages` (
   /* Indexing foreign keys */
   INDEX `fk_messages_friends_idx` (`friendship_id` ASC),
 
-  /* Adding foreign key constraint*/ 
+  /* Adding foreign key constraint */ 
   CONSTRAINT `fk_messages_friends`
     FOREIGN KEY (`friendship_id`)
     REFERENCES `MockQuizWebsite`.`friends` (`friendship_id`)
@@ -176,6 +192,39 @@ CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`messages` (
 
 ENGINE = InnoDB
 COMMENT = 'Stores messages associated with particular friendship entry.';
+
+
+-- -----------------------------------------------------
+-- Table `MockQuizWebsite`.`challenges`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MockQuizWebsite`.`challenges` (
+
+  `challenge_id`             INT               NOT NULL AUTO_INCREMENT,
+  `friendship_id`            INT               NOT NULL,  # FK
+  `sent_date`                TIMESTAMP         NOT NULL,
+  `quiz_name`                CHARACTER(45)     NOT NULL,  # FK
+  `sender`                   BIT               NOT NULL,  # indicates which part sent particular message.
+                                                          # "false" - first_user, "true" - second
+  PRIMARY KEY (`challenge_id`),
+
+  /* Indexing foreign keys */
+  INDEX `fk_friendship_idx` (`friendship_id` ASC),
+  INDEX `fk_quizname_idx` (`quiz_name` ASC),
+
+  /* Adding foreign key constraint*/ 
+  CONSTRAINT `fk_challenge_to_friendship`
+    FOREIGN KEY (`friendship_id`)
+    REFERENCES `MockQuizWebsite`.`friends` (`friendship_id`)
+    ON DELETE CASCADE,
+  CONSTRAINT `fk_challenge_to_quiz_name`
+    FOREIGN KEY (`quiz_name`)
+    REFERENCES `MockQuizWebsite`.`quizzes` (`quiz_name`)
+    ON DELETE CASCADE)
+
+ENGINE = InnoDB
+COMMENT = 'Stores challenges users friends send to each other.
+           challenge_id is unique in the table. friendship_id
+           references same column in friends table';
 
 
 -- -----------------------------------------------------

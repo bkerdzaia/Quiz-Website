@@ -1,10 +1,13 @@
 package quiz;
 
+import java.sql.Timestamp;
+
 import application.ServletConstants;
 
 public class Challenge implements Message {
 
 	private String quizName, senderName;
+	private Timestamp sentDate;
 	
 	/** Empty constructor */
 	public Challenge(){}
@@ -25,9 +28,13 @@ public class Challenge implements Message {
 	}
 
 	@Override
-	public String getMessage() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setDate(Timestamp sentDate) {
+		this.sentDate = sentDate;
 	}
-	
+
+	@Override
+	public Timestamp getDate() {
+		return sentDate;
+	}
+
 }

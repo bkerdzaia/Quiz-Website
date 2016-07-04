@@ -4,6 +4,8 @@
 <head>
 <meta charset="UTF-8">
 	<title>Login</title>
+	<link rel="shortcut icon" 
+		href="https://cdn1.iconfinder.com/data/icons/brain-games/1042/Quiz-Games.png" />
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script src="script.js"></script>
@@ -11,7 +13,6 @@
 	<!--  If session already contains user redirect to user's homepage -->
 <%
 	if (session.getAttribute(ServletConstants.USER_NAME_PARAM) != null){
-		System.out.println(session.getAttribute(ServletConstants.USER_NAME_PARAM));
     	String redirectURL = ServletConstants.HOMEPAGE_ADDRESS;
     	response.sendRedirect(redirectURL);
     	return;

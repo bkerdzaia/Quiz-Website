@@ -1,5 +1,7 @@
 package quiz;
 
+import java.sql.Timestamp;
+
 /**
  * Interface that defines overall look of messages
  */
@@ -15,8 +17,20 @@ public interface Message {
 	public String displayMessage();
 	
 	/**
-	 * Return message in it's bare form without any html
-	 * tags or other modifiers.
+	 * Sets name of the user who sent the message
+	 * @return - sender name
 	 */
-	public String getMessage();
+	public void setSenderName(String name);
+	
+	/**
+	 * Sets date of sending message
+	 */
+	public void setDate(Timestamp sentDate);
+	
+	/**
+	 * Return date when message was sent
+	 * @return
+	 */
+	public Timestamp getDate();
+	
 }

@@ -1,8 +1,11 @@
 package quiz;
 
+import java.sql.Timestamp;
+
 public class FriendRequest implements Message {
 
 	private String senderName, recipientName;
+	private Timestamp sentDate;
 	
 	@Override
 	public String displayMessage() {
@@ -15,7 +18,7 @@ public class FriendRequest implements Message {
 				"</form></div>";
 	}
 	
-	public void setSender(String senderName){
+	public void setSenderName(String senderName){
 		this.senderName = senderName;
 	}
 	
@@ -24,9 +27,13 @@ public class FriendRequest implements Message {
 	}
 
 	@Override
-	public String getMessage() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setDate(Timestamp sentDate) {
+		this.sentDate = sentDate;
+	}
+
+	@Override
+	public Timestamp getDate() {
+		return sentDate;
 	}
 
 }

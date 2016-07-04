@@ -58,6 +58,18 @@ public interface DatabaseParameters {
 		public int num() { return index; }
 	}
 
+	// 'Challenges' enumeration
+	public enum CHALLENGES{
+		CHALLENGE_ID		(1),
+		FRIENDSHIP_ID		(2),
+		SEND_DATE			(3),
+		QUIZ_NAME			(4),
+		SENDER				(5);
+		
+		private int index;
+		private CHALLENGES(int num) { index = num; }
+		public int num() { return index; }
+	}
 	
 	// 'Quizzes_taken' columns enumeration 
 	public enum QUIZ_TAKEN{
