@@ -10,9 +10,9 @@ public class MultipleChoiseView implements QuestionView {
 		String html = "<br><h3>"+ curQuestion.getQuestionText() +"</h3>";
 		html+="<div><p>";
 		ArrayList <String> answers = curQuestion.getPossibleChoises();
-		html+="<input type=\"radio\" checked=\"checked\" name=\"possibleAnswer\" value=\"ans"+0+"\">"+ answers.get(0) +"<br>";
+			html+="<input type=\"radio\" id=\"qiu\" name=\"possibleAnswer\" value=\""+answers.get(0)+"\">"+ answers.get(0) +"<br>";
 		for(int i = 1; i < answers.size(); i++)
-			html+="<input type=\"radio\" name=\"possibleAnswer\" value=\"ans"+i+"\">"+ answers.get(i) +"<br>";
+			html+="<input type=\"radio\" id=\"qiu\" name=\"possibleAnswer\" value=\""+answers.get(i)+"\">"+ answers.get(i) +"<br>";
 		html+="</p></div>";
 		return html;
 	}
