@@ -103,7 +103,7 @@
 		<%
 			FriendList friends = user.getFriends();
 			for (String friend : friends) {
-				out.println(friend);
+				out.println("<p>" + friend + "<p>");
 			}
 		%>
 	</div>

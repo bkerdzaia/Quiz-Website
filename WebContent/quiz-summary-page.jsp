@@ -4,10 +4,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Hello at quiz ${param.quizName}</title>
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script src="script.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Hello at quiz ${param.quizName}</title>
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="script.js"></script>
+	<link rel="stylesheet" type="text/css" href="table-style.css">
 </head>
 <body>
 
@@ -32,16 +33,19 @@
 		}
 	%>
 	
-	
+	<%-- returns a table of rows: date, percent correct, time amount --%>
 	<%!
-		private String getHtmlPerformance(QuizHistory perfomance, String quizName, String user, Comparator<Performance> comparator) {
+		private String getHtmlPerformance(QuizHistory perfomance, String user, Comparator<Performance> comparator) {
 			String htmlPerformance = "";
 			QuizFactory quizFactory = DefaultQuizFactory.getFactoryInstance();
 			for (PerformanceOnQuiz quizPerformance : perfomance.sortByUser(user, comparator)) {
-				htmlPerformance += "<p>quiz: " + quizName + 
-						" date: " + quizPerformance.getDate() +
-						" percent correct: " + quizPerformance.getPercentCorrect() + "%</p>";
+				htmlPerformance += 	"<tr>" +	
+						"<td>" + quizPerformance.getDate() + "</td>" +
+						"<td>" + quizPerformance.getPercentCorrect() + "%</td>" + 
+						"<td>" + quizPerformance.getAmountTime() + "</td>" +
+						"</tr>";
 			}
+			System.out.println("perf: " + htmlPerformance);
 			return htmlPerformance;
 		}
 	%>
@@ -60,20 +64,38 @@
 		<%
 			if (!quiz.getCreator().equals(user)) {
 				out.println("<p><a href=\"user-page.jsp?" + ServletConstants.USER_NAME_PARAM + "=" +  quiz.getCreator() +  "\">" + quiz.getCreator() + "</a></p>");
+			} else {
+				out.println("<p><a href=\"homepage.jsp\">my page</a></p>");
 			}
 		%>
 	</div>
 	
 	<div>
-		<p>A list of user's past performance ordered by: 
-		<input type="radio" name="performance" value="date" checked onclick="showOrderByDate()">date
-		<input type="radio" name="performance" value="percentCorrect" onclick="showOrderByPercentCorrect()">percent correct
-		<input type="radio" name="performance" value="amountTime" onclick="showOrderByAmountTime()">amount of time</p>
-		<p><b>user is <%= user %></b> past performance is </p>
-
-		<div id="performanceOrderByDate"><%= getHtmlPerformance(perfomance, quiz.getName(), user, quizFactory.getOrderByDateInstance()) %></div>
-		<div id="performanceOrderByPercentCorrect" style="display:none"><%= getHtmlPerformance(perfomance, quiz.getName(), user, quizFactory.getOrderByPercentCorrectInstance()) %></div>
-		<div id="performanceOrderByAmountTime" style="display:none"><%= getHtmlPerformance(perfomance, quiz.getName(), user, quizFactory.getOrderByAmountTimeInstance()) %></div>
+		<table border="1">
+			<caption>
+				A list of <%= user %>'s past performance on this quiz ordered by: <br>
+				<input type="radio" name="performance" value="date" checked onclick="showOrderByDate()">date
+				<input type="radio" name="performance" value="percentCorrect" onclick="showOrderByPercentCorrect()">percent correct
+				<input type="radio" name="performance" value="amountTime" onclick="showOrderByAmountTime()">amount of time
+			</caption>
+			<thead>
+				<tr>
+					<th>date</th>
+					<th>percent correct</th>
+					<th>time amount</th>
+				</tr>
+			</thead>
+			<tbody id="performanceOrderByDate">
+				<%= getHtmlPerformance(perfomance, user, quizFactory.getOrderByDateInstance()) %>
+			</tbody>
+			
+			<tbody id="performanceOrderByPercentCorrect" style="display:none">
+				<%= getHtmlPerformance(perfomance, user, quizFactory.getOrderByPercentCorrectInstance()) %>
+			</tbody>
+			<tbody id="performanceOrderByAmountTime" style="display:none">
+				<%= getHtmlPerformance(perfomance, user, quizFactory.getOrderByAmountTimeInstance()) %>
+			</tbody>
+		</table>
 	</div>
 
 	<div>
@@ -84,14 +106,26 @@
 		<p>list of top performers in the last day: <b><%= getHtmlUsers(topPerformers) %></b></p>
 	</div>
 	
-	<div>
-		<p>recent test takers performance: </p>
-		<%
-			for (PerformanceOnQuiz quizPerformance : perfomance) {
-				out.println("</p>user: " + quizPerformance.getUser() + " date: " + quizPerformance.getDate()
-					+ " percent correct: " + quizPerformance.getPercentCorrect() + " time amount:  " + quizPerformance.getAmountTime() + "</p>");
-			}
-		%>
+	<div align="left">
+		<table border="1">
+			<caption>recent test takers performance</caption>
+			<tr>
+				<th>user</th>
+				<th>date</th>
+				<th>percent correct</th>
+				<th>time amount</th>
+			</tr>
+			<%
+				for (PerformanceOnQuiz quizPerformance : perfomance) {
+					out.println("<tr>");
+					out.println("<td>" + quizPerformance.getUser() + "</td>");
+					out.println("<td>" + quizPerformance.getDate() + "</td>");
+					out.println("<td>" + quizPerformance.getPercentCorrect() + "%</td>");
+					out.println("<td>" + quizPerformance.getAmountTime() + "</td>");
+					out.println("</tr>");
+				}
+			%>
+		</table>
 	</div>
 	
 	<div>
@@ -100,7 +134,7 @@
 	
 	<div>
 		<form name="take-a-quiz" action="DisplayQuizServlet" method="get">
-			 <button type="submit" name="quizName" value=<%=quiz.getName()%>>Take a Quiz</button>
+			 <button type="submit" name="quizName" value="<%=quiz.getName()%>">Take a Quiz</button>
 		</form>
 	</div>
 	
