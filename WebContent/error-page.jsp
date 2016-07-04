@@ -12,7 +12,7 @@
 <body>
 
 	
-	<div id="logOutId"></div>
+	<jsp:include page="logout.html"></jsp:include>
 
 	<form action="homepage.jsp?">
 		<input type="submit" value="go hompage">

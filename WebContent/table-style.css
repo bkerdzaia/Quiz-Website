@@ -1,0 +1,33 @@
+@CHARSET "UTF-8";
+
+table {
+	border: 1px solid black;
+	border-collapse: collapse;
+	width: 50%;
+	font-family: Trebuchet MS;
+	font-size: 8;
+}
+
+th, td {
+	padding: 3px;
+	text-align: center;
+}
+
+th {
+	background-color: black;
+	color: white;
+}
+
+tr:nth-child(even) {
+	background-color: #CAFF70;
+}
+
+tr:nth-child(odd) {
+	background-color: #8EE5EE;
+}
+
+caption {
+	background-color: #9FB6CD;
+	color: black;
+	padding: 5px;
+}
