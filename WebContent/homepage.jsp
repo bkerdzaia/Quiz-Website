@@ -18,6 +18,31 @@
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script src="script.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css">
+	<script>
+		function loadFriendPerformance() {
+			var friendValue = $("#friendSearch").val();
+			if (friendValue === undefined || friendValue === null) {
+				friendValue = "";
+			}
+			$.ajax({
+				type: 'GET',
+				url: 'FriendSearchServlet',
+				headers: {"X-Test-Header": "test-value"},
+				data: { 
+					friendNamePrefix: friendValue
+				},
+				success: function(htmlResult) {
+					$("#friendAdd").html(htmlResult);
+				},
+				error: function() {
+		    		$("#friendAdd").html("<p style='color:red;'>Can't load friends performance</p>");
+		    	}
+			});
+		}
+		loadFriendPerformance();
+		alert("funct");
+	</script>
+	
 </head>
 <body>
 
@@ -64,7 +89,7 @@
 	%>
 	</div>
 
-	<p><b>Hello ${param.name}</b></p>
+	<p><b>Hello <%= userName %></b></p>
 	
 	
 	<div>
@@ -105,27 +130,10 @@
 		%>
 	</div>
 	
-	<script>
-		function loadFriendPerformance() {
-			alert("ok");
-			var friendValue = $("#friendSearch").val();
-			$.ajax({
-				type: 'GET',
-				url: 'FriendSearchServlet',
-				data: { friendNamePrefix: friendValue },
-				success: function(htmlResult) {
-					$("#friendAdd").html(htmlResult);
-				},
-				error: function() {
-		    		$("#friendAdd").html("<p style='color:red;'>Can't load friends performance</p>");
-		    	}
-			});
-		}
-	</script>
-
 	<div>
-		Search Friend <input type="text" id="friendSearch" placeholder="friend name" onkeyup="loadFriendPerformance()">
 		<p>friends recent activities (quizzes taken or created)</p>
+		Search Friend <input type="text" id="friendSearch" placeholder="friend name" onkeyup="loadFriendPerformance()">
+		
 		<div id="friendAdd">
 		
 		</div>
