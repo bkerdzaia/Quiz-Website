@@ -6,7 +6,7 @@ public class QuestionResponceView implements QuestionView {
 	public String displayQuestion(Question question) {
 		QuestionResponce curQuestion = (QuestionResponce) question;
 		String html = "<br><h3>"+ curQuestion.getQuestionText() +"</h3>";
-		html+="<input type=\"text\" name=\"possibleAnswer\" placeholder=\"Answer\"><br>";
+		html+="<input type=\"text\" id=\"qiu\" name=\"possibleAnswer\" placeholder=\"Answer\"><br>";
 		return html;
 	}
 

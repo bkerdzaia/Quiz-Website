@@ -28,7 +28,7 @@ ul#menu li {
 		int score = 0;
 		for(Question q: questions){
 			boolean b=q.isUsersAnswerCorrect();
-			out.println(q.getQuestionText()+""+q.getUsersChoice()+"	"+b+"<br>");
+			out.println("Question: "+q.getQuestionText()+"      Ans: "+q.getUsersChoice()+"      Correct: "+b+"<br>");
 			if(b)score++;
 		}
 		out.println("<p>Your score is: " + score+"</p>");
@@ -37,7 +37,7 @@ ul#menu li {
 	
 	
 	<div>
-		<p>users score and time</p>
+		<p>time</p>
 	</div>
 	
 	<div>

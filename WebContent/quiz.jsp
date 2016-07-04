@@ -23,6 +23,12 @@
 		$("#questionId"+ind).hide();
 		$("#questionId"+(ind+1)).show();
 	}
+	
+	$("#qiu").keyup(function(event){
+	    if(event.keyCode == 13){
+	        $("#next").click();
+	    }
+	});
 	</script>
 		
 	<h1>Welcome to <%=quiz.getName()%> by <%=quiz.getCreator()%> </h1>
@@ -43,7 +49,7 @@
 						if(i == questions.size()-1)
 							out.println("<br><br><button type=\"submit\" >Submit</button>");
 						else if(!properties.isOnePage())
-							out.println("<button type=\"button\" onclick=\"myFunction("+i+")\">next</button>");
+							out.println("<button type=\"button\" id=\"next\"onclick=\"myFunction("+i+")\">next</button>");
 						out.println("</div>");
 					}
 					out.println("</form>");
