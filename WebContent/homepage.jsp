@@ -79,7 +79,14 @@
 
 	<div>
 		<p>list of user's recent quiz taking activities</p>
-		<%= user.getHistory() %>
+		<%
+			History<UsersPerformance> history = user.getHistory();
+			for(UsersPerformance userPerformance : history) {
+				out.println("<p><a href=href='" + ServletConstants.QUIZ_SUMMARY_SERVLET + 
+						"?" + ServletConstants.QUIZ_NAME_PARAM + "=" + userPerformance.getQuiz() + "'>" + 
+						userPerformance.getQuiz() + "</a></p>");
+			}
+		%>
 	</div>
 
 	<div>
@@ -97,9 +104,31 @@
 			}
 		%>
 	</div>
+	
+	<script>
+		function loadFriendPerformance() {
+			alert("ok");
+			var friendValue = $("#friendSearch").val();
+			$.ajax({
+				type: 'GET',
+				url: 'FriendSearchServlet',
+				data: { friendNamePrefix: friendValue },
+				success: function(htmlResult) {
+					$("#friendAdd").html(htmlResult);
+				},
+				error: function() {
+		    		$("#friendAdd").html("<p style='color:red;'>Can't load friends performance</p>");
+		    	}
+			});
+		}
+	</script>
 
 	<div>
+		Search Friend <input type="text" id="friendSearch" placeholder="friend name" onkeyup="loadFriendPerformance()">
 		<p>friends recent activities (quizzes taken or created)</p>
+		<div id="friendAdd">
+		
+		</div>
 		<%
 			FriendList friends = user.getFriends();
 			for (String friend : friends) {

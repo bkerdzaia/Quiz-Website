@@ -1,36 +1,179 @@
 
 
-input[type="submit"]{
-	margin: 6px;
+/* Look of "submit" buttons throught the website */
+input[type="submit"] {
+	margin-top: 3px;
 	margin-left: auto;
 	margin-right: auto;
+	display: block;
+	margin-bottom: 3px;
 	background-color: cornflowerblue;
 	opacity: 0.65;
 	color: white;
 	position: relative;
 }
 
-input[type="submit"]:hover{
+/* Increase opacity when hovered as nice visual feature */
+input[type="submit"]:hover {
 	opacity: 0.95;
 }
 
-form{
+/* Overall look for form, particular forms will add some rules */
+
+form {
+	display: block;
 	padding: 15px;
 	margin: auto;
+	margin-left: auto;
+	margin-right: auto;
 }
+
+/* Id of div that contains description of the quiz to be created */
+#quiz-description {
+	width: 300px;
+	float: left;
+	margin: auto;
+}
+
+/* Center all the child elements in the quiz description */ 
+#quiz-description > * {
+	text-align: center;
+}
+
+#quiz-description textarea {
+	font-size: 16px;
+}
+
+/* Id of div that contains quiz name of the quiz to be created */
+#quiz-name { 
+	width: 300px;
+	float: left;
+	text-align: center;
+}
+
+/* Likewise style quiz-name child elements */]
+#quiz-name > * {
+	text-align: center;
+}
+
+#quiz-name input[type="text"]{
+	width: 60%;
+}
+
+#quiz-properties{
+	text-align: left;
+	width: 300px;
+	float: left;
+}
+
+.property-entry p {
+	display: inline;
+	padding: 15px;
+	margin: 4px;
+}
+
+#quiz-properties input {
+	margin-top: 2px;
+	margin-bottom: 2px;
+	padding: 2px;
+	display: inline;
+}
+
+.questionResponseQuestion, 
+.fillInTheBlankQuestion, 
+.multipleChoiceQuestion, 
+.pictureResponseQuestion {
+	width: 300px;
+	display: inline;
+	float: left;
+	border: 2px dotted;
+	border-color: cornflowerblue;
+	margin: 5px;
+	padding: 10px;
+	text-align: center;
+}
+
+#addQuestionsType {
+	display: block;
+}
+
+#addQuestionsType input[type="text"] {
+	width: 80%;
+	display: block;
+	text-align: center;
+}
+
+#question-types{
+	display: block;	
+	text-align: center;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+/* Define properties for all direct childrens of quiz-creation div*/
+#quiz-creation {
+	width: 90%;
+	margin-left:auto;
+	margin-right:auto;
+	font-family: "Times New Roman";
+}
+
+#quiz-creation > #submit{
+	display: block;
+}
+
+.topbar {
+	width: 100%;
+	min-height: 200px;
+	display: block;
+}
+
+
+.topbar > div{
+	display: inline;
+	text-align: center;
+	margin-top: 15px;
+	margin-left: 30px;
+	margin-right: 30px;
+	position: center;
+}
+
+
+#quiz-creation{
+	margin-top: 15px;
+	margin-bottom: 15px;
+	color: green;	
+	margin: auto;
+	position: center;
+	display: block;
+}
+
+#questions{
+	display: block;
+	margin: auto;
+}
+
+
+#login-submit-buttons{
+	margin-top: 40px;	
+}
+
 
 #login-form-id{
 	margin-top: 1%;		
 }
+
 
 h1, h2{
 	text-align: center;
 	color: lightblue;
 }
 
+
 h1{
 	font-size: 400%;
 }
+
 
 div.failure-message{
 	position: fixed;
@@ -40,6 +183,7 @@ div.failure-message{
 	font-weight: bold;
 }
 
+
 input{
 	width: 30%;
 	border: 0;
@@ -47,18 +191,42 @@ input{
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 10px;
-	margin-bottom: 15px;
+	margin-bottom: 10px;
 	padding: 10px;
 }
+
 
 #logOutId{
 	background-color: darkred;
 }
 
+
 #user-info{
 	background-color: green;
 }
 
+
 #quiz-lookup{
-	background-color: black;
+	background-color: blue;
 }
+
+
+textarea {
+  resize: none;
+}
+
+body div {
+	position: center;
+}
+
+#quiz-creation  textarea {
+	border: 2px dotted;
+	border-color: cornflowerblue;
+}
+
+#quiz-creation  input[type="text"] {
+	border: 2px dotted;
+	border-color: cornflowerblue;
+}
+
+

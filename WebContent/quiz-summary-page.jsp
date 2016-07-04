@@ -46,7 +46,6 @@
 						"<td>" + quizPerformance.getAmountTime() + "</td>" +
 						"</tr>";
 			}
-			System.out.println("perf: " + htmlPerformance);
 			return htmlPerformance;
 		}
 	%>
