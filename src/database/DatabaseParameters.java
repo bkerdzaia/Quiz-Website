@@ -49,8 +49,8 @@ public interface DatabaseParameters {
 		DATE_CREATION  			(2),
 		CREATOR_NAME 			(3),
 		RANDOM_ORDER  			(4),
-		INSTANT_CORRECTION 		(4),
-		ONE_MULTIPLE_PAGE_MODE 	(5),
+		INSTANT_CORRECTION 		(5),
+		ONE_MULTIPLE_PAGE_MODE 	(6),
 		QUIZ_DESCRIPTION  		(7);
 		
 		private int index;

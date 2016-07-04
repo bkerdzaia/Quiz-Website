@@ -14,4 +14,9 @@ public interface Message {
 	 */
 	public String displayMessage();
 	
+	/**
+	 * Return message in it's bare form without any html
+	 * tags or other modifiers.
+	 */
+	public String getMessage();
 }

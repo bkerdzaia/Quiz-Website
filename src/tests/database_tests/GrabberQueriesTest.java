@@ -3,6 +3,7 @@ package tests.database_tests;
 import database.DatabaseConnectionHandler;
 import static org.junit.Assert.*;
 
+import java.awt.SystemTray;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -176,7 +177,7 @@ public class GrabberQueriesTest {
 		sampleQuiz.setCreator("Sam");
 		sampleQuiz.setDescription("abcd");
 		sampleQuiz.setName("abc");
-		QuizProperty prop = new QuizProperty(true, true, true);
+		QuizProperty prop = new QuizProperty(false, false, true);
 		sampleQuiz.setProperty(prop);
 		
 		FillBlank fb1 = questFactory.getFillBlankQuestion();
@@ -200,9 +201,9 @@ public class GrabberQueriesTest {
 		assertEquals("Sam", sameQuiz.getCreator());
 		assertEquals("abcd", sameQuiz.getDescription());
 		QuizProperty sameQuizProp = sameQuiz.getProperty();
-		assertEquals(true, sameQuizProp.isRandomSeq());
+		assertEquals(false, sameQuizProp.isRandomSeq());
+		assertEquals(false, sameQuizProp.isOnePage());
 		assertEquals(true, sameQuizProp.isInstantlyMarked());
-		assertEquals(true, sameQuizProp.isOnePage());
 		dbGrabber.close();
 	}
 	

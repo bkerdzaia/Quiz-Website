@@ -576,6 +576,8 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 	// Adds friend request record to database
 	@Override
 	public boolean addFriendRequest(String from, String to) throws SQLException {
+		if (from.equals(to)) // are you kidding?
+			return false;
 		if (getFriendshipId(from, to) != -1) // stop man, they are friends
 												// already
 			return false;
@@ -751,7 +753,8 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 		retrievedUser.setPictureUrl(rs.getString(USER.PROFILE_PICTURE_URL.num()));
 		retrievedUser.setAboutMe(rs.getString(USER.ABOUT_ME.num()));
 		// Fill more complex fields, first list of created quizzes
-		retrievedUser.setCreatedQuizzes(getCreatedQuizzesByUserName(rs.getString(USER.USERNAME.num())));
+		retrievedUser.setCreatedQuizzes(getCreatedQuizzesByUserName(
+				rs.getString(USER.USERNAME.num())));
 		// Now, history of performance
 		History<UsersPerformance> userHistory = 
 				fillHistoryByUserName(rs.getString(USER.USERNAME.num()));

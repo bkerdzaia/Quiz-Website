@@ -23,5 +23,11 @@ public class Challenge implements Message {
 				+ " a quiz <a href='QuizSummaryServlet?'" + ServletConstants.QUIZ_NAME_PARAM 
 				+ "=" + quizName + "'>" + quizName + "</a></p></div>";
 	}
+
+	@Override
+	public String getMessage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

@@ -19,6 +19,7 @@ import factory.DatabaseFactory;
 import factory.DefaultQuestionFactory;
 import factory.DefaultQuizFactory;
 import factory.DefaultUserFactory;
+import quiz.Challenge;
 import quiz.FriendList;
 import quiz.Quiz;
 import quiz.QuizProperty;
@@ -178,6 +179,31 @@ public class UserRelationsTest {
 		assertTrue(dbGrabber.addFriendRequest("ann", "mery"));
 		assertTrue(dbGrabber.acceptFriendRequest("mery", "ann"));
 		assertFalse(dbGrabber.addFriendRequest("ann", "mery"));
+	}
+	
+	@Test
+	public void testTrickyCases() throws SQLException {
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		dbGrabber.connect();
+		assertTrue(dbGrabber.registerUser(sampleQuiz.getCreator(), "afd"));
+		assertTrue(dbGrabber.uploadQuiz(sampleQuiz));
+		assertTrue(dbGrabber.registerUser("amantha", "asdf"));
+		dbGrabber.registerUser("miranda", "iop");
+		assertFalse(dbGrabber.addFriendRequest("amantha", "amantha"));
+		Challenge ch = new Challenge();
+		ch.setSenderName("amantha");
+		ch.setQuizName(sampleQuiz.getCreator());
+		// They are not friends yet
+		assertFalse(dbGrabber.sendMessage("amantha", "miranda", ch.getMessage(), 
+				new Timestamp(new Date().getTime())));
+		dbGrabber.addFriendRequest("amantha", "miranda");
+		assertFalse(dbGrabber.acceptFriendRequest("amanda", "miranda"));
+		assertTrue(dbGrabber.acceptFriendRequest("miranda", "amantha"));
+		System.out.println(ch.displayMessage());
+		assertTrue(dbGrabber.sendMessage("amantha", "miranda", ch.displayMessage(), 
+				new Timestamp(new Date().getTime())));
+		User miranda = dbGrabber.loadUser("miranda");
+		UserMessageList messages = miranda.getMessages();
 	}
 
 }

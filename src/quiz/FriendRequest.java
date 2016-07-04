@@ -23,4 +23,10 @@ public class FriendRequest implements Message {
 		this.recipientName = recipientName;
 	}
 
+	@Override
+	public String getMessage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

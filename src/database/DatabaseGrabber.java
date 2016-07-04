@@ -180,7 +180,7 @@ public interface DatabaseGrabber {
 	 * wants to be friends with. As a precondition, both string should represent
 	 * valid user names contained in system. Method ensures that users are 
 	 * not friends already, in which case it returns 'false'. Also method 
-	 * returns 'false' if request is already sent by same user.
+	 * returns 'false' if request is already sent by same user or if from == to.
 	 * !! Note: if 'to' already requested friendship with 'from', new friendship
 	 * entry is automatically added to database.
 	 * @param from - user who wants to be friends with 'to'
