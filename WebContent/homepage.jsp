@@ -13,11 +13,11 @@
 			return;
 		}
 	%>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Hello to Funz</title>
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script src="script.js"></script>
-<link rel="stylesheet" type="text/css" href="style.css">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Hello to Funz</title>
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="script.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 
@@ -45,7 +45,7 @@
 	%>
 	
 	
-	<div id="logOutId"></div>
+	<jsp:include page="logout.html"></jsp:include>
 
 	<div>
 		<p> Search for quiz </p>		

@@ -12,6 +12,7 @@
 </head>
 <body>
 
+	<%-- gets information from session --%>
 	<%
 		Quiz quiz = (Quiz) session.getAttribute(ServletConstants.QUIZ_NAME_PARAM);
 		String user = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
@@ -50,7 +51,7 @@
 		}
 	%>
 
-	<div id="logOutId"></div>
+	<jsp:include page="logout.html"></jsp:include>
 
 	<p>Welcome to funz ${param.userName} !</p>
 	
