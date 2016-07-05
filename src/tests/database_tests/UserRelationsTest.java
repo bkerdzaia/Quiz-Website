@@ -214,4 +214,22 @@ public class UserRelationsTest {
 		assertEquals(0, amanda.getMessages().size());
 	}
 
+	@Test
+	public void testRejectFriendship() throws SQLException{
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		dbGrabber.connect();
+		Timestamp date = new Timestamp(new Date().getTime());
+
+		dbGrabber.registerUser("sam", "qfsasd");
+		dbGrabber.registerUser("samuel", "asdfas");
+		
+		assertTrue(dbGrabber.addFriendRequest("sam", "samuel", date));
+		assertTrue(dbGrabber.rejectFriendship("samuel", "sam"));
+		
+		User sam = dbGrabber.loadUser("sam");
+		assertEquals(0, sam.getFriends().size());
+		
+		assertFalse(dbGrabber.acceptFriendRequest("samuel", "sam"));
+		assertFalse(dbGrabber.acceptFriendRequest("sam", "samuel"));
+	}
 }

@@ -154,6 +154,37 @@ form {
 	min-height: 200px;
 }
 
+
+#friends-activities {
+	text-align: center;
+}
+
+#homepage-summary > div {
+	display: inline;	
+	float: left;
+	border: 2px dotted;
+	background-color: red;
+	border-color: cornflowerblue;
+}
+
+#popular-quizzes,
+#recently-created,
+#user-activities,
+#created-quizzes {
+	width: 300px;	
+}
+
+#welcome-home {
+	font-style: italic;
+	color: green;	
+}
+
+#homepage-summary {
+	display: block;
+	width: 99%;
+	min-height: 300px;
+}
+
 #quiz-create-bar > div {
 	margin-top: 8px;
 	margin-left: 35px;
