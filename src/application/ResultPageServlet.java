@@ -1,7 +1,6 @@
 package application;
 
 import java.io.IOException;
-import java.util.Enumeration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -29,11 +28,9 @@ public class ResultPageServlet extends HttpServlet implements ServletConstants{
 		String address = "quiz-result-page.jsp";
 		try {
 			System.out.println("Quiz Result Page");
-			DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
-			if (db == null) {
-				db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
-				request.getServletContext().setAttribute(DATABASE_ATTRIBUTE, db);
-			}
+			DatabaseGrabber db = 
+					(DatabaseGrabber) request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
+
 			HttpSession session = request.getSession();
 			db.connect();
 			
@@ -42,18 +39,12 @@ public class ResultPageServlet extends HttpServlet implements ServletConstants{
 			
 			System.out.println("User name = "+session.getAttribute(USER_NAME_PARAM));
 			
-//			Enumeration<String> x = request.getParameterNames();
-//			while (x.hasMoreElements()) {
-//				System.out.println("param names: " + x.nextElement());
-//			}
-			
 			String[] str = request.getParameterValues("possibleAnswer");
 			
 			for(int i=0; i<str.length; i++){
 				quiz.getQuestions().get(i).setUsersChoice(str[i]);
 				System.out.println(str[i]);
 			}
-			
 			
 			db.close();
 		} catch (Exception e) {
@@ -62,7 +53,6 @@ public class ResultPageServlet extends HttpServlet implements ServletConstants{
 		}
 		RequestDispatcher dispatcher = request.getRequestDispatcher(address);
 		dispatcher.forward(request, response);
-		
 	}
 
 	/**

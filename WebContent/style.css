@@ -235,6 +235,10 @@ input{
   }
 }
 
+#live-user-suggestions {
+	overflow: auto;
+}
+
 #logOutId > p {
 	position: relative;
 	top: 10px;
@@ -254,6 +258,13 @@ input{
 
 
 #quiz-lookup{
+	display: inline;
+	float: left;
+}
+
+#search-users{
+	display: inline;
+	float: left;
 }
 
 
