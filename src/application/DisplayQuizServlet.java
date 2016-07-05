@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import database.DatabaseGrabber;
-import factory.DefaultDatabaseFactory;
 import quiz.Quiz;
 
 /**
@@ -47,7 +46,7 @@ public class DisplayQuizServlet extends HttpServlet implements ServletConstants{
 			address = "quiz.jsp?quizName=" + quizName;
 		} catch (Exception e) {
 			e.printStackTrace();
-			address = "error-page.jsp";
+			address = ERROR_PAGE_ADDRESS;
 		}
 		RequestDispatcher dispatcher = request.getRequestDispatcher(address);
 		dispatcher.forward(request, response);

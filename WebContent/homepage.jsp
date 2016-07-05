@@ -16,6 +16,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Hello to Funz</title>
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="livesearch.js"> </script>
 	<script src="script.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" type="text/css" href="table-style.css">
@@ -72,14 +73,26 @@
 	
 	<jsp:include page="logout.html"></jsp:include>
 
-	<div>
-		<p> Search for quiz </p>		
-		<form id="quiz-lookup" action="QuizLookupServlet" method="get">
-			<input type="text" name="quizToFind" placeholder="Enter quiz name" required>
-			<input type="submit" name="quiz-submit" value="Find Quiz">
-		</form>	
+	<div class="topbar">
+
+		<div id="quiz-lookup">
+			<p> Search for quiz </p>		
+			<form action="QuizLookupServlet" method="get">
+				<input type="text" name="quizToFind" placeholder="Enter quiz name" required>
+				<input type="submit" name="quiz-submit" value="Find Quiz">
+			</form>	
+		</div>
+		
+		<div id="search-users">
+			<p> Search for users </p>
+			<input type="text" placeholder="Type user name" onkeyup="searchSimilarUsers(this.value)" required>
+			<div id="live-user-suggestions">
+			
+			</div>
+		</div> 
+
 	</div>
-	
+
 	<div class="failure-message">
 	<%
 		String message = (String) request.getAttribute(ServletConstants.MESSAGE_ATTR);
