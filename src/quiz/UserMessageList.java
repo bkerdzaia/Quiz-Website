@@ -12,7 +12,6 @@ public class UserMessageList extends ArrayList<Message> {
 	/**
 	 * Sorts messages chronologically. Most recent - first.
 	 */
-	@SuppressWarnings("deprecation")
 	public void sortByDate(){
 		Collections.sort(this, (m1, m2) -> 
 					m1.getDate().before(m2.getDate()) ? 1 : -1);

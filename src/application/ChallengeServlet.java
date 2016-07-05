@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import database.DefaultDatabaseGrabber;
-import factory.DefaultUserFactory;
-import quiz.Challenge;
 import quiz.Quiz;
 
 /**
@@ -37,12 +35,9 @@ public class ChallengeServlet extends HttpServlet implements ServletConstants {
 			DefaultDatabaseGrabber db = (DefaultDatabaseGrabber) request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
 			db.connect();
 			System.out.println("user: " + user + " friend: " + friendName + " quizName: " + quiz.getName());
-			Challenge chal = DefaultUserFactory.getFactoryInstance().getChallenge();
-			chal.setSenderName(user);
-			chal.setQuizName(quiz.getName());
-			System.out.println("sending message: " + db.sendMessage(user, friendName, chal.displayMessage(), new Timestamp(System.currentTimeMillis())));
+			System.out.println("sending message: " + db.sendChallenge(user, friendName, quiz.getName(), new Timestamp(System.currentTimeMillis())));
 			db.close();
-			addressToRedirect = USER_PAGE_ADDRESS + "?" + USER_NAME_PARAM + "=" + user;
+			addressToRedirect = HOMEPAGE_ADDRESS;
 		} catch (Exception e) {
 			e.printStackTrace();
 			addressToRedirect = ERROR_PAGE_ADDRESS;

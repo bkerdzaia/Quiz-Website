@@ -13,8 +13,8 @@ public class FriendRequest implements Message {
 				"<p>" + senderName + " want's to become friends</p>" +
 				"<input type='hidden' name='senderName' value='" + senderName + "'>" +
 				"<input type='hidden' name='recipientName' value='" + recipientName + "'>" +
-				"what is your answer <input type='button' value='no'>" +
-				"<input type='submit' value='yes'>" +
+				"what is your answer <input type='submit' name='rejectFriend' value='no'>" +
+				"<input type='submit' name='acceptFriend' value='yes'>" +
 				"</form></div>";
 	}
 	
