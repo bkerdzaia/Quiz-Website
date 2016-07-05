@@ -38,6 +38,7 @@ import quiz.UserMessageList;
 public class UserRelationsTest {
 
 	private static DatabaseFactory mockDbFactory = null;
+	private static Timestamp date;
 
 	private static Quiz sampleQuiz = null;
 	private static User sampleUser = null;
@@ -95,6 +96,8 @@ public class UserRelationsTest {
 		sampleQuiz.setQuestions(new QuizQuestions());
 		sampleQuiz.setName("samsfirst");
 		dbGrabber.close();
+		
+		date = new Timestamp(new Date().getTime());
 	}
 
 	
@@ -108,14 +111,14 @@ public class UserRelationsTest {
 		assertTrue(dbGrabber.registerUser("sam", "12"));
 		assertTrue(dbGrabber.registerUser("samuel", "34"));
 		
-		assertTrue (dbGrabber.addFriendRequest("sam", "samuel"));
+		assertTrue (dbGrabber.addFriendRequest("sam", "samuel", date));
 		// Sam's urge should not affect the system
-		assertFalse(dbGrabber.addFriendRequest("sam", "samuel"));
+		assertFalse(dbGrabber.addFriendRequest("sam", "samuel", date));
 		// Samuel accepts
 		assertTrue (dbGrabber.acceptFriendRequest("samuel", "sam"));
 		// Samuel is kinda forgetful and sends request to sam even though 
 		// the are already friends
-		assertFalse(dbGrabber.addFriendRequest("samuel", "sam"));
+		assertFalse(dbGrabber.addFriendRequest("samuel", "sam", date));
 		// Everything ended as Sam discovered Samuel being Trump supporter
 		assertTrue(dbGrabber.removeFriend("sam", "samuel"));
 	}
@@ -134,7 +137,7 @@ public class UserRelationsTest {
 		
 		Timestamp someTime = new Timestamp(new Date().getTime());
 		// Samuel can't cope why Sam unfriended him, so he send request again
-		assertTrue(dbGrabber.addFriendRequest("samuel", "sam"));
+		assertTrue(dbGrabber.addFriendRequest("samuel", "sam", date));
 		// Sam decides to be clear and say the reason
 		assertTrue(dbGrabber.acceptFriendRequest("sam", "samuel"));
 		assertTrue(dbGrabber.sendMessage("sam", "samuel", 
@@ -176,9 +179,9 @@ public class UserRelationsTest {
 		User ann = dbGrabber.loadUser("ann");
 		assertNotNull(ann);
 		assertEquals(0, ann.getFriends().size());
-		assertTrue(dbGrabber.addFriendRequest("ann", "mery"));
+		assertTrue(dbGrabber.addFriendRequest("ann", "mery", date));
 		assertTrue(dbGrabber.acceptFriendRequest("mery", "ann"));
-		assertFalse(dbGrabber.addFriendRequest("ann", "mery"));
+		assertFalse(dbGrabber.addFriendRequest("ann", "mery", date));
 	}
 	
 	@Test
@@ -189,13 +192,13 @@ public class UserRelationsTest {
 		assertTrue(dbGrabber.uploadQuiz(sampleQuiz));
 		assertTrue(dbGrabber.registerUser("amantha", "asdf"));
 		dbGrabber.registerUser("miranda", "iop");
-		assertFalse(dbGrabber.addFriendRequest("amantha", "amantha"));
+		assertFalse(dbGrabber.addFriendRequest("amantha", "amantha", date));
 		
 		Timestamp date = new Timestamp(new Date().getTime());
 		// They are not friends yet
 		assertFalse(dbGrabber.sendChallenge("amantha", "miranda", sampleQuiz.getName(), date));
 		// They became friends
-		dbGrabber.addFriendRequest("amantha", "miranda");
+		dbGrabber.addFriendRequest("amantha", "miranda", date);
 		assertFalse(dbGrabber.acceptFriendRequest("amanda", "miranda"));
 		assertTrue(dbGrabber.acceptFriendRequest("miranda", "amantha"));
 		

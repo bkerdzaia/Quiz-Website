@@ -205,7 +205,8 @@ public interface DatabaseGrabber {
 	 * @return - add status (true - success, otherwise - false)
 	 * @throws SQLException
 	 */
-	public boolean addFriendRequest(String from, String to) throws SQLException;
+	public boolean addFriendRequest(String from, String to, Timestamp date) 
+			throws SQLException;
 	
 	/**
 	 * Adds new friendship record to the database. A check is done, 
