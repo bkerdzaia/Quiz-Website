@@ -68,7 +68,7 @@
 		
 		for(String u: friends)
 			for (PerformanceOnQuiz quizPerformance : perfomance.sortByUser(u, comparator))
-					out.println(u+" got "+quizPerformance.getPercentCorrect()+"%");
+					out.println(u+" got "+quizPerformance.getPercentCorrect()+"% on this quiz<br>");
 	%>
 </body>
 </html>
