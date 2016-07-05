@@ -71,6 +71,7 @@ public interface DatabaseParameters {
 		public int num() { return index; }
 	}
 	
+	
 	// 'Quizzes_taken' columns enumeration 
 	public enum QUIZ_TAKEN{
 		QUIZ_NAME  				(1),

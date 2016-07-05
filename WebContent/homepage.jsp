@@ -104,8 +104,8 @@
 	</div>
 
 	<p id="welcome-home"><b>Welcome back <%= userName %>, have fun on your belowed website</b></p>
-	
-	<div id=homepage-summary">	
+
+	<div id="homepage-summary">	
 		<div id="popular-quizzes">
 			<p>Popular quizzes</p>
 			<%= getHtmlQuizzes(popularQuizzes) %>
@@ -116,26 +116,23 @@
 			<%= getHtmlQuizzes(recentlyCreatedQuiz) %>
 		</div>
 
-		<div id="user-activities">
-
-			<div id="taken-quizzes">
-				<p>${userName}'s recent quiz taking activities</p>
-				<%
-					History<UsersPerformance> history = user.getHistory();
-					for(UsersPerformance userPerformance : history) {
-						out.println("<p><a href=href='" + ServletConstants.QUIZ_SUMMARY_SERVLET + 
-								"?" + ServletConstants.QUIZ_NAME_PARAM + "=" + userPerformance.getQuiz() + "'>" + 
-								userPerformance.getQuiz() + "</a></p>");
-					}
-				%>
-			</div>
-
-			<div id="created-quizzes">
-				<p>Quizzes created by ${userName} </p>
-				<%= getHtmlQuizzes(user.getCreatedQuizzes()) %>
-			</div>
-
+		<div id="taken-quizzes">
+			<p>${userName}'s recent taken quizzes</p>
+			<%
+				History<UsersPerformance> history = user.getHistory();
+				for(UsersPerformance userPerformance : history) {
+					out.println("<p><a href=href='" + ServletConstants.QUIZ_SUMMARY_SERVLET + 
+							"?" + ServletConstants.QUIZ_NAME_PARAM + "=" + userPerformance.getQuiz() + "'>" + 
+							userPerformance.getQuiz() + "</a></p>");
+				}
+			%>
 		</div>
+
+		<div id="created-quizzes">
+			<p>Created by ${userName} </p>
+			<%= getHtmlQuizzes(user.getCreatedQuizzes()) %>
+		</div>
+
 
 	</div>
 	

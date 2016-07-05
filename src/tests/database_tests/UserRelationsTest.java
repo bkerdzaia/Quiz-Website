@@ -232,4 +232,31 @@ public class UserRelationsTest {
 		assertFalse(dbGrabber.acceptFriendRequest("samuel", "sam"));
 		assertFalse(dbGrabber.acceptFriendRequest("sam", "samuel"));
 	}
+	
+	
+	@Test
+	public void testChallenge() throws SQLException {
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		dbGrabber.connect();
+		Timestamp date = new Timestamp(new Date().getTime());
+
+		dbGrabber.registerUser(sampleQuiz.getCreator(), "somepass");
+		dbGrabber.uploadQuiz(sampleQuiz);
+		
+		dbGrabber.registerUser("sam", "asdf");
+		dbGrabber.registerUser("samuel", "asdf");
+		dbGrabber.addFriendRequest("sam", "samuel", date);
+		dbGrabber.addFriendRequest("samuel", "sam", date);
+		
+		dbGrabber.sendChallenge("sam", "samuel", sampleQuiz.getName(), date);
+		
+		User samuel = dbGrabber.loadUser("samuel");
+		UserMessageList samuelsMessages = samuel.getMessages();
+		assertEquals(1, samuelsMessages.size());
+		
+		Challenge ch = (Challenge) samuelsMessages.get(0);
+		assertEquals(date.getMinutes(), ch.getDate().getMinutes());
+		assertEquals("sam", ch.getSenderName());
+		assertEquals(sampleQuiz.getName(), ch.getQuizName());
+	}
 }
