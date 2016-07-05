@@ -9,29 +9,30 @@
 		<%
 			Quiz quiz = (Quiz) session.getAttribute("quizName");
 			QuizQuestions questions = quiz.getQuestions();
-			
+			String timeSpentString = (String) session.getAttribute("time");
+			long timeSpent = Long.parseLong(timeSpentString);
+			long hours = (timeSpent / (1000*60*60)) % 24;
+	        long minutes = ((timeSpent / (1000*60)) % 60);
+	        long seconds = (timeSpent / 1000) % 60 ;
 		%>
 <title>Result Page</title>
-<style>
-ul#menu li {
-    display:inline;
-}
-</style>
+
 </head>
 <body>
 	
 	<jsp:include page="logout.html"></jsp:include>
 
-<ul id="menu">
+<!-- <ul id="menu">
   <li id="que">questions: </li>
   <li id="ans">your answers: </li>
   <li id="cor">correct answers:</li>
-</ul>
+</ul> -->
+
 	<%	
 		int score = 0;
 		for(Question q: questions){
 			boolean b=q.isUsersAnswerCorrect();
-			out.println("Question: "+q.getQuestionText()+"      Ans: "+q.getUsersChoice()+"      Correct: "+b+"<br>");
+			out.println("<p id=\"resultop\">Question: "+q.getQuestionText()+"      Ans: "+q.getUsersChoice()+"      Correct: "+b+"</p>");
 			if(b)score++;
 		}
 		out.println("<p>Your score is: " + score+"</p>");
@@ -40,11 +41,8 @@ ul#menu li {
 	
 	
 	<div>
-		<p>time</p>
-	</div>
-	
-	<div>
-		<p>all the user's answers along with correct answers</p>
+		<p><% if(hours==0) out.println();%></p>
+		<p>Time Spent: <%=hours%> hours, <%=minutes%> min, <%=seconds%> sec</p>
 	</div>
 	
 	<div>

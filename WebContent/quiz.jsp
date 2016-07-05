@@ -16,9 +16,22 @@
 			
 		%>
 <title><%=quiz.getName()%> at funz!</title>
+
+<style>
+
+	p{
+	text-align:center;
+	}
+	[name=possibleAnswer]{
+	display: block;
+	padding: 15px;
+	margin: auto;
+	margin-left: auto;
+	margin-right: auto;
+	}
+</style>
 </head>
 <body>
-
 	<jsp:include page="logout.html"></jsp:include>
 
 	<script>
@@ -44,15 +57,24 @@
 					out.println("<div id = questionId" + i + hide + ">");
 					out.println(questions.get(i).displayQuestion());
 					if(i == questions.size()-1)
-						out.println("<br><br><button type=\"submit\" >Submit</button>");
+						out.println("<br><br><button type=\"submit\" onclick=\"dateFunction()\" >Submit</button>");
 					else if(!properties.isOnePage())
 						out.println("<button type=\"button\" id=\"next\"onclick=\"myFunction("+i+")\">next</button>");
 					out.println("</div>");
 				}
+				out.println("<input type=\"hidden\" id=\"w\" name=\"time\" value=\"\">");
 				out.println("</form>");
 			%>
 	</div>
 	
-	
+	<script>
+	var date1 = new Date();
+	function dateFunction() {
+		var date2 = new Date();
+		var TimeSpent = date2-date1;
+		
+		document.getElementById("w").value = TimeSpent;
+	}
+	</script>
 </body>
 </html>

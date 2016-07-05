@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import database.DatabaseGrabber;
 import factory.DefaultDatabaseFactory;
+import questions.Question;
 import quiz.Quiz;
 
 /**
@@ -49,15 +50,23 @@ public class ResultPageServlet extends HttpServlet implements ServletConstants{
 				a.add(x.nextElement());
 			}
 			
-			for(int j=0; j<a.size(); j++){
+			int k=0;
+			for(int j=0; j<a.size()-1; j++){
 				String[] str = request.getParameterValues(a.get(j));
 				for(int i=0; i<str.length; i++){
-					quiz.getQuestions().get(j+i).setUsersChoice(str[i]);
-					System.out.println(str[i]);
+					quiz.getQuestions().get(k).setUsersChoice(str[i]);
+					k++;
+					System.out.println(a.get(j));
 				}
 			}
+			System.out.println(request.getParameter("time").getClass());
 			
-			
+			session.setAttribute("time", request.getParameter("time"));
+			int score = 0;
+			for(Question q: quiz.getQuestions()){
+				if(q.isUsersAnswerCorrect())score++;
+			}
+			quiz.setSummaryStatistics(score/(quiz.getQuestions().size())*100);
 			db.close();
 		} catch (Exception e) {
 			e.printStackTrace();
