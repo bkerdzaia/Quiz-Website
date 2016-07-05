@@ -15,8 +15,9 @@
 
 	<div>
 		<form action="SendNote" method="post"><br>
-			Enter name of receiver: <input type="text" name="receiverName"><br><br>
-			Enter message: <textarea rows="5" cols="20" name="messageText"></textarea><br><br>
+			<p>Sending message to <b><%= request.getParameter(ServletConstants.USER_NAME_PARAM) %></b></p>
+			Enter message: <textarea rows="5" cols="20" name="messageText" required></textarea><br><br>
+			<input type="hidden" name="<%= ServletConstants.USER_NAME_PARAM %>" value="<%= request.getParameter(ServletConstants.USER_NAME_PARAM) %>">
 			<input type="submit" value="send">
 		</form>
 	

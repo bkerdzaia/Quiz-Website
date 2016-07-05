@@ -13,14 +13,9 @@
 <body>
 
 	<%
-		DatabaseGrabber db = (DatabaseGrabber) 
-			application.getAttribute(ServletConstants.DATABASE_ATTRIBUTE);
-		db.connect(); 
-		String userName = request.getParameter(ServletConstants.USER_NAME_PARAM);
-		User user = db.loadUser(userName);
+		User user = (User) session.getAttribute(ServletConstants.USER_OBJECT_ATTRIBUTE);
 		FriendList friends = user.getFriends();
 		String loggedUser = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
-		db.close();
 	%>
 	
 	<jsp:include page="logout.html"></jsp:include>
@@ -33,25 +28,26 @@
 
 
 	<div id="user-info">
-		<p>user name: <%= request.getParameter(ServletConstants.USER_NAME_PARAM) %></p>
+		<p>user name: <%= user.getName() %></p>
 		<p><b>session attribute value: <%= session.getAttribute(ServletConstants.USER_NAME_PARAM) %></b></p>
 	</div>
 	
 	<!-- send friend request or send message display to the user that is viewed by logged in user -->
 	<%
-		if(loggedUser.equals(userName)) 
+		if(loggedUser.equals(user.getName())) 
 			return;
 		if (friends.contains(loggedUser)) {
 			// send message
 			out.println("<div>" +
 							"<form action='send-note.jsp'>" +
+								"<input type='hidden' name='" + ServletConstants.USER_NAME_PARAM + "' value='" + user.getName() + "'>" +
 								"<input type='submit' value='Send Message'>" +
 							"</form>" +
 						"</div>");
 			out.println("<div>" +
 					"<form action='RemoveFriend' method='post'>" +
 						"<input type='hidden' name='" + ServletConstants.USER_NAME_PARAM + "' " +
-							"value='" + request.getParameter(ServletConstants.USER_NAME_PARAM) + "'>" + 
+							"value='" + user.getName() + "'>" + 
 						"<input type='submit' value='remove friend'>" +
 					 "</form>" +
 				"</div>");
@@ -60,7 +56,7 @@
 			out.println("<div id='friendRequestId'>" +
 							"<form action='SendFreindRequest' method='post'>" +
 								"<input type='hidden' name='" + ServletConstants.USER_NAME_PARAM + "' " +
-									"value='" + request.getParameter(ServletConstants.USER_NAME_PARAM) + "'>" + 
+									"value='" + user.getName() + "'>" + 
 								"<input type='submit' value='send friend request'>" +
 							 "</form>" +
 						"</div>");

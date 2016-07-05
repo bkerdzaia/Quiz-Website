@@ -48,14 +48,10 @@
 <body>
 
 	<%
-		DatabaseGrabber db = (DatabaseGrabber) 
-			application.getAttribute(ServletConstants.DATABASE_ATTRIBUTE);
-		db.connect(); 
 		String userName = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
-		User user = db.loadUser(userName);
-		QuizCollection popularQuizzes = db.getPopularQuizzes(); 
-		QuizCollection recentlyCreatedQuiz = db.getRecentlyCreatedQuizzes();
-		db.close();
+		User user = (User) session.getAttribute(ServletConstants.USER_OBJECT_ATTRIBUTE);
+		QuizCollection popularQuizzes = (QuizCollection) session.getAttribute(ServletConstants.POPULAR_QUIZZES_ATTRIBUTE); 
+		QuizCollection recentlyCreatedQuiz = (QuizCollection) session.getAttribute(ServletConstants.RECENTLY_CREATED_QUIZZES_ATTRIBUTE);
 	%>
 
 	<%!
@@ -74,6 +70,8 @@
 	<jsp:include page="logout.html"></jsp:include>
 
 	<div class="topbar" id="homepage-bar">
+	
+		<p><a href="<%= ServletConstants.USER_PAGE_ADDRESS + "?" + ServletConstants.USER_NAME_PARAM + "=" + userName %>">profile page</a></p>
 
 		<div id="quiz-lookup">
 			<p> Search for quiz </p>		
@@ -105,7 +103,7 @@
 
 	<p id="welcome-home"><b>Welcome back <%= userName %>, have fun on your belowed website</b></p>
 	
-	<div id=homepage-summary">	
+	<div id="homepage-summary">	
 		<div id="popular-quizzes">
 			<p>Popular quizzes</p>
 			<%= getHtmlQuizzes(popularQuizzes) %>

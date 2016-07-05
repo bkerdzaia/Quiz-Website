@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import database.DefaultDatabaseGrabber;
 
 /**
@@ -24,7 +25,7 @@ public class SendNote extends HttpServlet implements ServletConstants {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String reciever = request.getParameter("receiverName");
+		String reciever = request.getParameter(USER_NAME_PARAM);
 		String text = request.getParameter("messageText");
 		String sender = (String) request.getSession().getAttribute(USER_NAME_PARAM);
 		String addressToRedirect;
