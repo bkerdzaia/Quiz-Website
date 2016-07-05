@@ -26,7 +26,13 @@ public class AddFriend extends HttpServlet implements ServletConstants {
 			db.connect();
 			String sender = request.getParameter("senderName");
 			String recepient = request.getParameter("recipientName");
-			db.acceptFriendRequest(recepient, sender);
+			String accept = request.getParameter("acceptFriend");
+			// when reject friend request
+			if (accept == null) {
+				db.rejectFriendship(recepient, sender);
+			} else {
+				db.acceptFriendRequest(recepient, sender);
+			}
 			db.close();
 			addressToRedirect = HOMEPAGE_ADDRESS;
 		} catch (Exception e) {

@@ -8,8 +8,8 @@ public interface ServletConstants {
 
 	public static final String DATABASE_ATTRIBUTE = "database";
 	public static final String LOGIN_ADDRESS = "login.jsp";
-	public static final String HOMEPAGE_ADDRESS = "homepage.jsp";
-	public static final String USER_PAGE_ADDRESS = "user-page.jsp";
+	public static final String HOMEPAGE_ADDRESS = "HomepageServlet";
+	public static final String USER_PAGE_ADDRESS = "UserPageServlet";
 	public static final String ERROR_PAGE_ADDRESS = "error-page.jsp";
 	public static final String QUIZ_SUMMARY_SERVLET = "QuizSummaryServlet";
 	public static final String USER_NAME_PARAM = "userName";
@@ -17,6 +17,9 @@ public interface ServletConstants {
 	public static final String HIGHEST_PERFORMANCE_ATTRIBUTE = "highestPerformers";
 	public static final String TOP_PERFORMANCE_ATTRIBUTE = "topPerformers";
 	public static final String PERFORMANCE_ATTRIBUTE = "performance";
+	public static final String POPULAR_QUIZZES_ATTRIBUTE = "popularQuizzes";
+	public static final String RECENTLY_CREATED_QUIZZES_ATTRIBUTE = "recentlyCreatedQuiz";
+	public static final String USER_OBJECT_ATTRIBUTE = "userObject";
 	public static final String PASSWORD_PARAM = "password";
 	public static final String REGISTER_PARAM = "register";
 

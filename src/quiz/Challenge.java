@@ -23,7 +23,7 @@ public class Challenge implements Message {
 	@Override
 	public String displayMessage() {
 		return "<div class=challengeClass><p>" + senderName + " has challenged you to take"
-				+ " a quiz <a href='QuizSummaryServlet?'" + ServletConstants.QUIZ_NAME_PARAM 
+				+ " a quiz <a href='QuizSummaryServlet?" + ServletConstants.QUIZ_NAME_PARAM 
 				+ "=" + quizName + "'>" + quizName + "</a></p></div>";
 	}
 
