@@ -9,9 +9,11 @@
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script src="script.js"></script>
 	<link rel="stylesheet" type="text/css" href="table-style.css">
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 
+	<jsp:include page="logout.html"></jsp:include>
 	<%-- gets information from session --%>
 	<%
 		Quiz quiz = (Quiz) session.getAttribute(ServletConstants.QUIZ_NAME_PARAM);

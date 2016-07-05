@@ -73,6 +73,12 @@ public interface DatabaseGrabber {
 	 */
 	public User loadUser(String userName) throws SQLException;
 
+	/**
+	 * Based on search string returns list of userName s 
+	 * which contain the provides search term as substring.
+	 * @param - search term
+	 */
+	public UserList searchUsers(String searchTerm) throws SQLException;
 
 	/**
 	 * Provided with 'quiz' object, method breaks it down
@@ -180,7 +186,7 @@ public interface DatabaseGrabber {
 	 * wants to be friends with. As a precondition, both string should represent
 	 * valid user names contained in system. Method ensures that users are 
 	 * not friends already, in which case it returns 'false'. Also method 
-	 * returns 'false' if request is already sent by same user.
+	 * returns 'false' if request is already sent by same user or if from == to.
 	 * !! Note: if 'to' already requested friendship with 'from', new friendship
 	 * entry is automatically added to database.
 	 * @param from - user who wants to be friends with 'to'
@@ -222,12 +228,29 @@ public interface DatabaseGrabber {
 	 * be friends.
 	 * @param from - sender's name
 	 * @param to - recepient's name
+	 * @param message - note text
+	 * @param date - date of sending
 	 * @return - completion status ('true' if success, 'false' otherwise)
 	 * @throws SQLException
 	 */
 	public boolean sendMessage(String from, String to, String message, Timestamp date) 
 			throws SQLException;
 
+	
+	/**
+	 * Provides means for friends of challenging each othe on various 
+	 * quizzes. A check is done for users to be friends and if it is 
+	 * not the case 'false' is handed back signifying failure. As a 
+	 * precondition quizName should represent valid name of quiz stored
+	 * in database.
+	 * @param from - sender's name
+	 * @param to - recipient's name
+	 * @param quizName - quiz on which recipient is challenged
+	 * @param date - date of sending challenge
+	 * @throws SQLException
+	 */
+	public boolean sendChallenge(String from, String to, String quizName, Timestamp date)
+			throws SQLException;
 	
 	/**
 	 * Frees up resources associated with current connection.

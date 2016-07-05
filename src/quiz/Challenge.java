@@ -1,10 +1,13 @@
 package quiz;
 
+import java.sql.Timestamp;
+
 import application.ServletConstants;
 
 public class Challenge implements Message {
 
 	private String quizName, senderName;
+	private Timestamp sentDate;
 	
 	/** Empty constructor */
 	public Challenge(){}
@@ -23,5 +26,15 @@ public class Challenge implements Message {
 				+ " a quiz <a href='QuizSummaryServlet?'" + ServletConstants.QUIZ_NAME_PARAM 
 				+ "=" + quizName + "'>" + quizName + "</a></p></div>";
 	}
-	
+
+	@Override
+	public void setDate(Timestamp sentDate) {
+		this.sentDate = sentDate;
+	}
+
+	@Override
+	public Timestamp getDate() {
+		return sentDate;
+	}
+
 }

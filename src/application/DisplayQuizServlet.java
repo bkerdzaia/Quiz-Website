@@ -1,7 +1,7 @@
 package application;
 
 import java.io.IOException;
-import java.util.ArrayList;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,13 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import database.DatabaseGrabber;
 import factory.DefaultDatabaseFactory;
-import factory.DefaultQuestionFactory;
-import questions.FillBlank;
-import questions.MultipleChoise;
-import questions.PictureResponse;
 import quiz.Quiz;
-import quiz.QuizProperty;
-import quiz.QuizQuestions;
 
 /**
  * Servlet implementation class DisplayQuizServlet
@@ -34,22 +28,21 @@ public class DisplayQuizServlet extends HttpServlet implements ServletConstants{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String address;
 		try {
-			System.out.println("Quiz is being displayed");
-			DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
-			if (db == null) {
-				db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
-				request.getServletContext().setAttribute(DATABASE_ATTRIBUTE, db);
+			// If session does not contain user attribute then go to login page
+			if (request.getSession().getAttribute(USER_NAME_PARAM) == null){
+				response.sendRedirect(LOGIN_ADDRESS);
+				return;
 			}
+			DatabaseGrabber db = (DatabaseGrabber) 
+					request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
 			HttpSession session = request.getSession();
 			db.connect();
-//			Enumeration<String> x = request.getParameterNames();
-//			while (x.hasMoreElements()) {
-//				System.out.println("param names: " + x.nextElement());
-//			}
+			
 			String quizName = request.getParameter("quizName");
 			Quiz quiz = db.loadQuiz(quizName);
 			session.setAttribute("quizName", quiz);
 			session.setAttribute("questIndex", 0);
+			
 			db.close();
 			address = "quiz.jsp?quizName=" + quizName;
 		} catch (Exception e) {

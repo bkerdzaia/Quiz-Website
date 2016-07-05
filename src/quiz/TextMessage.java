@@ -1,5 +1,7 @@
 package quiz;
 
+import java.sql.Timestamp;
+
 /**
  * @author dav23r
  * Encapsulates ordinary text message that users 
@@ -8,7 +10,9 @@ package quiz;
  */
 public class TextMessage implements Message {
 	
-	String message;
+	private String message;
+	private String sender;
+	private Timestamp sentDate;
 	
 	/** Empty constructor */
 	public TextMessage(){}
@@ -32,6 +36,21 @@ public class TextMessage implements Message {
 	 */
 	public String getMessage(){
 		return message;
+	}
+	
+	@Override
+	public void setSenderName(String name){
+		this.sender = name;
+	}
+	
+	@Override
+	public void setDate(Timestamp sentDate) {
+		this.sentDate = sentDate;
+	}
+
+	@Override
+	public Timestamp getDate() {
+		return sentDate;
 	}
 
 }

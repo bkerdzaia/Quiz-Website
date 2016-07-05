@@ -6,6 +6,7 @@
 <html>
 <head>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<%
 			Quiz quiz = (Quiz) session.getAttribute("quizName");
@@ -18,11 +19,19 @@
 </head>
 <body>
 
+	<jsp:include page="logout.html"></jsp:include>
+
 	<script>
 	function myFunction(ind) {
 		$("#questionId"+ind).hide();
 		$("#questionId"+(ind+1)).show();
 	}
+	
+	$("#qiu").keyup(function(event){
+	    if(event.keyCode == 13){
+	        $("#next").click();
+	    }
+	});
 	</script>
 		
 	<h1>Welcome to <%=quiz.getName()%> by <%=quiz.getCreator()%> </h1>
@@ -34,19 +43,19 @@
 			<%
 				if(properties.isRandomSeq() && questIndex==0)
 					Collections.shuffle(questions);
-					out.println("<form name=\"answers\"action=\"ResultPageServlet\" method=\"post\">");
-					String hide = "";
-					for(int i =0; i<questions.size();i++){
-						if(i>0 && !properties.isOnePage()) hide = " style='display:none'";
-						out.println("<div id = questionId" + i + hide + ">");
-						out.println(questions.get(i).displayQuestion());
-						if(i == questions.size()-1)
-							out.println("<br><br><button type=\"submit\" >Submit</button>");
-						else if(!properties.isOnePage())
-							out.println("<button type=\"button\" onclick=\"myFunction("+i+")\">next</button>");
-						out.println("</div>");
-					}
-					out.println("</form>");
+				out.println("<form name=\"answers\"action=\"ResultPageServlet\" method=\"post\">");
+				String hide = "";
+				for(int i =0; i<questions.size();i++){
+					if(i>0 && !properties.isOnePage()) hide = " style='display:none'";
+					out.println("<div id = questionId" + i + hide + ">");
+					out.println(questions.get(i).displayQuestion());
+					if(i == questions.size()-1)
+						out.println("<br><br><button type=\"submit\" >Submit</button>");
+					else if(!properties.isOnePage())
+						out.println("<button type=\"button\" id=\"next\"onclick=\"myFunction("+i+")\">next</button>");
+					out.println("</div>");
+				}
+				out.println("</form>");
 			%>
 	</div>
 	

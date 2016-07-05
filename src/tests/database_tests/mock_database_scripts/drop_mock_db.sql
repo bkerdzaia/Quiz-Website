@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS `multiple_choise_answers`;
 DROP TABLE IF EXISTS `picture_response`;
 DROP TABLE IF EXISTS `picture_response_correct_answers`;
 DROP TABLE IF EXISTS `friend_requests`;
+DROP TABLE IF EXISTS `challenges`;
 
 # Restore configuration.
 SET UNIQUE_CHECKS=1;

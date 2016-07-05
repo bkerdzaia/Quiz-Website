@@ -19,6 +19,7 @@ import factory.DatabaseFactory;
 import factory.QuestionFactory;
 import factory.QuizFactory;
 import factory.UserFactory;
+import quiz.Challenge;
 import quiz.FriendList;
 import quiz.FriendRequest;
 import quiz.History;
@@ -155,11 +156,41 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 	// Returns message sent to user with provided user name.
 	private UserMessageList getMessages(String userName) throws SQLException {
 		UserMessageList messages = userFactory.getMessageList();
-		messages.addAll(getTextMessagesAndChallenges(userName));
+		messages.addAll(getTextMessages(userName));
 		messages.addAll(getFriendRequests(userName));
+		messages.addAll(getChallenges(userName));
 		return messages;
 	}
 
+	// Returns challenges sent to user with userName.
+	private UserMessageList getChallenges(String userName) throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlGetChallengesForUser = 
+				"SELECT challenges.* FROM friends " +
+					"JOIN challenges ON " +
+						"friends.friendship_id = challenges.friendship_id " + 
+							" AND (" + 
+								"first_user_name = '" + userName + "'" + 
+									" AND sender = 1" +
+										" OR " +
+								"second_user_name = '" + userName + "'" +
+									"AND sender = 0)" +
+				"ORDER BY sent_date;";
+		ResultSet rs = stmt.executeQuery(sqlGetChallengesForUser);
+		UserMessageList challenges = userFactory.getMessageList();
+		// Iterate over result set and collect challenges for user
+		while (rs.next()){
+			Challenge curChallenge = userFactory.getChallenge();
+			curChallenge.setSenderName(rs.getString(CHALLENGES.QUIZ_NAME.num()));
+			curChallenge.setQuizName(rs.getString(CHALLENGES.QUIZ_NAME.num()));
+			curChallenge.setDate(rs.getTimestamp(CHALLENGES.SEND_DATE.num()));
+			challenges.add(curChallenge);
+		}
+		stmt.close();
+		return challenges;
+	}
+
+	// Returns friend request for user with provided userName
 	private UserMessageList getFriendRequests(String userName) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlFriendRequests = 
@@ -169,14 +200,15 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 		UserMessageList friendRequests = userFactory.getMessageList();
 		while (rs.next()) {
 			FriendRequest curRequest = userFactory.getFriendRequest();
-			curRequest.setSender(rs.getString(1)); // initiator column
+			curRequest.setSenderName(rs.getString(1)); // initiator column
 			curRequest.setRecipient(userName);
 			friendRequests.add(curRequest);
 		}
 		return friendRequests;
 	}
 
-	private UserMessageList getTextMessagesAndChallenges(String userName) throws SQLException {
+	// Return list of text message for user with provided name
+	private UserMessageList getTextMessages(String userName) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlMessagesToUser = 
 				"SELECT text, sent_date FROM friends " + 
@@ -197,6 +229,7 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 			curMessage.setMessage(rs.getString(1)); // text column
 			textMessages.add(curMessage);
 		}
+		stmt.close();
 		return textMessages;
 	}
 
@@ -576,6 +609,8 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 	// Adds friend request record to database
 	@Override
 	public boolean addFriendRequest(String from, String to) throws SQLException {
+		if (from.equals(to)) // are you kidding?
+			return false;
 		if (getFriendshipId(from, to) != -1) // stop man, they are friends
 												// already
 			return false;
@@ -751,7 +786,8 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 		retrievedUser.setPictureUrl(rs.getString(USER.PROFILE_PICTURE_URL.num()));
 		retrievedUser.setAboutMe(rs.getString(USER.ABOUT_ME.num()));
 		// Fill more complex fields, first list of created quizzes
-		retrievedUser.setCreatedQuizzes(getCreatedQuizzesByUserName(rs.getString(USER.USERNAME.num())));
+		retrievedUser.setCreatedQuizzes(getCreatedQuizzesByUserName(
+				rs.getString(USER.USERNAME.num())));
 		// Now, history of performance
 		History<UsersPerformance> userHistory = 
 				fillHistoryByUserName(rs.getString(USER.USERNAME.num()));
@@ -834,6 +870,40 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 		while (rs.next())
 			recentQuizzes.add(rs.getString(1)); // quizName column
 		return recentQuizzes;
+	}
+
+	// Store challenge message in database
+	@Override
+	public boolean sendChallenge(String from, String to, String quizName, Timestamp date) 
+			throws SQLException {
+		int friendshipId = getFriendshipId(from, to);
+		if (friendshipId == -1)
+			return false;
+		int directionBit = (from.compareTo(to) < 0) ? 0 : 1; // if from < to then 0, else 1
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlAddChalenge = 
+				"INSERT INTO challenges VALUES(" + 
+				"NULL," + friendshipId + ",'" + date + "','" + 
+						quizName + "'," + directionBit + ");";
+		stmt.executeUpdate(sqlAddChalenge);
+		stmt.close();
+		return true;
+	}
+
+	// Searches for users with names similar to searchTerm
+	@Override
+	public UserList searchUsers(String searchTerm) throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlSimilarNames = 
+				"SELECT username FROM users " + 
+				"WHERE username LIKE '%" + searchTerm + "%'" + 
+				"LIMIT " + MAX_USERS_SUGGESTIONS + ";";
+		ResultSet rs = stmt.executeQuery(sqlSimilarNames);
+		UserList similarUserNames = userFactory.getUserList();
+		while (rs.next())
+			similarUserNames.add(rs.getString(1)); // username column
+		stmt.close();
+		return similarUserNames;
 	}
 
 }

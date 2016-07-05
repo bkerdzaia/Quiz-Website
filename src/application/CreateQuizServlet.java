@@ -28,12 +28,19 @@ public class CreateQuizServlet extends HttpServlet implements ServletConstants{
 			throws ServletException, IOException {
 		String address;
 		try {
-			DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
+			DatabaseGrabber db = (DatabaseGrabber) 
+					request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
 			db.connect();
 			HttpSession session = request.getSession();
 			QuestionFactory questionFactory = DefaultQuestionFactory.getFactoryInstance();
 			QuizFactory quizFactory = DefaultQuizFactory.getFactoryInstance();
 			String user = (String) session.getAttribute(USER_NAME_PARAM);
+			// If session does not contain user name attribute, redirect to login page
+			if (user == null){
+				response.sendRedirect(LOGIN_ADDRESS);
+				return;
+			}
+			// Extract questions/answers from response and build corresponding objects
 			String quizName = request.getParameter("quizNameText");
 			String description = request.getParameter("quizDescriptionText");
 			String[] quizProperty = request.getParameterValues("QuizProperties");

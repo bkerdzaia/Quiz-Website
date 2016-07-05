@@ -49,8 +49,8 @@ public interface DatabaseParameters {
 		DATE_CREATION  			(2),
 		CREATOR_NAME 			(3),
 		RANDOM_ORDER  			(4),
-		INSTANT_CORRECTION 		(4),
-		ONE_MULTIPLE_PAGE_MODE 	(5),
+		INSTANT_CORRECTION 		(5),
+		ONE_MULTIPLE_PAGE_MODE 	(6),
 		QUIZ_DESCRIPTION  		(7);
 		
 		private int index;
@@ -58,6 +58,18 @@ public interface DatabaseParameters {
 		public int num() { return index; }
 	}
 
+	// 'Challenges' enumeration
+	public enum CHALLENGES{
+		CHALLENGE_ID		(1),
+		FRIENDSHIP_ID		(2),
+		SEND_DATE			(3),
+		QUIZ_NAME			(4),
+		SENDER				(5);
+		
+		private int index;
+		private CHALLENGES(int num) { index = num; }
+		public int num() { return index; }
+	}
 	
 	// 'Quizzes_taken' columns enumeration 
 	public enum QUIZ_TAKEN{
