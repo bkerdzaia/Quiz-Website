@@ -30,7 +30,7 @@ form {
 
 /* Id of div that contains description of the quiz to be created */
 #quiz-description {
-	width: 300px;
+	width: 27%;
 	float: left;
 	margin: auto;
 }
@@ -46,7 +46,7 @@ form {
 
 /* Id of div that contains quiz name of the quiz to be created */
 #quiz-name { 
-	width: 300px;
+	width: 27%;
 	float: left;
 	text-align: center;
 }
@@ -62,7 +62,7 @@ form {
 
 #quiz-properties{
 	text-align: left;
-	width: 300px;
+	width: 27%;
 	float: left;
 }
 
@@ -88,7 +88,10 @@ form {
 	float: left;
 	border: 2px dotted;
 	border-color: cornflowerblue;
-	margin: 5px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left: 30px;
+	margin-right: 30px;
 	padding: 10px;
 	text-align: center;
 }
@@ -134,17 +137,30 @@ form {
 	display: block;
 }
 
-
-.topbar > div{
+.topbar > div {
 	display: inline;
 	text-align: center;
-	margin-top: 15px;
-	margin-left: 50px;
-	margin-right: 50px;
 }
 
+#homepage-bar {
+	min-height: 200px
+}
 
-#quiz-creation{
+#homepage-bar > div {
+	margin-top: 10px;
+	margin-left: 5%;
+	margin-right: 5%;
+	width: 30%;
+	min-height: 200px;
+}
+
+#quiz-create-bar > div {
+	margin-top: 8px;
+	margin-left: 35px;
+	margin-right: 35px;
+}
+
+#quiz-creation {
 	margin-top: 15px;
 	margin-bottom: 15px;
 	color: green;	
@@ -244,14 +260,14 @@ input{
 }
 
 #logOutId::after {
-	transform: rotateZ(60deg) translate(-5em, 7.5em);
+	transform: rotateZ(60deg) translate(2em, 2em);
 	content: '';
 	position: absolute;
  	top: -50%;
 	right: -50%;
  	bottom: -50%;
 	left: -50%;
- 	background: linear-gradient(to bottom, rgba(229, 172, 142, 0), rgba(255,255,255,0.5) 50%, rgba(229, 172, 142, 0));
+ 	background: linear-gradient(to bottom, rgba(229, 172, 142, 0), rgba(255,255,255,0.2) 50%, rgba(229, 172, 142, 0));
 }
 
 #logOutId:hover::after, #logOutId:focus::after {
@@ -264,8 +280,17 @@ input{
   }
 }
 
+.hide-borders {
+	border: 0;
+}
+
 #live-user-suggestions {
 	overflow: auto;
+	border-color: cornflowerblue;
+}
+
+.show-borders {
+	border: 2px dotted;
 }
 
 #logOutId > p {
@@ -295,7 +320,6 @@ input{
 	display: inline;
 	float: left;
 }
-
 
 textarea {
   resize: none;

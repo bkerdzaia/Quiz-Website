@@ -35,10 +35,9 @@ public class CreateQuizServlet extends HttpServlet implements ServletConstants{
 			QuestionFactory questionFactory = DefaultQuestionFactory.getFactoryInstance();
 			QuizFactory quizFactory = DefaultQuizFactory.getFactoryInstance();
 			String user = (String) session.getAttribute(USER_NAME_PARAM);
-			// If session does not contain user name attribute, redirect to login page
-			if (user == null){
-				response.sendRedirect(LOGIN_ADDRESS);
-				return;
+			String nameOfQuizToUpdate = request.getParameter("updateQuiz");
+			if (nameOfQuizToUpdate != null) {
+				db.deleteQuiz(nameOfQuizToUpdate);
 			}
 			// Extract questions/answers from response and build corresponding objects
 			String quizName = request.getParameter("quizNameText");

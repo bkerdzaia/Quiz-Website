@@ -11,7 +11,7 @@
 	
 	<form id="quiz-creation" action="CreateQuizServlet" method="post" onsubmit="return $.trim( $('#addQuestionsType').html() ).length !== 0"> 
 	
-		<div class="topbar">
+		<div id="quiz-create-bar" class="topbar"> 
 			<div id="quiz-name">
 				<p>Name of the quiz: </p>
 				<input class="quiz-name-field" type="text" name="quizNameText" placeholder="Enter quiz name" required>

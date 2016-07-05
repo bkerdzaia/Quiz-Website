@@ -24,12 +24,10 @@ public class FriendSearchServlet extends HttpServlet implements ServletConstants
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("friend search servlet");
 		try {
 			response.setContentType("text/plain");
 			String friendPrefix = request.getParameter("friendNamePrefix");
 			String user = (String) request.getSession().getAttribute(USER_NAME_PARAM);
-			System.out.println("search: " + friendPrefix);
 			PrintWriter out = response.getWriter();
 			DefaultDatabaseGrabber db = (DefaultDatabaseGrabber) request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
 			db.connect();
@@ -45,9 +43,7 @@ public class FriendSearchServlet extends HttpServlet implements ServletConstants
 			out.println("</tr></thead><tbody>");
 			for(String friendName : currentUser.getFriends()) {
 				if (friendName.startsWith(friendPrefix)) {
-					System.out.println("friend: " + friendName);
 					User friend = db.loadUser(friendName);
-					System.out.println("from base: " + friend.getName());
 					out.println(createTableRowFriendsCreatedQuizzes(friend));
 					out.println(createTableRowFriendsHistory(friend));
 				}
@@ -61,6 +57,20 @@ public class FriendSearchServlet extends HttpServlet implements ServletConstants
 	}
 	
 	/*
+	 * Returns the link to the userName's user page/
+	 */
+	private String getUserLink(String userName) {
+		return "<a href='" + USER_PAGE_ADDRESS + "?" + USER_NAME_PARAM + "=" + userName + "'>" + userName + "</a>";
+	}
+	
+	/*
+	 * Returns the link to the quizName's quiz page/
+	 */
+	private String getQuizLink(String quizName) {
+		return "<a href='" + QUIZ_SUMMARY_SERVLET + "?" + QUIZ_NAME_PARAM + "=" + quizName + "'>" + quizName + "</a>";
+	}
+	
+	/*
 	 * Returns a html table row string of data friends name, created quiz name
 	 * and status it has created quiz.
 	 */
@@ -68,9 +78,9 @@ public class FriendSearchServlet extends HttpServlet implements ServletConstants
 		return friend.getCreatedQuizzes()
 				.stream()
 					.reduce("", (result, quizName) -> {
-						return result + "<tr><td>" + friend.getName() + "</td>" + "<td>" + quizName
-								+ "</td><td>created</td><td></td><td></td><td></td></tr>";
-					});
+					return result + "<tr><td>" + getUserLink(friend.getName()) + "</td>" + "<td>"
+							+ getQuizLink(quizName) + "</td><td>created</td><td></td><td></td><td></td></tr>";
+				});
 	}
 
 	/*
@@ -82,8 +92,8 @@ public class FriendSearchServlet extends HttpServlet implements ServletConstants
 		return friend.getHistory()
 				.parallelStream()
 					.reduce("", (result, performance) -> {
-						return result + "<tr><td>" + friend.getName() + "</td>" + 
-								"<td>" + performance.getQuiz() + "</td><td>taken</td>" +
+						return result + "<tr><td>" + getUserLink(friend.getName()) + "</td>" + 
+								"<td>" + getQuizLink(performance.getQuiz()) + "</td><td>taken</td>" +
 								"<td>" + performance.getDate() + "</td>" + 
 								"<td>" + performance.getPercentCorrect() + "</td>" + 
 								"<td>" + performance.getAmountTime() +"</td></tr>";

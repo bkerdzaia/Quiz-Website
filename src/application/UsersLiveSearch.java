@@ -39,7 +39,6 @@ public class UsersLiveSearch extends HttpServlet implements ServletConstants{
 				);
 			}
 			db.close();
-			System.out.println(similarUsers.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

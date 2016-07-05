@@ -83,4 +83,13 @@ public abstract class Question {
 		return view.displayQuestion(this);
 	}
 	
+	/**
+	 * Returns the html form of each question type with values.
+	 * It is assumed that all information is set before calling
+	 * this method.
+	 * @param id - a unique number for all types of questions
+	 * @return a string of html form
+	 */
+	public abstract String getQuestionHtmlForm(int id);
+	
 }

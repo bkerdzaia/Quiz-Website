@@ -73,7 +73,7 @@
 	
 	<jsp:include page="logout.html"></jsp:include>
 
-	<div class="topbar">
+	<div class="topbar" id="homepage-bar">
 
 		<div id="quiz-lookup">
 			<p> Search for quiz </p>		
@@ -85,8 +85,9 @@
 		
 		<div id="search-users">
 			<p> Search for users </p>
-			<input type="text" placeholder="Type user name" onkeyup="searchSimilarUsers(this.value)" required>
-			<div id="live-user-suggestions">
+			<input type="text" placeholder="Type user name"  
+			       onkeyup="searchSimilarUsers(this.value)" required>
+			<div id="live-user-suggestions" class="hide-borders">
 			
 			</div>
 		</div> 
@@ -106,12 +107,12 @@
 	
 	
 	<div>
-		<p>list of popular quizzes</p>
+		<p>Popular quizzes</p>
 		<%= getHtmlQuizzes(popularQuizzes) %>
 	</div>
 
 	<div>
-		<p>list of recently created quizzes</p>
+		<p>Recently created quizzes</p>
 		<%= getHtmlQuizzes(recentlyCreatedQuiz) %>
 	</div>
 

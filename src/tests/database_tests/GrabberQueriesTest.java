@@ -434,6 +434,35 @@ public class GrabberQueriesTest {
 	}
 	
 	@Test
+	public void editQuiz() throws SQLException {
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		dbGrabber.connect();
+		assertTrue(dbGrabber.registerUser("sam", "samsky"));
+		dbGrabber.registerUser(sampleQuiz.getCreator(), "creatorsky");
+		dbGrabber.uploadQuiz(sampleQuiz);
+		sampleQuiz.setDescription("new description");
+		assertTrue(dbGrabber.editQuiz(sampleQuiz));
+		assertEquals("new description", 
+				dbGrabber.loadQuiz(sampleQuiz.getName()).getDescription());
+	}
+	
+	@Test 
+	public void editUser() throws SQLException {
+		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
+		dbGrabber.connect();
+		User nonexistent = new User();
+		nonexistent.setName("i really dont exist");
+		assertFalse(dbGrabber.editUser(nonexistent));
+
+		dbGrabber.registerUser("user", "12");
+		User user = dbGrabber.loadUser("user");
+		user.setAboutMe("Im changed fully");
+		assertTrue(dbGrabber.editUser(user));
+		User changedUser = dbGrabber.loadUser("user");
+		assertEquals("Im changed fully", changedUser.getAboutMe());
+	}
+	
+	@Test
 	public void loadUserFullInfo() throws SQLException{
 		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();
 		dbGrabber.connect();

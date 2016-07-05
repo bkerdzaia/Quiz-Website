@@ -59,4 +59,16 @@ public class QuestionResponce extends Question {
 		return (correctAnswers.contains(answer));
 	}
 
+
+	@Override
+	public String getQuestionHtmlForm(int id) {
+		String result = "<div class='questionResponseQuestion'><p><b>QuestionResponseType</b></p>" +
+					"Enter Question: <input type='text' name='questionResponseQuestion" + id + "' value='" + getQuestionText() + "' required>";
+		for (String answer : correctAnswers) {
+			result += "Enter Possible Answer: <input type='text' name='questionResponseQuestion" + id + "' value='" + answer + "' required>";
+		}
+		result += "</div>";
+		return result;
+	}
+
 }

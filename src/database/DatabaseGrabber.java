@@ -74,6 +74,17 @@ public interface DatabaseGrabber {
 	public User loadUser(String userName) throws SQLException;
 
 	/**
+	 * Provided with new user object, changes values of user
+	 * in database having user's userName correspondingly.
+	 * Method returns false is user's userName is not contained
+	 * in database.
+	 * @param userWithNewValues - new user object
+	 * @return - completion status
+	 * @throws SQLException
+	 */
+	public boolean editUser(User userWithNewValues) throws SQLException;
+	
+	/**
 	 * Based on search string returns list of userName s 
 	 * which contain the provides search term as substring.
 	 * @param - search term
@@ -194,7 +205,8 @@ public interface DatabaseGrabber {
 	 * @return - add status (true - success, otherwise - false)
 	 * @throws SQLException
 	 */
-	public boolean addFriendRequest(String from, String to) throws SQLException;
+	public boolean addFriendRequest(String from, String to, Timestamp date) 
+			throws SQLException;
 	
 	/**
 	 * Adds new friendship record to the database. A check is done, 
