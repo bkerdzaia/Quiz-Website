@@ -239,7 +239,8 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 	 * Given user name, constructs record of user's performance, and hands back
 	 * corresponding 'history' object.
 	 */
-	private History<UsersPerformance> fillHistoryByUserName(String userName) throws SQLException {
+	private History<UsersPerformance> fillHistoryByUserName(String userName) 
+			throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		History<UsersPerformance> userHistory = userFactory.getHistoryUsersPerformance();
 		String sqlTakenQuizzes = 
@@ -545,7 +546,8 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 	// Returns list of highest performer user for particular quiz, starting from
 	// given date
 	@Override
-	public UserList getHighestPerformers(String quizName, Timestamp date) throws SQLException {
+	public UserList getHighestPerformers(String quizName, Timestamp date) 
+			throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlHighestPerformers = 
 				"SELECT username FROM quizzes_taken " + 
@@ -924,6 +926,22 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 				"UPDATE users SET profile_pic_url = '" + changedUser.getPictureUrl() + "'," +
 						"description = '" + changedUser.getAboutMe() + "';";
 		stmt.executeUpdate(sqlUpdateUserInfo);
+		return true;
+	}
+
+	// Method for rejecting friendship request
+	@Override
+	public boolean rejectFriendship(String rejector, String from) throws SQLException {
+		if (!friendshipRequested(from, rejector))
+			return false;
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlRemoveFriendshipRequest = 
+				"DELETE FROM friend_requests " + 
+				"WHERE initiator = '" + from + "'" + 
+					" AND " +
+						"acceptor ='" + rejector + "';";
+		stmt.executeUpdate(sqlRemoveFriendshipRequest);
+		stmt.close();
 		return true;
 	}
 

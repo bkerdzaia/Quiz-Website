@@ -103,38 +103,44 @@
 	%>
 	</div>
 
-	<p><b>Hello <%= userName %></b></p>
+	<p id="welcome-home"><b>Welcome back <%= userName %>, have fun on your belowed website</b></p>
 	
+	<div id=homepage-summary">	
+		<div id="popular-quizzes">
+			<p>Popular quizzes</p>
+			<%= getHtmlQuizzes(popularQuizzes) %>
+		</div>
+
+		<div id="recently-created">
+			<p>Recently created quizzes</p>
+			<%= getHtmlQuizzes(recentlyCreatedQuiz) %>
+		</div>
+
+		<div id="user-activities">
+
+			<div id="taken-quizzes">
+				<p>${userName}'s recent quiz taking activities</p>
+				<%
+					History<UsersPerformance> history = user.getHistory();
+					for(UsersPerformance userPerformance : history) {
+						out.println("<p><a href=href='" + ServletConstants.QUIZ_SUMMARY_SERVLET + 
+								"?" + ServletConstants.QUIZ_NAME_PARAM + "=" + userPerformance.getQuiz() + "'>" + 
+								userPerformance.getQuiz() + "</a></p>");
+					}
+				%>
+			</div>
+
+			<div id="created-quizzes">
+				<p>Quizzes created by ${userName} </p>
+				<%= getHtmlQuizzes(user.getCreatedQuizzes()) %>
+			</div>
+
+		</div>
+
+	</div>
 	
-	<div>
-		<p>Popular quizzes</p>
-		<%= getHtmlQuizzes(popularQuizzes) %>
-	</div>
-
-	<div>
-		<p>Recently created quizzes</p>
-		<%= getHtmlQuizzes(recentlyCreatedQuiz) %>
-	</div>
-
-	<div>
-		<p>list of user's recent quiz taking activities</p>
-		<%
-			History<UsersPerformance> history = user.getHistory();
-			for(UsersPerformance userPerformance : history) {
-				out.println("<p><a href=href='" + ServletConstants.QUIZ_SUMMARY_SERVLET + 
-						"?" + ServletConstants.QUIZ_NAME_PARAM + "=" + userPerformance.getQuiz() + "'>" + 
-						userPerformance.getQuiz() + "</a></p>");
-			}
-		%>
-	</div>
-
-	<div>
-		<p>list of user's created quizzes</p>
-		<%= getHtmlQuizzes(user.getCreatedQuizzes()) %>
-	</div>
-
 	<!-- display messages list -->
-	<div>
+	<div id="messages">
 		<p>received messages</p>
 		<%
 			UserMessageList messages = user.getMessages();
@@ -144,9 +150,9 @@
 		%>
 	</div>
 	
-	<div>
-		<p>friends recent activities (quizzes taken or created)</p>
-		Search Friend<input type="text" id="friendSearch" placeholder=" Enter Friend Name" onkeyup="loadFriendPerformance()">
+	<div id="friends-activities">
+		<p>Friends' recent activities (quizzes taken or created)</p>
+		<input type="text" id="friendSearch" placeholder=" Enter Friend Name" onkeyup="loadFriendPerformance()">
 		
 		<div id="friendAdd">
 		
