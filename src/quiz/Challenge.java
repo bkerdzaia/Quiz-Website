@@ -32,6 +32,14 @@ public class Challenge implements Message {
 		this.sentDate = sentDate;
 	}
 
+	public String getSenderName(){
+		return senderName;
+	}
+	
+	public String getQuizName(){
+		return quizName;
+	}
+
 	@Override
 	public Timestamp getDate() {
 		return sentDate;

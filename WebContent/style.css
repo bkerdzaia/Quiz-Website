@@ -160,26 +160,37 @@ form {
 }
 
 #homepage-summary > div {
-	display: inline;	
+	margin-left: 5%;
+	margin-left: 5%;
+	display: inline;
 	float: left;
-	border: 2px dotted;
-	background-color: red;
+	border: 3px dotted;
 	border-color: cornflowerblue;
+}
+
+.category-header {
+	width: 100%;
+	padding: 1px;
+	min-height: 30px;	
 }
 
 #popular-quizzes,
 #recently-created,
-#user-activities,
+#taken-quizzes,
 #created-quizzes {
-	width: 300px;	
+	width: 15%;	
+	text-align: center;
 }
 
 #welcome-home {
 	font-style: italic;
 	color: green;	
+	text-align: center;
 }
 
 #homepage-summary {
+	margin-left: 5%;
+	margin-right: 5%;	
 	display: block;
 	width: 99%;
 	min-height: 300px;
@@ -354,10 +365,6 @@ input{
 
 textarea {
   resize: none;
-}
-
-body div {
-	position: center;
 }
 
 #quiz-creation  textarea {

@@ -167,7 +167,7 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 	private UserMessageList getChallenges(String userName) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlGetChallengesForUser = 
-				"SELECT challenges.* FROM friends " +
+				"SELECT challenges.*, first_user_name, second_user_name FROM friends " +
 					"JOIN challenges ON " +
 						"friends.friendship_id = challenges.friendship_id " + 
 							" AND (" + 
@@ -182,9 +182,12 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 		// Iterate over result set and collect challenges for user
 		while (rs.next()){
 			Challenge curChallenge = userFactory.getChallenge();
-			curChallenge.setSenderName(rs.getString(CHALLENGES.SENDER.num()));
 			curChallenge.setQuizName(rs.getString(CHALLENGES.QUIZ_NAME.num()));
 			curChallenge.setDate(rs.getTimestamp(CHALLENGES.SEND_DATE.num()));
+			String sender;
+			if (rs.getBoolean(CHALLENGES.SENDER.num())) sender = rs.getString(7); // second_user
+			else sender = rs.getString(6);
+			curChallenge.setSenderName(sender);
 			challenges.add(curChallenge);
 		}
 		stmt.close();
@@ -213,7 +216,7 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 	private UserMessageList getTextMessages(String userName) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlMessagesToUser = 
-				"SELECT text, sent_date FROM friends " + 
+				"SELECT text, sender, first_user_name, second_user_name, sent_date FROM friends " + 
 					"JOIN messages ON " + 
 						"friends.friendship_id = messages.friendship_id " + 
 							" AND (" + 
@@ -229,6 +232,11 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 		while (rs.next()) {
 			TextMessage curMessage = userFactory.getTextMessage();
 			curMessage.setMessage(rs.getString(1)); // text column
+			curMessage.setDate(rs.getTimestamp(5)); // date column
+			String sender;
+			if (rs.getBoolean(2)) sender = rs.getString(4); // second user sent 
+			else sender = rs.getString(3); // first user sent
+			curMessage.setSenderName(sender);
 			textMessages.add(curMessage);
 		}
 		stmt.close();
@@ -598,7 +606,7 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 			throws SQLException {
 		// Extract field values
 		Timestamp date = perf.getDate();
-		int timeTaken = perf.getAmountTime();
+		int timeTaken = (int) perf.getAmountTime();
 		double percentCorrect = perf.getPercentCorrect();
 		// Pass the values to sql update query
 		Statement stmt = conHandler.getConnection().createStatement();

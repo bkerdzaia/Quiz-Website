@@ -31,7 +31,11 @@ public class SendFreindRequest extends HttpServlet implements ServletConstants {
 			db.connect();
 			String sender = (String) request.getSession().getAttribute(USER_NAME_PARAM);
 			String recepient = request.getParameter(USER_NAME_PARAM);
+<<<<<<< HEAD
 			db.addFriendRequest(sender, recepient, new Timestamp(System.currentTimeMillis()));
+=======
+			db.addFriendRequest(sender, recepient, null); //TODO
+>>>>>>> 232c5c5db44a63ba80acc6adf079391b0d9c870e
 			db.close();
 			addressToRedirect = HOMEPAGE_ADDRESS;
 		} catch (Exception e) {
