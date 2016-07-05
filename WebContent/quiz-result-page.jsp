@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="application.*, quiz.*, questions.*, database.*"%>
+<%@ page import="application.*, quiz.*, questions.*, database.*, factory.*, java.util.Comparator"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -18,6 +18,8 @@
 			long hours = (seconds / (60*60)) % 24;
 			long minutes = ((seconds / 60) % 60)-hours*60;
 	        seconds = seconds-60*minutes-60*60*hours;
+	        QuizHistory perfomance = (QuizHistory) session.getAttribute(ServletConstants.PERFORMANCE_ATTRIBUTE);
+	        QuizFactory quizFactory = DefaultQuizFactory.getFactoryInstance();
 		%>
 <title>Result Page</title>
 
@@ -40,27 +42,33 @@
 			if(b)score++;
 		}
 		out.println("<p>Your score is: " + score+"</p>");
-		History<UsersPerformance> history = user.getHistory();
-		for(UsersPerformance u : history)
-			out.println(u.getPercentCorrect());
 	%>
 	
 	
 	
 	<div>
-		<p><% if(hours==0) out.println();%></p>
-		<p>Time Spent: <%=hours%> hours, <%=minutes%> min, <%=seconds%> sec</p>
-	</div>
-	
-	<%
-		for(UsersPerformance u : history)
-			if(u.getQuiz().equals(quiz.getName()))
-				out.println(""+u.getPercentCorrect());
-	%>
-	<div>
-		<p> comparisons to user's past performance</p>
-		<p> comparisons with top performers or user's friends</p>
+		<p>Time Spent: <%=hours%> h <%=minutes%> m <%=seconds%> s</p>
 	</div>
 
+	<p>Past Performance:</p>
+	<%
+		History<UsersPerformance> history = user.getHistory();
+		for(int i=0; i < history.size()-1 && i<11; i++)
+			if(history.get(i).getQuiz().equals(quiz.getName()))
+				out.println(history.get(i).getPercentCorrect()+"<br>");
+	%>
+	<div>
+		<p> friends' scores:</p>
+	</div>
+	
+	
+	<%
+		Comparator<Performance> comparator = quizFactory.getOrderByPercentCorrectInstance();
+		FriendList friends = user.getFriends();
+		
+		for(String u: friends)
+			for (PerformanceOnQuiz quizPerformance : perfomance.sortByUser(u, comparator))
+					out.println(u+" got "+quizPerformance.getPercentCorrect()+"%");
+	%>
 </body>
 </html>
