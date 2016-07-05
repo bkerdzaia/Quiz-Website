@@ -159,6 +159,7 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 		messages.addAll(getTextMessages(userName));
 		messages.addAll(getFriendRequests(userName));
 		messages.addAll(getChallenges(userName));
+		messages.sortByDate();
 		return messages;
 	}
 
