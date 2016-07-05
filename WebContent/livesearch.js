@@ -11,6 +11,7 @@ var resultBoxId = "live-user-suggestions"
 function searchSimilarUsers(searchTerm) {
 	if (searchTerm.length == 0) { // just empty suggestions box and return
 		document.getElementById(resultBoxId).innerHTML = "";
+		hideBorders();
 		return;
 	}
 	if (!window.XMLHttpRequest) 
@@ -22,9 +23,25 @@ function searchSimilarUsers(searchTerm) {
 	xmlhttp.onreadystatechange = function() { 
 		if (xmlhttp.readyState == gotResponse && xmlhttp.status == successMark) {  
 			document.getElementById(resultBoxId).innerHTML = xmlhttp.responseText;
+			if (xmlhttp.responseText != "")
+				showBorders();
+			else 
+				hideBorders();
 		}
 	}
 	xmlhttp.open("GET", userSuggestionsServlet + "?searchTerm=" + searchTerm, true);
 	// Add header here
 	xmlhttp.send();
+}
+
+function hideBorders(){
+	$('#' + resultBoxId).removeClass("show-borders");
+	$('#' + resultBoxId).addClass("hide-borders");
+
+}
+
+function showBorders(){
+	$('#' + resultBoxId).removeClass("hide-borders")
+	$('#' + resultBoxId).addClass("show-borders");	
+
 }

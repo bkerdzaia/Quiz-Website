@@ -142,6 +142,18 @@ form {
 	text-align: center;
 }
 
+#homepage-bar {
+	min-height: 200px
+}
+
+#homepage-bar > div {
+	margin-top: 10px;
+	margin-left: 5%;
+	margin-right: 5%;
+	width: 30%;
+	min-height: 200px;
+}
+
 #quiz-create-bar > div {
 	margin-top: 8px;
 	margin-left: 35px;
@@ -219,14 +231,14 @@ input{
 }
 
 #logOutId::after {
-	transform: rotateZ(60deg) translate(-5em, 7.5em);
+	transform: rotateZ(60deg) translate(2em, 2em);
 	content: '';
 	position: absolute;
  	top: -50%;
 	right: -50%;
  	bottom: -50%;
 	left: -50%;
- 	background: linear-gradient(to bottom, rgba(229, 172, 142, 0), rgba(255,255,255,0.5) 50%, rgba(229, 172, 142, 0));
+ 	background: linear-gradient(to bottom, rgba(229, 172, 142, 0), rgba(255,255,255,0.2) 50%, rgba(229, 172, 142, 0));
 }
 
 #logOutId:hover::after, #logOutId:focus::after {
@@ -239,8 +251,17 @@ input{
   }
 }
 
+.hide-borders {
+	border: 0;
+}
+
 #live-user-suggestions {
 	overflow: auto;
+	border-color: cornflowerblue;
+}
+
+.show-borders {
+	border: 2px dotted;
 }
 
 #logOutId > p {
@@ -270,7 +291,6 @@ input{
 	display: inline;
 	float: left;
 }
-
 
 textarea {
   resize: none;

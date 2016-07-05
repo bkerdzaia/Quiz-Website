@@ -143,6 +143,7 @@ CREATE TABLE IF NOT EXISTS `QuizWebsite`.`friend_requests` (
 
   `initiator`      CHARACTER(45)     NOT NULL,  # one who sends request
   `acceptor`       CHARACTER(45)     NOT NULL,  # one to whom request is sent
+  `sent_date`      TIMESTAMP         NOT NULL,
   CHECK (`initiator` <> `acceptor`),
 
   /* Indexing foreign keys */

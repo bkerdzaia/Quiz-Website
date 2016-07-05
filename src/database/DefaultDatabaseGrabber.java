@@ -182,7 +182,7 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 		// Iterate over result set and collect challenges for user
 		while (rs.next()){
 			Challenge curChallenge = userFactory.getChallenge();
-			curChallenge.setSenderName(rs.getString(CHALLENGES.QUIZ_NAME.num()));
+			curChallenge.setSenderName(rs.getString(CHALLENGES.SENDER.num()));
 			curChallenge.setQuizName(rs.getString(CHALLENGES.QUIZ_NAME.num()));
 			curChallenge.setDate(rs.getTimestamp(CHALLENGES.SEND_DATE.num()));
 			challenges.add(curChallenge);
@@ -195,7 +195,7 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 	private UserMessageList getFriendRequests(String userName) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String sqlFriendRequests = 
-				"SELECT initiator FROM friend_requests " + 
+				"SELECT initiator, sent_date FROM friend_requests " + 
 				"WHERE acceptor = '" + userName + "';";
 		ResultSet rs = stmt.executeQuery(sqlFriendRequests);
 		UserMessageList friendRequests = userFactory.getMessageList();
@@ -203,6 +203,7 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 			FriendRequest curRequest = userFactory.getFriendRequest();
 			curRequest.setSenderName(rs.getString(1)); // initiator column
 			curRequest.setRecipient(userName);
+			curRequest.setDate(rs.getTimestamp(2)); // date column
 			friendRequests.add(curRequest);
 		}
 		return friendRequests;
@@ -609,7 +610,8 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 
 	// Adds friend request record to database
 	@Override
-	public boolean addFriendRequest(String from, String to) throws SQLException {
+	public boolean addFriendRequest(String from, String to, Timestamp date) 
+			throws SQLException {
 		if (from.equals(to)) // are you kidding?
 			return false;
 		if (getFriendshipId(from, to) != -1) // stop man, they are friends
@@ -627,7 +629,7 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 		Statement stmt = conHandler.getConnection().createStatement();
 		String addFriendRequestMessage = 
 				"INSERT INTO friend_requests " + 
-				"VALUES('" + from + "','" + to + "');";
+				"VALUES('" + from + "','" + to + "','" + date + "');";
 		stmt.executeUpdate(addFriendRequestMessage);
 		return true;
 	}
