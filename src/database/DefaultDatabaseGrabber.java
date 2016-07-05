@@ -890,4 +890,20 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 		return true;
 	}
 
+	// Searches for users with names similar to searchTerm
+	@Override
+	public UserList searchUsers(String searchTerm) throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlSimilarNames = 
+				"SELECT username FROM users " + 
+				"WHERE username LIKE '%" + searchTerm + "%'" + 
+				"LIMIT " + MAX_USERS_SUGGESTIONS + ";";
+		ResultSet rs = stmt.executeQuery(sqlSimilarNames);
+		UserList similarUserNames = userFactory.getUserList();
+		while (rs.next())
+			similarUserNames.add(rs.getString(1)); // username column
+		stmt.close();
+		return similarUserNames;
+	}
+
 }

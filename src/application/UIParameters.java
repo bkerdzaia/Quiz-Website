@@ -15,4 +15,7 @@ public interface UIParameters {
 	public static final int MAX_HIGHEST_PERFORMERS = 5;
 	public static final int MAX_RECENTLY_CREATED_BY_USER = 10;
 	public static final int MAX_RECENT_TAKERS_STATS = 5;
+	
+	public static final int MAX_USERS_SUGGESTIONS = 10;
+	public static final int MAX_QUIZ_SUGGESTIONS = 10;
 }

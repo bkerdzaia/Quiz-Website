@@ -73,6 +73,12 @@ public interface DatabaseGrabber {
 	 */
 	public User loadUser(String userName) throws SQLException;
 
+	/**
+	 * Based on search string returns list of userName s 
+	 * which contain the provides search term as substring.
+	 * @param - search term
+	 */
+	public UserList searchUsers(String searchTerm) throws SQLException;
 
 	/**
 	 * Provided with 'quiz' object, method breaks it down

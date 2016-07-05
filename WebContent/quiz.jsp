@@ -41,19 +41,19 @@
 			<%
 				if(properties.isRandomSeq() && questIndex==0)
 					Collections.shuffle(questions);
-					out.println("<form name=\"answers\"action=\"ResultPageServlet\" method=\"post\">");
-					String hide = "";
-					for(int i =0; i<questions.size();i++){
-						if(i>0 && !properties.isOnePage()) hide = " style='display:none'";
-						out.println("<div id = questionId" + i + hide + ">");
-						out.println(questions.get(i).displayQuestion());
-						if(i == questions.size()-1)
-							out.println("<br><br><button type=\"submit\" >Submit</button>");
-						else if(!properties.isOnePage())
-							out.println("<button type=\"button\" id=\"next\"onclick=\"myFunction("+i+")\">next</button>");
-						out.println("</div>");
-					}
-					out.println("</form>");
+				out.println("<form name=\"answers\"action=\"ResultPageServlet\" method=\"post\">");
+				String hide = "";
+				for(int i =0; i<questions.size();i++){
+					if(i>0 && !properties.isOnePage()) hide = " style='display:none'";
+					out.println("<div id = questionId" + i + hide + ">");
+					out.println(questions.get(i).displayQuestion());
+					if(i == questions.size()-1)
+						out.println("<br><br><button type=\"submit\" >Submit</button>");
+					else if(!properties.isOnePage())
+						out.println("<button type=\"button\" id=\"next\"onclick=\"myFunction("+i+")\">next</button>");
+					out.println("</div>");
+				}
+				out.println("</form>");
 			%>
 	</div>
 	
