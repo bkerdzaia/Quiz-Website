@@ -265,6 +265,15 @@ public interface DatabaseGrabber {
 			throws SQLException;
 	
 	/**
+	 * Provides means of rejecting friend request for user from some
+	 * different user of the system. A check is that 'from' really sent
+	 * friendship request to 'rejector'.
+	 * @param rejector - user who rejects friendship with from
+	 * @param from - user who sent the friendship request
+	 */
+	public boolean rejectFriendship(String rejector, String from) throws SQLException;
+
+	/**
 	 * Frees up resources associated with current connection.
 	 */
 	public void close();
