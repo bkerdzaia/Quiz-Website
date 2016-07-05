@@ -6,6 +6,7 @@
 <html>
 <head>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<%
 			Quiz quiz = (Quiz) session.getAttribute("quizName");

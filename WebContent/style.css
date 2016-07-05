@@ -95,6 +95,7 @@ form {
 
 #addQuestionsType {
 	display: block;
+	overflow: auto;
 }
 
 #addQuestionsType input[type="text"] {
@@ -119,7 +120,12 @@ form {
 }
 
 #quiz-creation > #submit{
+	margin-top: 20px;
 	display: block;
+}
+
+#submit > input:hover {
+	background-color: green;
 }
 
 .topbar {
@@ -133,9 +139,8 @@ form {
 	display: inline;
 	text-align: center;
 	margin-top: 15px;
-	margin-left: 30px;
-	margin-right: 30px;
-	position: center;
+	margin-left: 50px;
+	margin-right: 50px;
 }
 
 
@@ -228,5 +233,6 @@ body div {
 	border: 2px dotted;
 	border-color: cornflowerblue;
 }
+
 
 

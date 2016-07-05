@@ -28,12 +28,13 @@ public class DisplayQuizServlet extends HttpServlet implements ServletConstants{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String address;
 		try {
-			System.out.println("Quiz is being displayed");
-			DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
-			if (db == null) {
-				db = DefaultDatabaseFactory.getFactoryInstance().getDatabaseGrabber();
-				request.getServletContext().setAttribute(DATABASE_ATTRIBUTE, db);
+			// If session does not contain user attribute then go to login page
+			if (request.getSession().getAttribute(USER_NAME_PARAM) == null){
+				response.sendRedirect(LOGIN_ADDRESS);
+				return;
 			}
+			DatabaseGrabber db = (DatabaseGrabber) 
+					request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
 			HttpSession session = request.getSession();
 			db.connect();
 			
