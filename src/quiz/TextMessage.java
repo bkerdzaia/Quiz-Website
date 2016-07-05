@@ -19,7 +19,7 @@ public class TextMessage implements Message {
 
 	@Override
 	public String displayMessage() {
-		return "<p>" + message + "</p>";
+		return "<div><p>" + sender + " sent a message: " + message + ", on " + sentDate + " date</p></div>";
 	}
 
 	/**

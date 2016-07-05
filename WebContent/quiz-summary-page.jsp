@@ -16,15 +16,7 @@
 	<%-- gets information from session --%>
 	<%
 		String user = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
-		// Some redirections
-		if (user == null){
-			response.sendRedirect(ServletConstants.LOGIN_ADDRESS);
-			return;
-		}
 		Quiz quiz = (Quiz) session.getAttribute(ServletConstants.QUIZ_NAME_PARAM);
-		if (quiz == null){
-			response.sendRedirect(ServletConstants.HOMEPAGE_ADDRESS);
-		}
 		UserList highestPerformers = (UserList) session.getAttribute(ServletConstants.HIGHEST_PERFORMANCE_ATTRIBUTE);
 		UserList topPerformers = (UserList) session.getAttribute(ServletConstants.TOP_PERFORMANCE_ATTRIBUTE);
 		QuizHistory perfomance = (QuizHistory) session.getAttribute(ServletConstants.PERFORMANCE_ATTRIBUTE);
@@ -32,6 +24,7 @@
 	%>
 	
 	<jsp:include page="logout.html"></jsp:include>
+	<jsp:include page="homepage-link.jsp"></jsp:include>
 
 	<%!
 		private String getHtmlUsers(UserList  users) {
@@ -82,7 +75,7 @@
 	<div>
 		<table border="1">
 			<caption>
-				A list of <%= user %>'s past performance on this quiz ordered by: <br>
+				A list of <%= user %>'s past performance on this quiz ordered by: 
 				<input type="radio" name="performance" value="date" checked onclick="showOrderByDate()">date
 				<input type="radio" name="performance" value="percentCorrect" onclick="showOrderByPercentCorrect()">percent correct
 				<input type="radio" name="performance" value="amountTime" onclick="showOrderByAmountTime()">amount of time

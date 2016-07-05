@@ -12,25 +12,23 @@ import javax.servlet.http.HttpServletResponse;
 import database.DefaultDatabaseGrabber;
 
 /**
- * Servlet implementation class SendFreindRequest
+ * Servlet implementation class RemoveFriend
  */
-@WebServlet("/SendFreindRequest")
-public class SendFreindRequest extends HttpServlet implements ServletConstants {
+@WebServlet("/RemoveFriend")
+public class RemoveFriend extends HttpServlet implements ServletConstants {
 	private static final long serialVersionUID = 1L;
-
+       
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String addressToRedirect;
 		try {
 			DefaultDatabaseGrabber db = (DefaultDatabaseGrabber) request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
 			db.connect();
-			String sender = (String) request.getSession().getAttribute(USER_NAME_PARAM);
-			String recepient = request.getParameter(USER_NAME_PARAM);
-			db.addFriendRequest(sender, recepient);
+			String remover = (String) request.getSession().getAttribute(USER_NAME_PARAM);
+			String removeWith = request.getParameter(USER_NAME_PARAM);
+			db.removeFriend(remover, removeWith);
 			db.close();
 			addressToRedirect = HOMEPAGE_ADDRESS;
 		} catch (Exception e) {
@@ -40,4 +38,5 @@ public class SendFreindRequest extends HttpServlet implements ServletConstants {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(addressToRedirect);
 		dispatcher.forward(request, response);
 	}
+
 }

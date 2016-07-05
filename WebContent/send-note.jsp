@@ -4,16 +4,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Message Sending</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Message Sending</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 
-	<div>
-		<form action="homepage.jsp?">
-			<br><input type="submit" value="go hompage"><br>
-		</form>
-	</div>
+	<jsp:include page="logout.html"></jsp:include>
+	<jsp:include page="homepage-link.jsp"></jsp:include>
 
 	<div>
 		<form action="SendNote" method="post"><br>
