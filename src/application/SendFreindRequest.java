@@ -1,6 +1,7 @@
 package application;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -30,7 +31,7 @@ public class SendFreindRequest extends HttpServlet implements ServletConstants {
 			db.connect();
 			String sender = (String) request.getSession().getAttribute(USER_NAME_PARAM);
 			String recepient = request.getParameter(USER_NAME_PARAM);
-			db.addFriendRequest(sender, recepient);
+			db.addFriendRequest(sender, recepient, new Timestamp(System.currentTimeMillis()));
 			db.close();
 			addressToRedirect = HOMEPAGE_ADDRESS;
 		} catch (Exception e) {
