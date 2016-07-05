@@ -107,7 +107,9 @@
 
 	<div id="homepage-summary">	
 		<div id="popular-quizzes">
-			<p>Popular quizzes</p>
+			<div class="category-header">
+				<p>Popular quizzes</p>
+			</div>
 			<%= getHtmlQuizzes(popularQuizzes) %>
 		</div>
 
