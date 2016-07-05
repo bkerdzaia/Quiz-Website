@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import database.DefaultDatabaseGrabber;
 import quiz.User;
-import quiz.UsersPerformance;
 
 /**
  * Servlet implementation class FriendSearchServlet
@@ -35,15 +34,15 @@ public class FriendSearchServlet extends HttpServlet implements ServletConstants
 			DefaultDatabaseGrabber db = (DefaultDatabaseGrabber) request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
 			db.connect();
 			User currentUser = db.loadUser(user);
-			out.println("<table border='1'>");
+			out.println("<table id='friendsStatus' border='1'>");
 			out.println("<thead><tr>");
 			out.println("<th>friend name</th>"
 					+ "<th>quiz name</th>"
 					+ "<th>action</th>"
 					+ "<th>date</th>"
 					+ "<th>percent correct</th>"
-					+ "<th>time amount</th></thead>");
-			out.println("</tr>");
+					+ "<th>time amount</th>");
+			out.println("</tr></thead><tbody>");
 			for(String friendName : currentUser.getFriends()) {
 				if (friendName.startsWith(friendPrefix)) {
 					System.out.println("friend: " + friendName);
@@ -54,34 +53,43 @@ public class FriendSearchServlet extends HttpServlet implements ServletConstants
 				}
 			}
 			db.close();
-			out.print("</table>");
+			out.print("</tbody></table>");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
 	
-
+	/*
+	 * Returns a html table row string of data friends name, created quiz name
+	 * and status it has created quiz.
+	 */
 	private String createTableRowFriendsCreatedQuizzes(User friend) {
-		String result = "";
-		for(String quizName : friend.getCreatedQuizzes()) {
-			result += "<tr><td>" + friend.getName() + "</td>" + "<td>" + quizName
-					+ "</td><td>created</td><td></td><td></td><td></td></tr>";
-		}
-		return result;
+		return friend.getCreatedQuizzes()
+				.stream()
+					.reduce("", (result, quizName) -> {
+						return result + "<tr><td>" + friend.getName() + "</td>" + "<td>" + quizName
+								+ "</td><td>created</td><td></td><td></td><td></td></tr>";
+					});
 	}
 
-
+	/*
+	 * Returns a html table row string of data friends name, taken quiz name,
+	 * status it has taken quiz and performance of taken quiz with order of
+	 * date, percent correct and time amount.
+	 */
 	private String createTableRowFriendsHistory(User friend) {
-		String result = "";
-		for(UsersPerformance performance : friend.getHistory()) {
-			result += "<tr><td>" + friend.getName() + "</td>" + 
-					"<td>" + performance.getQuiz() + "</td><td>taken</td>" +
-					"<td>" + performance.getDate() + "</td>" + 
-					"<td>" + performance.getPercentCorrect() + "</td>" + 
-					"<td>" + performance.getAmountTime() +"</td></tr>";
-		}
-		return  result;
+		return friend.getHistory()
+				.parallelStream()
+					.reduce("", (result, performance) -> {
+						return result + "<tr><td>" + friend.getName() + "</td>" + 
+								"<td>" + performance.getQuiz() + "</td><td>taken</td>" +
+								"<td>" + performance.getDate() + "</td>" + 
+								"<td>" + performance.getPercentCorrect() + "</td>" + 
+								"<td>" + performance.getAmountTime() +"</td></tr>";
+					}, (accumulated1, accumulated2) -> {
+						return accumulated1 + accumulated2; 
+					});
 	}
 
 	/**

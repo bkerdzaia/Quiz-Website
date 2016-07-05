@@ -229,4 +229,10 @@ body div {
 	border-color: cornflowerblue;
 }
 
+#friendSearch {
+    padding: 7px;
+    border: 2px solid black;
+    margin-bottom: 20px;
+}
+
 

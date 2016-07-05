@@ -18,6 +18,7 @@
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script src="script.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="table-style.css">
 	<script>
 		function loadFriendPerformance() {
 			var friendValue = $("#friendSearch").val();
@@ -40,7 +41,6 @@
 			});
 		}
 		loadFriendPerformance();
-		alert("funct");
 	</script>
 	
 </head>
@@ -132,17 +132,11 @@
 	
 	<div>
 		<p>friends recent activities (quizzes taken or created)</p>
-		Search Friend <input type="text" id="friendSearch" placeholder="friend name" onkeyup="loadFriendPerformance()">
+		Search Friend<input type="text" id="friendSearch" placeholder=" Enter Friend Name" onkeyup="loadFriendPerformance()">
 		
 		<div id="friendAdd">
 		
 		</div>
-		<%
-			FriendList friends = user.getFriends();
-			for (String friend : friends) {
-				out.println("<p>" + friend + "<p>");
-			}
-		%>
 	</div>
 	
 	<!-- display create a quiz -->
