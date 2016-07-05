@@ -19,6 +19,8 @@
 </head>
 <body>
 
+	<jsp:include page="logout.html"></jsp:include>
+
 	<script>
 	function myFunction(ind) {
 		$("#questionId"+ind).hide();

@@ -201,8 +201,29 @@ input{
 }
 
 
-#logOutId{
-	background-color: darkred;
+#logOutId {
+	width: 110px;
+	height: 90px;
+	top: 0px;
+	right: 0px;
+	background: lightcoral;
+	position: fixed;
+	text-align: center;
+    border-bottom-left-radius: 100px;
+	float: right;
+	opacity: 0.8;
+}
+
+#logOutId > p {
+	position: relative;
+	top: 10px;
+	left: 10px;
+	font-size: 18px;
+	font-family: Georgia;
+}
+
+#logOutId:hover{
+	opacity: 0.9;
 }
 
 
@@ -212,7 +233,6 @@ input{
 
 
 #quiz-lookup{
-	background-color: blue;
 }
 
 

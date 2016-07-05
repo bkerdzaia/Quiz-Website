@@ -64,7 +64,7 @@
 	%>
 	</div>
 
-	<p><b>Hello ${param.name}</b></p>
+	<p><b>Hello <%= userName %></b></p>
 	
 	
 	<div>

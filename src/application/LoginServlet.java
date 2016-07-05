@@ -78,8 +78,8 @@ public class LoginServlet extends HttpServlet implements ServletConstants{
 		HttpSession session = request.getSession();
 		if (request.getParameter(LOG_OUT_PARAM) != null){
 			session.removeAttribute(USER_NAME_PARAM);
-			response.sendRedirect(LOGIN_ADDRESS);
 		}
+		response.sendRedirect(LOGIN_ADDRESS);
 	}
 
 }

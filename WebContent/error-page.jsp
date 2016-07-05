@@ -6,6 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Error Occurred</title>
+<link rel="stylesheet" type="text/css" href="style.css">
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="script.js"></script>
 </head>
@@ -15,7 +16,7 @@
 	<jsp:include page="logout.html"></jsp:include>
 
 	<form action="homepage.jsp?">
-		<input type="submit" value="go hompage">
+		<input type="submit" value="return home">
 	</form>
 
 	<h3> Exception Occurred</h3>

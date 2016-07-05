@@ -1,5 +1,10 @@
-<div id="logOutId">
-	<form id="logout" action="LoginServlet" method="get">
-		<input type="submit" name="logout" value="Log out">
-	</form>
+<div id="logOutId"> 
+	<p> Log out </p>
 </div>
+
+
+<script>
+	document.getElementById("logOutId").onclick = function() {
+		 location.href = "LoginServlet?logout=Log+out";
+	};
+</script>

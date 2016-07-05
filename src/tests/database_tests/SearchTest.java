@@ -8,14 +8,11 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 import database.DatabaseConnectionHandler;
 import database.DatabaseGrabber;
@@ -28,7 +25,6 @@ import quiz.Quiz;
 import quiz.QuizProperty;
 import quiz.QuizQuestions;
 import quiz.User;
-import quiz.UserList;
 
 public class SearchTest {
 	
