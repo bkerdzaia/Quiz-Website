@@ -906,4 +906,22 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 		return similarUserNames;
 	}
 
+	// Edits parameters of user having particular user name
+	@Override
+	public boolean editUser(User changedUser) throws SQLException {
+		Statement stmt = conHandler.getConnection().createStatement();
+		String userName = changedUser.getName();
+		String queryUser = 
+				"SELECT * FROM users " + 
+				"WHERE username = " + "'" + userName + "';";
+		ResultSet rs = stmt.executeQuery(queryUser);
+		if (!rs.next())
+			return false; // user is not contained in database
+		String sqlUpdateUserInfo =
+				"UPDATE users SET profile_pic_url = '" + changedUser.getPictureUrl() + "'," +
+						"description = '" + changedUser.getAboutMe() + "';";
+		stmt.executeUpdate(sqlUpdateUserInfo);
+		return true;
+	}
+
 }

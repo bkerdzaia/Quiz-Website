@@ -85,7 +85,8 @@
 		
 		<div id="search-users">
 			<p> Search for users </p>
-			<input type="text" placeholder="Type user name" onkeyup="searchSimilarUsers(this.value)" required>
+			<input type="text" placeholder="Type user name"  
+			       onkeyup="searchSimilarUsers(this.value)" required>
 			<div id="live-user-suggestions">
 			
 			</div>
