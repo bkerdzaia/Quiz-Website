@@ -26,12 +26,6 @@
 		$("#questionId"+ind).hide();
 		$("#questionId"+(ind+1)).show();
 	}
-	
-	$("#qiu").keyup(function(event){
-	    if(event.keyCode == 13){
-	        $("#next").click();
-	    }
-	});
 	</script>
 		
 	<h1>Welcome to <%=quiz.getName()%> by <%=quiz.getCreator()%> </h1>

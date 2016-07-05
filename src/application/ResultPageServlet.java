@@ -1,6 +1,7 @@
 package application;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 
 import javax.servlet.RequestDispatcher;
@@ -42,16 +43,18 @@ public class ResultPageServlet extends HttpServlet implements ServletConstants{
 			
 			System.out.println("User name = "+session.getAttribute(USER_NAME_PARAM));
 			
-//			Enumeration<String> x = request.getParameterNames();
-//			while (x.hasMoreElements()) {
-//				System.out.println("param names: " + x.nextElement());
-//			}
+			ArrayList<String> a= new ArrayList<String>();
+			Enumeration<String> x = request.getParameterNames();
+			while (x.hasMoreElements()) {
+				a.add(x.nextElement());
+			}
 			
-			String[] str = request.getParameterValues("possibleAnswer");
-			
-			for(int i=0; i<str.length; i++){
-				quiz.getQuestions().get(i).setUsersChoice(str[i]);
-				System.out.println(str[i]);
+			for(int j=0; j<a.size(); j++){
+				String[] str = request.getParameterValues(a.get(j));
+				for(int i=0; i<str.length; i++){
+					quiz.getQuestions().get(j+i).setUsersChoice(str[i]);
+					System.out.println(str[i]);
+				}
 			}
 			
 			
