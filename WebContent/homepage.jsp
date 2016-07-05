@@ -71,7 +71,10 @@
 
 	<div class="topbar" id="homepage-bar">
 	
-		<p><a href="<%= ServletConstants.USER_PAGE_ADDRESS + "?" + ServletConstants.USER_NAME_PARAM + "=" + userName %>">profile page</a></p>
+		<div id="profile-on-home">
+			<a href="<%= ServletConstants.USER_PAGE_ADDRESS + "?" 
+				+ ServletConstants.USER_NAME_PARAM + "=" + userName %>">Open profile page</a>
+		</div>
 
 		<div id="quiz-lookup">
 			<p> Search for quiz </p>		
@@ -101,36 +104,52 @@
 	%>
 	</div>
 
-	<p id="welcome-home"><b>Welcome back <%= userName %>, have fun on your belowed website</b></p>
+	<p id="welcome-home">
+		<b>Welcome back <%= userName %>, have fun on your belowed website</b>
+	</p>
 
 	<div id="homepage-summary">	
 		<div id="popular-quizzes">
 			<div class="category-header">
 				<p>Popular quizzes</p>
 			</div>
-			<%= getHtmlQuizzes(popularQuizzes) %>
+			<div class="category-content">
+				<%= getHtmlQuizzes(popularQuizzes) %>
+			</div>
 		</div>
 
 		<div id="recently-created">
-			<p>Recently created quizzes</p>
-			<%= getHtmlQuizzes(recentlyCreatedQuiz) %>
+			<div class="category-header">
+				<p>Recently created quizzes</p>
+			</div>
+			<div class="category-content">
+				<%= getHtmlQuizzes(recentlyCreatedQuiz) %>
+			</div>
 		</div>
 
 		<div id="taken-quizzes">
-			<p>${userName}'s recent taken quizzes</p>
-			<%
-				History<UsersPerformance> history = user.getHistory();
-				for(UsersPerformance userPerformance : history) {
-					out.println("<p><a href=href='" + ServletConstants.QUIZ_SUMMARY_SERVLET + 
-							"?" + ServletConstants.QUIZ_NAME_PARAM + "=" + userPerformance.getQuiz() + "'>" + 
-							userPerformance.getQuiz() + "</a></p>");
-				}
-			%>
+			<div class="category-header">	
+				<p>${userName}'s recent taken quizzes</p>
+			</div>
+			<div class="category-content">
+				<%
+					History<UsersPerformance> history = user.getHistory();
+					for(UsersPerformance userPerformance : history) {
+						out.println("<p><a href=href='" + ServletConstants.QUIZ_SUMMARY_SERVLET + 
+								"?" + ServletConstants.QUIZ_NAME_PARAM + "=" + userPerformance.getQuiz() + "'>" + 
+								userPerformance.getQuiz() + "</a></p>");
+					}
+				%>
+			</div>
 		</div>
 
 		<div id="created-quizzes">
-			<p>Created by ${userName} </p>
-			<%= getHtmlQuizzes(user.getCreatedQuizzes()) %>
+			<div class="category-header">
+				<p>Created by ${userName} </p>
+			</div>
+			<div class="category-content">
+				<%= getHtmlQuizzes(user.getCreatedQuizzes()) %>
+			</div>
 		</div>
 
 

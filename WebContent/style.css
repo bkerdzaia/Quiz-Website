@@ -143,14 +143,33 @@ form {
 }
 
 #homepage-bar {
-	min-height: 200px
+	min-height: 200px;
+	margin-bottom: 40px;
+}
+
+#profile-on-home > a {
+	margin-top: 30%;
+	display: inline-block;
+}
+
+#profile-on-home {
+	float: left;
+	display: table;	
+}
+
+#homepage-bar  input {
+	width: 65%;	
+	border: 2px dotted;
+	border-color: green;
 }
 
 #homepage-bar > div {
+	text-align: center;
+	display: inline;
 	margin-top: 10px;
 	margin-left: 5%;
 	margin-right: 5%;
-	width: 30%;
+	width: 20%;
 	min-height: 200px;
 }
 
@@ -160,24 +179,35 @@ form {
 }
 
 #homepage-summary > div {
-	margin-left: 5%;
-	margin-left: 5%;
+	margin-left: 1%;
+	margin-right: 1%;
+	width: 21%;
 	display: inline;
+	overflow: auto;
 	float: left;
+}
+
+.category-header {
+	margin: auto;
+	overflow: auto;
 	border: 3px dotted;
 	border-color: cornflowerblue;
 }
 
-.category-header {
-	width: 100%;
-	padding: 1px;
-	min-height: 30px;	
+.category-content {
+	border-bottom: 3px dotted;
+	border-left: 3px dotted;
+	border-right: 3px dotted;
+	border-color: cornflowerblue;
+	min-height: 150px;
+	overflow: auto;
 }
 
 #popular-quizzes,
 #recently-created,
 #taken-quizzes,
 #created-quizzes {
+	margin-top: 3%;
 	width: 15%;	
 	text-align: center;
 }
