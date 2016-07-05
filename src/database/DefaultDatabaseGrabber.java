@@ -596,7 +596,7 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 			throws SQLException {
 		// Extract field values
 		Timestamp date = perf.getDate();
-		int timeTaken = perf.getAmountTime();
+		int timeTaken = (int) perf.getAmountTime();
 		double percentCorrect = perf.getPercentCorrect();
 		// Pass the values to sql update query
 		Statement stmt = conHandler.getConnection().createStatement();

@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 public class Performance {
 
 	private Timestamp date;
-	private int amountTimeSecs;
+	private long amountTimeSecs;
 	private double percentCorrect;
 	
 	/** Empty constructor **/
@@ -39,17 +39,17 @@ public class Performance {
 	 * the particular attempt.
 	 * @return time taken on the quiz (seconds)
 	 */
-	public int getAmountTime() {
+	public long getAmountTime() {
 		return amountTimeSecs;
 	}
 
 	/**
 	 * Setter for time interval the user took for
 	 * the particular attempt.
-	 * @param amountTimeSecs - number of seconds taken
+	 * @param seconds - number of seconds taken
 	 */
-	public void setAmountTime(int amountTimeSecs) {
-		this.amountTimeSecs = amountTimeSecs;
+	public void setAmountTime(long seconds) {
+		this.amountTimeSecs = seconds;
 	}
 
 	/**

@@ -24,7 +24,7 @@ public class QuizHistoryTest {
 		public int compare(PerformanceOnQuiz p1, PerformanceOnQuiz p2) {
 			int cmpUser = p1.getUser().compareTo(p2.getUser());
 			if (cmpUser != 0) return cmpUser;
-			int cmpAmount = Integer.compare(p1.getAmountTime(), p2.getAmountTime());
+			int cmpAmount = Long.compare(p1.getAmountTime(), p2.getAmountTime());
 			if (cmpAmount != 0) return cmpAmount;
 			int cmpPercent = Double.compare(p1.getPercentCorrect(), p2.getPercentCorrect());
 			if (cmpPercent != 0) return cmpPercent;
