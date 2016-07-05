@@ -16,6 +16,7 @@ public class Quiz {
 	private double summaryStatistics;
 	private QuizQuestions questions;
 	private QuizProperty property;
+	private int timesTaken = 0;
 	
 	/** Empty constructor */
 	public Quiz() {}
@@ -77,5 +78,11 @@ public class Quiz {
 		this.property = property;
 	}
 	
+	public int getTimesTaken(){
+		return timesTaken;
+	}
 	
+	public void increaseTimesTaken(){
+		timesTaken++;
+	}
 }

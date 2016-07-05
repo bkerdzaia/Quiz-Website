@@ -1,7 +1,9 @@
 package application;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 
 import javax.servlet.RequestDispatcher;
@@ -16,6 +18,8 @@ import database.DatabaseGrabber;
 import factory.DefaultDatabaseFactory;
 import questions.Question;
 import quiz.Quiz;
+import quiz.User;
+import quiz.UsersPerformance;
 
 /**
  * Servlet implementation class ResultPageServlet
@@ -40,9 +44,8 @@ public class ResultPageServlet extends HttpServlet implements ServletConstants{
 			db.connect();
 			
 			Quiz quiz = (Quiz) session.getAttribute("quizName");
-			System.out.println("Quiz name = " +quiz.getName());
 			
-			System.out.println("User name = "+session.getAttribute(USER_NAME_PARAM));
+			String userName = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
 			
 			ArrayList<String> a= new ArrayList<String>();
 			Enumeration<String> x = request.getParameterNames();
@@ -56,16 +59,28 @@ public class ResultPageServlet extends HttpServlet implements ServletConstants{
 				for(int i=0; i<str.length; i++){
 					quiz.getQuestions().get(k).setUsersChoice(str[i]);
 					k++;
-					System.out.println(a.get(j));
 				}
 			}
-			System.out.println(request.getParameter("time").getClass());
 			
-			session.setAttribute("time", request.getParameter("time"));
+			
+			String timeSpentString = (String) session.getAttribute("time");
+			long timeSpent = Long.parseLong(timeSpentString);
+			long seconds = (timeSpent / 1000) % 60 ;
+			session.setAttribute("time", seconds);
 			int score = 0;
 			for(Question q: quiz.getQuestions()){
 				if(q.isUsersAnswerCorrect())score++;
 			}
+			User user = db.loadUser(userName);
+			session.setAttribute("realUser", user);
+			UsersPerformance e = new UsersPerformance();
+			e.setAmountTime(seconds);
+			Date date = new Date();
+			e.setDate(new Timestamp(date.getTime()));
+			e.setPercentCorrect(score/(quiz.getQuestions().size())*100);
+			e.setQuiz(quiz.getName());
+			user.getHistory().add(e);
+			
 			quiz.setSummaryStatistics(score/(quiz.getQuestions().size())*100);
 			db.close();
 		} catch (Exception e) {
