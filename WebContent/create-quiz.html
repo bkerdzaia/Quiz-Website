@@ -9,7 +9,7 @@
 </head>
 <body>
 	
-	<form id="quiz-creation" action="CreateQuizServlet" method="post"> 
+	<form id="quiz-creation" action="CreateQuizServlet" method="post" onsubmit="return $.trim( $('#addQuestionsType').html() ).length !== 0"> 
 	
 		<div class="topbar">
 			<div id="quiz-name">
