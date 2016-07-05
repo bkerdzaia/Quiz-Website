@@ -57,4 +57,18 @@ public class MultipleChoise extends Question {
 		return possibleChoises.get(correctAnswerIndex).equals(answer);
 	}
 
+	@Override
+	public String getQuestionHtmlForm(int id) {
+		String result = " <div class='multipleChoiceQuestion'> " + "<p><b>MultipleChoiceType</b></p>"
+				+ "Enter Question: <input type='text' name='multipleChoiceQuestion"+id+"' value='" + getQuestionText() +"' required>"
+				+ "Enter Correct Answer: <input type='text' name='multipleChoiceQuestion"+id+"' value='" + possibleChoises.get(correctAnswerIndex) +"' required>";
+		for (int i=0; i<possibleChoises.size(); i++) {
+			if (i != correctAnswerIndex) {
+				result += "Enter Possible Answer: <input type='text' name='multipleChoiceQuestion"+id+"' value='" + possibleChoises.get(i) + "' required>";
+			}
+		}
+		result += "</div>";
+		return result;
+	}
+
 }

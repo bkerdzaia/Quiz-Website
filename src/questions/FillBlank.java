@@ -84,4 +84,18 @@ public class FillBlank extends Question {
 		return (correctAnswers.contains(answer));
 	}
 
+	@Override
+	public String getQuestionHtmlForm(int id) {
+		String result = "<div class='fillInTheBlankQuestion'><p><b>FillInTheBlankType</b></p>"
+				+ "Enter Question: <input type='text' name='fillInTheBlankQuestion" + id + "' value='"
+				+ getQuestionText() + "' oninvalid='alert(\"question should have one blank ___ (three _) !\");' "
+				+ "pattern='([^_]*(___){1}[^_]+)|([^_]+(___){1}[^_]*)' required><br>";
+		for (String answers : correctAnswers) {
+			result += "Enter Possible Answer: <input type='text' name='fillInTheBlankQuestion" + id + "' value='"
+					+ answers + "' required>";
+		}
+		result += "</div>";
+		return result;
+	}
+
 }

@@ -13,7 +13,6 @@
 </head>
 <body>
 
-	<jsp:include page="logout.html"></jsp:include>
 	<%-- gets information from session --%>
 	<%
 		Quiz quiz = (Quiz) session.getAttribute(ServletConstants.QUIZ_NAME_PARAM);
@@ -150,9 +149,8 @@
 	
 	<div>
 		<%
-			String creator = quiz.getCreator();
-			if(creator.equals(user)) {
-				out.println("<p>edit quiz for owner of quiz<//p>");
+			if(quiz.getCreator().equals(user)) {
+				out.println("<form action='edit-quiz.jsp' method='post'><input type='submit' value='edit quiz'></form>");
 			}
 		%>
 	</div>
