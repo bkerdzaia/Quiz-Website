@@ -15,14 +15,24 @@
 
 	<%-- gets information from session --%>
 	<%
-		Quiz quiz = (Quiz) session.getAttribute(ServletConstants.QUIZ_NAME_PARAM);
 		String user = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
+		// Some redirections
+		if (user == null){
+			response.sendRedirect(ServletConstants.LOGIN_ADDRESS);
+			return;
+		}
+		Quiz quiz = (Quiz) session.getAttribute(ServletConstants.QUIZ_NAME_PARAM);
+		if (quiz == null){
+			response.sendRedirect(ServletConstants.HOMEPAGE_ADDRESS);
+		}
 		UserList highestPerformers = (UserList) session.getAttribute(ServletConstants.HIGHEST_PERFORMANCE_ATTRIBUTE);
 		UserList topPerformers = (UserList) session.getAttribute(ServletConstants.TOP_PERFORMANCE_ATTRIBUTE);
 		QuizHistory perfomance = (QuizHistory) session.getAttribute(ServletConstants.PERFORMANCE_ATTRIBUTE);
 		QuizFactory quizFactory = DefaultQuizFactory.getFactoryInstance();
 	%>
 	
+	<jsp:include page="logout.html"></jsp:include>
+
 	<%!
 		private String getHtmlUsers(UserList  users) {
 			if (users == null) return "";
@@ -50,8 +60,6 @@
 			return htmlPerformance;
 		}
 	%>
-
-	<jsp:include page="logout.html"></jsp:include>
 
 	<p>Welcome to funz ${param.userName} !</p>
 	
