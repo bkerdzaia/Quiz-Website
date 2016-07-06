@@ -34,6 +34,7 @@
 	
 	<!-- send friend request or send message display to the user that is viewed by logged in user -->
 	<%
+		// allow to change personal information
 		if(loggedUser.equals(user.getName())) 
 			return;
 		if (friends.contains(loggedUser)) {

@@ -132,13 +132,14 @@ form {
 }
 
 .topbar {
-	width: 100%;
+	width: 95%;
 	min-height: 200px;
 	display: block;
 }
 
 .topbar > div {
 	display: inline;
+	float: left
 	text-align: center;
 }
 
@@ -226,14 +227,15 @@ form {
 	margin-left: 5%;
 	margin-right: 5%;	
 	display: block;
-	width: 99%;
+	width: 95%;
 	min-height: 300px;
 }
 
 #quiz-create-bar > div {
+	width: 30%;
 	margin-top: 8px;
-	margin-left: 35px;
-	margin-right: 35px;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
 #quiz-creation {
@@ -359,6 +361,11 @@ input:not([type="radio"]){
 
 .hide-borders {
 	border: 0;
+}
+
+#live-quiz-suggestions {
+	overflow: auto;
+	border-color: cornflowerblue;
 }
 
 #live-user-suggestions {

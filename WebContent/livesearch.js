@@ -5,13 +5,18 @@
 
 var gotResponse = 4;
 var successMark = 200;
-var userSuggestionsServlet = "UsersLiveSearch";
-var resultBoxId = "live-user-suggestions"
 
-function searchSimilarUsers(searchTerm) {
+var userSuggestionsServlet = "UsersLiveSearch";
+var quizSuggestionsServlet = "QuizLookupServlet";
+var userSuggestionsBoxId = "live-user-suggestions";
+var quizSuggestionsBoxId = "live-quiz-suggestions";
+
+
+// General function sending request to servers
+function interactWithServer(servletPath, resultBoxId, searchTerm) {
 	if (searchTerm.length == 0) { // just empty suggestions box and return
 		document.getElementById(resultBoxId).innerHTML = "";
-		hideBorders();
+		hideBorders(resultBoxId);
 		return;
 	}
 	if (!window.XMLHttpRequest) 
@@ -24,24 +29,33 @@ function searchSimilarUsers(searchTerm) {
 		if (xmlhttp.readyState == gotResponse && xmlhttp.status == successMark) {  
 			document.getElementById(resultBoxId).innerHTML = xmlhttp.responseText;
 			if (xmlhttp.responseText != "")
-				showBorders();
+				showBorders(resultBoxId);
 			else 
-				hideBorders();
+				hideBorders(resultBoxId);
 		}
 	}
-	xmlhttp.open("GET", userSuggestionsServlet + "?searchTerm=" + searchTerm, true);
-	// Add header here
+	xmlhttp.open("GET", servletPath + "?searchTerm=" + searchTerm, true);
 	xmlhttp.send();
 }
 
-function hideBorders(){
+function hideBorders(resultBoxId){
 	$('#' + resultBoxId).removeClass("show-borders");
 	$('#' + resultBoxId).addClass("hide-borders");
 
-}
+};
 
-function showBorders(){
+function showBorders(resultBoxId){
 	$('#' + resultBoxId).removeClass("hide-borders")
 	$('#' + resultBoxId).addClass("show-borders");	
+};
 
+
+// Send request to 'similar users' servlet
+function searchSimilarUsers(searchTerm){
+	interactWithServer(userSuggestionsServlet, userSuggestionsBoxId, searchTerm);
+};
+
+// Send request to 'similar quizzes' servlet
+function searchSimilarQuizzes(searchTerm){
+	interactWithServer(quizSuggestionsServlet, quizSuggestionsBoxId, searchTerm);
 }

@@ -987,4 +987,20 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 		return true;
 	}
 
+	@Override
+	public QuizCollection searchQuizzes(String searchTerm) throws SQLException {
+		searchTerm = escape(searchTerm);
+		Statement stmt = conHandler.getConnection().createStatement();
+		String sqlSimilarQuizzes = 
+				"SELECT quiz_name FROM quizzes " + 
+				"WHERE quiz_name LIKE '%" + searchTerm + "%'" + 
+				"LIMIT " + MAX_QUIZ_SUGGESTIONS + ";";
+		ResultSet rs = stmt.executeQuery(sqlSimilarQuizzes);
+		QuizCollection similarQuizNames = quizFactory.getQuizCollection();
+		while (rs.next())
+			similarQuizNames.add(rs.getString(1)); // quizname column
+		stmt.close();
+		return similarQuizNames;
+	}
+
 }

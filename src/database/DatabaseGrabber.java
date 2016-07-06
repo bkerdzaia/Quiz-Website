@@ -92,6 +92,13 @@ public interface DatabaseGrabber {
 	public UserList searchUsers(String searchTerm) throws SQLException;
 
 	/**
+	 * Based on search string returns list of quiz names that
+	 * are 'similar' to provided name (actually provided is substring)
+	 * @param - search term
+	 */
+	public QuizCollection searchQuizzes(String searchTerm) throws SQLException;
+	
+	/**
 	 * Provided with 'quiz' object, method breaks it down
 	 * into pieces of information that should be store in
 	 * database, as an entry associated with the new quiz.

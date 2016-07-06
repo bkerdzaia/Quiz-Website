@@ -73,11 +73,12 @@
 
 	<div class="topbar" id="homepage-bar">
 		
-		<div id="message-box">
+		<div id="message-box" class="category-content">
 			<p> Your inbox </p>
 			<%
 				UserMessageList messages = user.getMessages();
 				for (Message receivedMessage : messages) {
+					if (receivedMessage == null) continue;
 					out.println(receivedMessage.displayMessage());		
 				}
 			%>
@@ -85,18 +86,19 @@
 		
 		<div id="quiz-lookup">
 			<p> Search for quiz </p>		
-			<form action="QuizLookupServlet" method="get">
-				<input type="text" name="quizToFind" placeholder="Enter quiz name" required>
-				<input type="submit" name="quiz-submit" value="Find Quiz">
-			</form>	
+			<input type="text" name="quizToFind" placeholder="Type quiz name" 
+					onkeyup="searchSimilarQuizzes(this.value)" >
+			<div id="live-quiz-suggestions" class="hide-borders">
+				<!-- Suggestion would be added dynamicly -->	
+			</div>
 		</div>
 		
 		<div id="search-users">
 			<p> Search for users </p>
 			<input type="text" placeholder="Type user name"  
-			       onkeyup="searchSimilarUsers(this.value)" required>
+			       onkeyup="searchSimilarUsers(this.value)" >
 			<div id="live-user-suggestions" class="hide-borders">
-			
+				<!-- Suggestion would be added dynamicly -->	
 			</div>
 		</div> 
 
