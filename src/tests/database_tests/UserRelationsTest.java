@@ -149,7 +149,6 @@ public class UserRelationsTest {
 		assertEquals(1, samuelsMessages.size());
 		TextMessage mes = (TextMessage) samuelsMessages.get(0);
 		assertEquals("I cant be friends with trump supporter", mes.getMessage());
-		assertEquals("<p>" + mes.getMessage() + "</p>", mes.displayMessage());
 		String someNonsense =
 				"Hillay and Ted Cruz will make 2 + 2 = 4" + 
 				" Im not saying its 5 maybe Jeb is saying that..";
@@ -234,6 +233,7 @@ public class UserRelationsTest {
 	}
 	
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testChallenge() throws SQLException {
 		DatabaseGrabber dbGrabber = mockDbFactory.getDatabaseGrabber();

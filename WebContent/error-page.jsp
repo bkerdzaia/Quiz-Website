@@ -21,7 +21,7 @@
 
 	<h3> Exception Occurred</h3>
 	
-	<p>Exception is: <%= exception %></p>
+	<h3>Exception is: <%= exception %></h3>
 
 
 </body>

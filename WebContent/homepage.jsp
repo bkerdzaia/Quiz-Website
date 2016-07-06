@@ -72,12 +72,17 @@
 	<jsp:include page="logout.html"></jsp:include>
 
 	<div class="topbar" id="homepage-bar">
-	
-		<div id="profile-on-home">
-			<a href="<%= ServletConstants.USER_PAGE_ADDRESS + "?" 
-				+ ServletConstants.USER_NAME_PARAM + "=" + userName %>">Open profile page</a>
+		
+		<div id="message-box">
+			<p> Your inbox </p>
+			<%
+				UserMessageList messages = user.getMessages();
+				for (Message receivedMessage : messages) {
+					out.println(receivedMessage.displayMessage());		
+				}
+			%>
 		</div>
-
+		
 		<div id="quiz-lookup">
 			<p> Search for quiz </p>		
 			<form action="QuizLookupServlet" method="get">
@@ -107,7 +112,11 @@
 	</div>
 
 	<p id="welcome-home">
-		<b>Welcome back <%= userName %>, have fun on your belowed website</b>
+		<b>Welcome back <%= userName %>, have fun on your belowed website</b>	
+			<a href="<%= ServletConstants.USER_PAGE_ADDRESS + "?" 
+				+ ServletConstants.USER_NAME_PARAM + "=" + userName %>">[See your profile] </a>
+
+
 	</p>
 
 	<div id="homepage-summary">	
@@ -156,18 +165,7 @@
 
 
 	</div>
-	
-	<!-- display messages list -->
-	<div id="messages">
-		<p>received messages</p>
-		<%
-			UserMessageList messages = user.getMessages();
-			for (Message receivedMessage : messages) {
-				out.println(receivedMessage.displayMessage());		
-			}
-		%>
-	</div>
-	
+
 	<div id="friends-activities">
 		<p>Friends' recent activities (quizzes taken or created)</p>
 		<input type="text" id="friendSearch" placeholder=" Enter Friend Name" onkeyup="loadFriendPerformance()">
