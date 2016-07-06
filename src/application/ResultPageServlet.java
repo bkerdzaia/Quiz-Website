@@ -66,7 +66,7 @@ public class ResultPageServlet extends HttpServlet implements ServletConstants{
 			long timeSpent = Long.parseLong(timeSpentString);
 			long seconds = (timeSpent / 1000) % 60 ;
 			session.setAttribute("time", seconds);
-			int score = 0;
+			double score = 0;
 			for(Question q: quiz.getQuestions()){
 				if(q.isUsersAnswerCorrect())score++;
 			}
@@ -76,7 +76,7 @@ public class ResultPageServlet extends HttpServlet implements ServletConstants{
 			e.setAmountTime(seconds);
 			Date date = new Date();
 			e.setDate(new Timestamp(date.getTime()));
-			int percentage = score/(quiz.getQuestions().size())*100;
+			double percentage = score/(quiz.getQuestions().size())*100;
 			e.setPercentCorrect(percentage);
 			e.setQuiz(quiz.getName());
 			user.getHistory().add(e);

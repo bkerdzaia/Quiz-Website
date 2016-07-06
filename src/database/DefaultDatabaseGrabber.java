@@ -958,6 +958,8 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 	public boolean editUser(User changedUser) throws SQLException {
 		Statement stmt = conHandler.getConnection().createStatement();
 		String userName = changedUser.getName();
+		System.out.println(userName);
+		System.out.println(changedUser.getAboutMe());
 		String queryUser = 
 				"SELECT * FROM users " + 
 				"WHERE username = " + "'" + escape(userName) + "';";
@@ -966,7 +968,8 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 			return false; // user is not contained in database
 		String sqlUpdateUserInfo =
 				"UPDATE users SET profile_pic_url = '" + escape(changedUser.getPictureUrl()) + "'," +
-						"description = '" + escape(changedUser.getAboutMe()) + "';";
+						"description = '" + escape(changedUser.getAboutMe()) + "'" +
+				"WHERE username = '" + userName + "';";
 		stmt.executeUpdate(sqlUpdateUserInfo);
 		return true;
 	}

@@ -24,7 +24,14 @@ function updateUser(){
 			alert("success");
 		}
 	}
+	
+	$.get(servletPath,
+			{
+			newPicUrl:newPicUrl,
+			newDesc:newAboutMe,
+			userName:userName
+			}, function(data){
+				location.reload();
+			});
 
-	xmlhttp.open("GET", servletPath + "?newPicUrl=" +newPicUrl+"&newDesc="+newAboutMe+"&userName="+userName,true);
-	xmlhttp.send();
 }
