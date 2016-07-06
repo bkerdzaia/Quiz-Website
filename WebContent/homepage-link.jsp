@@ -1,3 +1,4 @@
+<%@ page errorPage="error-page.jsp" %> 
 <div>
 	<form action="HomepageServlet">
 		<br>
