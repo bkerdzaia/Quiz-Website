@@ -131,7 +131,7 @@
 	</div>
 	
 	<div>
-		<p>summary statistics: <%= quiz.getSummaryStatistics() %></p>
+		<p>summary statistics (average score): <%= quiz.getSummaryStatistics() %> %</p>
 	</div>
 	
 	<div>

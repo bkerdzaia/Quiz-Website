@@ -62,8 +62,7 @@ public class ResultPageServlet extends HttpServlet implements ServletConstants{
 				}
 			}
 			
-			
-			String timeSpentString = (String) session.getAttribute("time");
+			String timeSpentString = (String) request.getParameter("time");
 			long timeSpent = Long.parseLong(timeSpentString);
 			long seconds = (timeSpent / 1000) % 60 ;
 			session.setAttribute("time", seconds);
@@ -77,11 +76,15 @@ public class ResultPageServlet extends HttpServlet implements ServletConstants{
 			e.setAmountTime(seconds);
 			Date date = new Date();
 			e.setDate(new Timestamp(date.getTime()));
-			e.setPercentCorrect(score/(quiz.getQuestions().size())*100);
+			int percentage = score/(quiz.getQuestions().size())*100;
+			e.setPercentCorrect(percentage);
 			e.setQuiz(quiz.getName());
 			user.getHistory().add(e);
 			
-			quiz.setSummaryStatistics(score/(quiz.getQuestions().size())*100);
+			quiz.setSummaryStatistics(
+					(quiz.getTimesTaken()*quiz.getSummaryStatistics()+percentage)/quiz.getTimesTaken());
+			quiz.increaseTimesTaken();
+			db.storeAttempt(e, userName, quiz.getName());
 			db.close();
 		} catch (Exception e) {
 			e.printStackTrace();
