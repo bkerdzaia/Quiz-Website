@@ -313,7 +313,7 @@ div.failure-message{
 }
 
 
-input{
+input:not([type="radio"]){
 	width: 30%;
 	border: 0;
 	display: block;

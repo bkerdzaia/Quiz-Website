@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="application.*, quiz.*, factory.*, java.util.Comparator"%>
+<%@ page errorPage="error-page.jsp" %>  
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -73,9 +74,9 @@
 	</div>
 	
 	<div>
-		<table border="1">
+		<table border="1" align="center">
 			<caption>
-				A list of <%= user %>'s past performance on this quiz ordered by: 
+				A list of <%= user %>'s past performance on this quiz ordered by:<br>
 				<input type="radio" name="performance" value="date" checked onclick="showOrderByDate()">date
 				<input type="radio" name="performance" value="percentCorrect" onclick="showOrderByPercentCorrect()">percent correct
 				<input type="radio" name="performance" value="amountTime" onclick="showOrderByAmountTime()">amount of time
@@ -108,8 +109,8 @@
 		<p>list of top performers in the last day: <b><%= getHtmlUsers(topPerformers) %></b></p>
 	</div>
 	
-	<div align="left">
-		<table border="1">
+	<div>
+		<table border="1" align="center">
 			<caption>recent test takers performance</caption>
 			<tr>
 				<th>user</th>
@@ -143,7 +144,7 @@
 	<div>
 		<p>Challenge Friend</p>
 		<form action="ChallengeServlet" method="post"><br>
-			Enter friend name: <input type="text" name="friendName"><br>
+			<input type="text" placeholder="Enter friend name" name="friendName"><br>
 			<input type="submit" value="challenge">
 		</form>
 	</div>

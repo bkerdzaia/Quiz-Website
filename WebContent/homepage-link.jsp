@@ -1,5 +1,6 @@
+<%@ page errorPage="error-page.jsp" %> 
 <div>
-	<form action="homepage.jsp?">
+	<form action="HomepageServlet">
 		<br>
 		<input type="submit" value="return home"><br>
 	</form>

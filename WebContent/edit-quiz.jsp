@@ -3,6 +3,7 @@
 <%@page import="quiz.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page errorPage="error-page.jsp" %> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -21,7 +22,8 @@
 		<div class="topbar">
 			<div id="quiz-name">
 				<p>Name of the quiz: </p>
-				<input class="quiz-name-field" type="text" name="quizNameText" value="<%= quiz.getName() %>" placeholder="Enter quiz name" required>
+				<input class="quiz-name-field" type="text" name="quizNameText" value="<%= quiz.getName() %>" placeholder="Enter quiz name"
+					oninvalid="alert('enter valid characters');" pattern='^[\w ]+$' required>
 			</div>
 		
 			<div id="quiz-description">

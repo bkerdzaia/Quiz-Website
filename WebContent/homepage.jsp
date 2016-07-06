@@ -2,7 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="application.*, quiz.*, database.*"%>
-
+<%@ page errorPage="error-page.jsp" %> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -148,7 +148,7 @@
 				<%
 					History<UsersPerformance> history = user.getHistory();
 					for(UsersPerformance userPerformance : history) {
-						out.println("<p><a href=href='" + ServletConstants.QUIZ_SUMMARY_SERVLET + 
+						out.println("<p><a href='" + ServletConstants.QUIZ_SUMMARY_SERVLET + 
 								"?" + ServletConstants.QUIZ_NAME_PARAM + "=" + userPerformance.getQuiz() + "'>" + 
 								userPerformance.getQuiz() + "</a></p>");
 					}

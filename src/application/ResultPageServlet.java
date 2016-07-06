@@ -84,6 +84,7 @@ public class ResultPageServlet extends HttpServlet implements ServletConstants{
 			quiz.setSummaryStatistics(
 					(quiz.getTimesTaken()*quiz.getSummaryStatistics()+percentage)/quiz.getTimesTaken());
 			quiz.increaseTimesTaken();
+			System.out.println("user: " + userName);
 			db.storeAttempt(e, userName, quiz.getName());
 			db.close();
 		} catch (Exception e) {
