@@ -73,7 +73,7 @@
 
 	<div class="topbar" id="homepage-bar">
 		
-		<div id="message-box">
+		<div id="message-box" class="category-content">
 			<p> Your inbox </p>
 			<%
 				UserMessageList messages = user.getMessages();
