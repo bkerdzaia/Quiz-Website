@@ -21,7 +21,8 @@
 		<div class="topbar">
 			<div id="quiz-name">
 				<p>Name of the quiz: </p>
-				<input class="quiz-name-field" type="text" name="quizNameText" value="<%= quiz.getName() %>" placeholder="Enter quiz name" required>
+				<input class="quiz-name-field" type="text" name="quizNameText" value="<%= quiz.getName() %>" placeholder="Enter quiz name"
+					oninvalid="alert('enter valid characters');" pattern='^[\w ]+$' required>
 			</div>
 		
 			<div id="quiz-description">

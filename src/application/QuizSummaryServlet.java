@@ -26,7 +26,6 @@ public class QuizSummaryServlet extends HttpServlet implements ServletConstants{
 			throws ServletException, IOException {
 		String address;
 		try {
-			System.out.println("quiz summary page");
 			DatabaseGrabber db = (DatabaseGrabber) request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
 			HttpSession session = request.getSession();
 			db.connect();

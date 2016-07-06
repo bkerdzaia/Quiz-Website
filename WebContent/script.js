@@ -1,7 +1,11 @@
 /* validation for input name */
 function validateName() {
 	var pat = /^[\w]+$/;
-	return pat.test(document.getElementById("register-form-id").userName.value);
+	if (pat.test(document.getElementById("login-form-id").userName.value)) {
+		return true;
+	}
+	alert("not valid name: " + document.getElementById("login-form-id").userName.value);
+	return false;
 };
 
 	

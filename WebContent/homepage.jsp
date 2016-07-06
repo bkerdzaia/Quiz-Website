@@ -146,7 +146,7 @@
 				<%
 					History<UsersPerformance> history = user.getHistory();
 					for(UsersPerformance userPerformance : history) {
-						out.println("<p><a href=href='" + ServletConstants.QUIZ_SUMMARY_SERVLET + 
+						out.println("<p><a href='" + ServletConstants.QUIZ_SUMMARY_SERVLET + 
 								"?" + ServletConstants.QUIZ_NAME_PARAM + "=" + userPerformance.getQuiz() + "'>" + 
 								userPerformance.getQuiz() + "</a></p>");
 					}

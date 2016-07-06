@@ -27,6 +27,7 @@
 <body>
 	
 	<jsp:include page="logout.html"></jsp:include>
+	<jsp:include page="homepage-link.jsp"></jsp:include>
 
 <!-- <ul id="menu">
   <li id="que">questions: </li>
