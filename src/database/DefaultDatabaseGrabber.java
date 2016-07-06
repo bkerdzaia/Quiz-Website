@@ -768,7 +768,7 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 		// in friends table first username is the lexicographically smaller one
 		int directionBit = (from.compareTo(to) > 0) ? 1 : 0;
 		String sqlSendMessage = 
-				"INSERT INTO messages VALUES(NULL," + friendshipId + ",'" + message + "','" + 
+				"INSERT INTO messages VALUES(NULL," + friendshipId + ",'" + escape(message) + "','" + 
 						date + "'," + directionBit + ");";
 		stmt.executeUpdate(sqlSendMessage);
 		stmt.close();

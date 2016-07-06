@@ -166,8 +166,11 @@ form {
 
 
 #friends-activities {
+	margin-top: 30px;
 	text-align: center;
 }
+
+
 
 #homepage-summary > div {
 	margin-left: 1%;
@@ -229,6 +232,7 @@ form {
 	display: block;
 	width: 95%;
 	min-height: 300px;
+	overflow: auto;
 }
 
 #quiz-create-bar > div {
