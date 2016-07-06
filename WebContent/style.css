@@ -203,6 +203,11 @@ form {
 	overflow: auto;
 }
 
+.category-content > p{
+	maring-top: 10px;
+}
+
+
 #popular-quizzes,
 #recently-created,
 #taken-quizzes,

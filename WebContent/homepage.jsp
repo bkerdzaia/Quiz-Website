@@ -18,8 +18,10 @@
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script src="livesearch.js"> </script>
 	<script src="script.js"></script>
+	<script src="homepage.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" type="text/css" href="table-style.css">
+
 	<script>
 		function loadFriendPerformance() {
 			var friendValue = $("#friendSearch").val();
