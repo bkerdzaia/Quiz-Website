@@ -425,5 +425,47 @@ textarea {
     margin-bottom: 20px;
 }
 
+#user-data{
+	margin-top: 60px;
+	width: 95%;
+	display: block;
+	overflow: auto;
+}
 
+#user-data > div {
+	border: 3px dotted;
+	width: 300px;
+	height: 300px;
+	border-color: cornflowerblue;
+	margin-left: 9%;
+	margin-right: 9%;
+	display: inline;
+	float: left;	
+	margin-bottom: 100px;
+}
 
+#profile-picture{
+	vertical-align: middle;
+	text-align: center;
+
+}
+
+[id="pp"] {
+	max-width:300px;
+	max-height:300px;
+}
+
+#about-me 
+{
+	vertical-align: middle;
+	text-align: center;
+}
+
+#change-user-info {
+	display: block;
+	text-align: center;
+}
+
+#user-change-fields{
+	display: inline;
+}

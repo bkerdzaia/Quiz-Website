@@ -99,6 +99,8 @@ public class DefaultDatabaseGrabber implements DatabaseGrabber,
 	 * to secure agains injection attacks, just provides very basic handling.
 	 */
 	private String escape(String input){
+		if (input == null)
+			return input;
 		// Escape single quotes
 		int searchFrom = 0;
 		while (true) {

@@ -7,7 +7,9 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>User page: + ${param.userName}</title>
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="userpage.js"> </script>
+	<title>User page: ${param.userName}</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
@@ -18,25 +20,42 @@
 		String loggedUser = (String) session.getAttribute(ServletConstants.USER_NAME_PARAM);
 	%>
 	
+	<input type="hidden" id="userName" value="<%=user.getName()%>">
+	
 	<jsp:include page="logout.html"></jsp:include>
 	<jsp:include page="homepage-link.jsp"></jsp:include>
 
-	<p>description: <%= user.getAboutMe()  %></p>
-	
-	<p>my picture: </p>
-	<img src="<%= user.getPictureUrl() %>" alt="<%= user.getName() %>">
+	<div id="user-data">
+		
+		<div id="profile-picture">
+			<img id="pp" src="<%= user.getPictureUrl() %>" 
+			alt="No picture set">
+		</div>
 
+		<div id="about-me">
+			<% 
+				String desc= user.getAboutMe(); 
+				if(desc==null)out.println("No description available");
+				else out.println(desc);
+			%>
+		</div>
 
-	<div id="user-info">
-		<p>user name: <%= user.getName() %></p>
-		<p><b>session attribute value: <%= session.getAttribute(ServletConstants.USER_NAME_PARAM) %></b></p>
 	</div>
-	
+
+
 	<!-- send friend request or send message display to the user that is viewed by logged in user -->
 	<%
 		// allow to change personal information
-		if(loggedUser.equals(user.getName())) 
+		if(loggedUser.equals(user.getName())){
+			
+			out.println(
+					"<div id=\"change-user-info\">" + 
+						"<button onclick=\"showFields()\"> Change information </button>" +
+						"<div id=\"user-change-fields\"> </div>" +
+					"</div>"	
+					);
 			return;
+		}
 		if (friends.contains(loggedUser)) {
 			// send message
 			out.println("<div>" +

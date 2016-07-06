@@ -21,17 +21,29 @@ public class EditUserInfo extends HttpServlet implements ServletConstants{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response){
 
 		HttpSession session = request.getSession();
-		User updatedUser = (User) session.getAttribute(USER_OBJECT_ATTRIBUTE);
-		DatabaseGrabber db = (DatabaseGrabber) session.getAttribute(DATABASE_ATTRIBUTE);
+		
+		String newPicUrl = request.getParameter("newPicUrl");
+		String newDesc = request.getParameter("newDesc");
+		String name = request.getParameter("userName");
+		
+		User changedUser = new User();
+		changedUser.setName(name);
+		changedUser.setAboutMe(newDesc);
+		changedUser.setPictureUrl(newPicUrl);
+		
+		DatabaseGrabber db = (DatabaseGrabber) 
+				request.getServletContext().getAttribute(DATABASE_ATTRIBUTE);
+		
 		try{
 			db.connect();
-			boolean status = db.editUser(updatedUser);
-			System.out.println(status);
-		}
-		catch (Exception e){
+			boolean res = db.editUser(changedUser);
+			System.out.println(res);
+			db.close();
+		} catch (Exception e){
 			e.printStackTrace();
 		}
-
+		
+		session.setAttribute(ServletConstants.USER_OBJECT_ATTRIBUTE, changedUser);
 	}
 
 }
