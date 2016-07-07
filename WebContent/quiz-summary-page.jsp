@@ -32,7 +32,7 @@
 			if (users == null) return "";
 			String htmlUser = "";
 			for (String userName : users) {
-				htmlUser += "<p><a href=\"user-page.jsp?" + ServletConstants.USER_NAME_PARAM + "=" + userName + "\">" 
+				htmlUser += "<p><a href=\"UserPageServlet?" + ServletConstants.USER_NAME_PARAM + "=" + userName + "\">" 
 						+ userName + "</a></p>\n";
 			}
 			return htmlUser;
@@ -66,7 +66,7 @@
 	<div>
 		<%
 			if (!quiz.getCreator().equals(user)) {
-				out.println("<p><a href=\"user-page.jsp?" + ServletConstants.USER_NAME_PARAM + "=" +  quiz.getCreator() +  "\">" + quiz.getCreator() + "</a></p>");
+				out.println("<p><a href=\"UserPageServlet?" + ServletConstants.USER_NAME_PARAM + "=" +  quiz.getCreator() +  "\">" + quiz.getCreator() + "</a></p>");
 			} else {
 				out.println("<p><a href=\"homepage.jsp\">my page</a></p>");
 			}
